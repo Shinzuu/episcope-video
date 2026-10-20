@@ -1,0 +1,681 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>EpiScope slides</title>
+<meta name="description" content="Slides for the EpiScope group video, CSE 4345 Big Data Analytics.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%230b7a75'/%3E%3Cpath d='M2 11l3-4 3 2 3-5 3 3' stroke='white' stroke-width='1.6' fill='none'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  html, body { height: 100%; overflow: hidden; }
+  body { background: #d9e2e4; display: grid; place-items: center; }
+  :root[data-theme="dark"] body { background: #081215; }
+
+  /* 1600 x 900 design canvas, scaled to fit the window */
+  .stage {
+    position: absolute; left: 50%; top: 50%;
+    width: 1600px; height: 900px;
+    transform-origin: 0 0;
+    background: var(--paper);
+    overflow: hidden;
+    box-shadow: 0 0 0 1px var(--rule);
+  }
+  .slide {
+    position: absolute; inset: 0;
+    padding: 64px 88px 120px;
+    display: none;
+    font-size: 30px; line-height: 1.35;
+  }
+  .slide.active { display: block; }
+  .slide h2 {
+    font-size: 64px; line-height: 1.05; font-weight: 800; letter-spacing: -0.02em;
+    margin: 0 0 28px; max-width: 24ch;
+  }
+  .slide h2 + .lede { margin-top: -12px; }
+  .lede { font-size: 34px; color: var(--muted); max-width: 46ch; margin: 0 0 32px; }
+  .slide p { margin: 0 0 18px; max-width: 48ch; }
+  .slide ul { margin: 0; padding-left: 1.1em; }
+  .slide li { margin: 0 0 14px; max-width: 46ch; }
+  .slide li::marker { color: var(--sp); }
+  .small { font-size: 22px; color: var(--muted); }
+  .src { position: absolute; left: 88px; bottom: 92px; font-size: 18px; color: var(--muted); max-width: 1400px; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
+  .cols.wide-left { grid-template-columns: 1.25fr 1fr; }
+  .cols.wide-right { grid-template-columns: 1fr 1.35fr; }
+  .big { font-size: 96px; font-weight: 800; line-height: 1; letter-spacing: -0.03em; }
+  .num { font-variant-numeric: tabular-nums; }
+  b, strong { font-weight: 800; }
+  code { font-family: inherit; font-weight: 600; background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 0 .25em; }
+
+  /* the speaker's colour runs down the left edge of each slide */
+  .slide::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 14px; background: var(--sp); }
+  .slide[data-speaker="s1"] { --sp: var(--s1); }
+  .slide[data-speaker="s2"] { --sp: var(--s2); }
+  .slide[data-speaker="s3"] { --sp: var(--s3); }
+  .slide[data-speaker="s4"] { --sp: var(--s4); }
+
+  /* bottom bar: speaker label, week-strip progress, slide number */
+  .bar {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 72px;
+    display: flex; align-items: center; gap: 28px; padding: 0 40px 0 88px;
+    border-top: 2px solid var(--rule); background: var(--paper);
+    font-size: 22px; z-index: 5;
+  }
+  .who { display: flex; align-items: center; gap: 12px; min-width: 360px; font-weight: 600; }
+  .who i { width: 18px; height: 18px; border-radius: 4px; background: var(--cur); display: inline-block; }
+  .who span { color: var(--muted); font-weight: 400; }
+  .strip { flex: 1; display: grid; gap: 3px; height: 22px; }
+  .strip b { border-radius: 3px; opacity: .28; }
+  .strip b.done { opacity: .75; }
+  .strip b.now { opacity: 1; outline: 3px solid var(--ink); outline-offset: 1px; }
+  .count { font-variant-numeric: tabular-nums; color: var(--muted); min-width: 84px; text-align: right; }
+  .copy { font-size: 15px; color: var(--muted); white-space: nowrap; }
+
+  /* entrance animation: one orchestrated rise per slide, diagrams draw in */
+  .slide.active [data-in] { animation: rise 480ms cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--i, 0) * 90ms + 60ms); }
+  @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+  .slide.active .draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 900ms ease-out forwards; animation-delay: calc(var(--d, 0) * 120ms + 200ms); }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  .slide.active .grow { transform-box: fill-box; transform-origin: 0 100%; animation: growy 560ms cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--d, 0) * 50ms + 250ms); }
+  .slide.active .growx { transform-box: fill-box; transform-origin: 0 0; animation: growx 560ms cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--d, 0) * 50ms + 250ms); }
+  @keyframes growy { from { transform: scaleY(0); } }
+  @keyframes growx { from { transform: scaleX(0); } }
+  @media (prefers-reduced-motion: reduce) {
+    .slide.active [data-in], .slide.active .draw, .slide.active .grow, .slide.active .growx { animation: none !important; stroke-dashoffset: 0; }
+  }
+
+  /* diagrams */
+  svg { display: block; overflow: visible; font-family: var(--font); }
+  svg text { fill: var(--ink); }
+  svg .m { fill: var(--muted); }
+  .box { fill: var(--panel); stroke: var(--ink); stroke-width: 2.5; }
+  .box.soft { stroke: var(--rule); }
+  .ln { fill: none; stroke: var(--ink); stroke-width: 3; }
+  .ln.mute { stroke: var(--muted); stroke-width: 2.5; }
+  .ln.alert { stroke: var(--alert); }
+
+  /* title slide */
+  .title h1 { font-size: 168px; line-height: .9; font-weight: 800; letter-spacing: -0.045em; margin: 30px 0 22px; }
+  .title .lede { font-size: 40px; color: var(--ink); max-width: 30ch; }
+  .title .meta { font-size: 26px; color: var(--muted); }
+  .title svg.curve { position: absolute; left: 0; right: 0; bottom: 72px; width: 1600px; height: 330px; }
+
+  /* running order */
+  .order { display: grid; gap: 0; margin-top: 8px; }
+  .order .row { display: grid; grid-template-columns: 30px 340px 1fr 230px; gap: 24px; align-items: baseline; padding: 18px 0; border-top: 2px solid var(--rule); }
+  .order .row:last-child { border-bottom: 2px solid var(--rule); }
+  .order .sw { width: 24px; height: 24px; border-radius: 5px; align-self: center; }
+  .order .nm { font-weight: 800; }
+  .order .t { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+
+  .four { display: grid; grid-template-columns: repeat(4, 1fr); gap: 34px; margin-top: 30px; }
+  .four div { border-top: 6px solid var(--sp); padding-top: 18px; }
+  .four h3 { font-size: 34px; margin: 0 0 10px; }
+  .four p { font-size: 26px; color: var(--muted); }
+
+  .vs { display: grid; grid-template-columns: 1fr 120px 1fr; align-items: center; gap: 20px; margin-top: 40px; }
+  .vs .side h3 { font-size: 38px; margin: 0 0 8px; }
+  .vs .side p { color: var(--muted); }
+  .vs .mid { font-size: 44px; font-weight: 800; text-align: center; color: var(--alert); }
+  .verdict { margin-top: 46px; padding: 22px 28px; border-left: 8px solid var(--sp); background: var(--panel); max-width: 1180px; }
+
+  table.t { border-collapse: collapse; width: 100%; font-size: 27px; }
+  table.t th { text-align: left; font-size: 22px; color: var(--muted); font-weight: 600; padding: 0 16px 10px 0; border-bottom: 3px solid var(--ink); }
+  table.t td { padding: 14px 16px 14px 0; border-bottom: 2px solid var(--rule); vertical-align: top; }
+  table.t td:first-child { font-weight: 800; white-space: nowrap; }
+  table.t .r { text-align: right; font-variant-numeric: tabular-nums; }
+
+  .shot { border: 2px solid var(--rule); border-radius: 10px; overflow: hidden; background: #fff; }
+  .shot img { display: block; width: 100%; height: auto; }
+  .cue {
+    display: inline-block; font-size: 22px; font-weight: 600; color: var(--paper); background: var(--ink);
+    border-radius: 6px; padding: 4px 12px; margin-bottom: 18px;
+  }
+  .stamp { font-size: 22px; font-weight: 600; color: var(--muted); }
+  .stamp.d { color: var(--teal); }
+  .pendbox { border: 3px dashed var(--pending); background: var(--pending-bg); color: var(--pending); border-radius: 12px; padding: 22px 26px; font-size: 26px; font-weight: 600; }
+  .formula { font-size: 32px; background: var(--panel); border: 2px solid var(--rule); border-radius: 10px; padding: 18px 24px; margin: 0 0 18px; }
+  .steps { counter-reset: s; list-style: none; padding: 0 !important; }
+  .steps li { counter-increment: s; position: relative; padding-left: 52px; font-size: 27px; }
+  .steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 36px; height: 36px; border-radius: 50%; background: var(--sp); color: #fff; font-size: 22px; font-weight: 800; display: grid; place-items: center; }
+  .kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 18px; }
+  .kpis div { border-top: 4px solid var(--sp); padding-top: 12px; }
+  .kpis .big { font-size: 70px; }
+
+  .nav-hint { position: fixed; right: 14px; top: 10px; transition: opacity .4s; font: 14px var(--font); color: #5a6b70; opacity: .8; }
+  @media (max-width: 700px) { .nav-hint { display: none; } }
+  .nav-hint.gone { opacity: 0; }
+</style>
+</head>
+<body>
+<main class="stage" id="stage" aria-live="polite">
+
+<!-- 1 -->
+<section class="slide title" data-speaker="s1" aria-label="Title">
+  <p class="meta" data-in>CSE 4345 Big Data Analytics, Premier University, Chittagong</p>
+  <h1 data-in>EpiScope</h1>
+  <p class="lede" data-in>Catching outbreaks early in Bangladesh, and planning supplies before the season peaks.</p>
+  <p class="meta" data-in>Group <span data-cfg="group"></span>: <span data-cfg="team"></span></p>
+  <svg class="curve" id="title-curve" viewBox="0 0 1600 330" preserveAspectRatio="none" aria-label="Weekly dengue cases, all districts, from the pipeline's draft run"></svg>
+</section>
+
+<!-- 2 -->
+<section class="slide" data-speaker="s1" aria-label="Running order">
+  <h2 data-in>Four of us, six chapters</h2>
+  <p class="lede" data-in>Each person explains their own part, and why we built it that way.</p>
+  <div class="order" id="order" data-in></div>
+</section>
+
+<!-- 3 -->
+<section class="slide" data-speaker="s1" aria-label="The problem">
+  <h2 data-in>Late, messy reports from 64 districts</h2>
+  <p class="lede" data-in>Dengue, diarrhoea, flu-like illness and malaria. Reports arrive late, facilities go quiet, and the same patient appears twice.</p>
+  <div class="four">
+    <div data-in><h3>Warn early</h3><p>An alert when cases rise more than the season explains.</p></div>
+    <div data-in><h3>Forecast</h3><p>Cases and hospital demand, one to four weeks ahead, with a range.</p></div>
+    <div data-in><h3>Allocate</h3><p>Split a fixed national stock of supplies across districts.</p></div>
+    <div data-in><h3>Prepare</h3><p>A calendar of when to stock up and when to start campaigns.</p></div>
+  </div>
+  <p class="verdict" data-in>The users are not data scientists. Every output has to explain itself.</p>
+</section>
+
+<!-- 4 -->
+<section class="slide" data-speaker="s1" aria-label="Conflict 1">
+  <h2 data-in>Conflict 1: early alerts or few false alarms</h2>
+  <div class="vs">
+    <div class="side" data-in><h3>District health officer</h3><p>"Tell me the moment cases go up. A missed outbreak costs lives."</p></div>
+    <div class="mid" data-in>vs</div>
+    <div class="side" data-in><h3>Epidemiologist</h3><p>"If the alarm rings every week, nobody answers it."</p></div>
+  </div>
+  <p class="verdict" data-in>We sweep the alert threshold against planted outbreaks and pick the point in the open. Shown by <b data-cfg="s4"></b>.</p>
+</section>
+
+<!-- 5 -->
+<section class="slide" data-speaker="s1" aria-label="Conflicts 2 to 5">
+  <h2 data-in>Four more trade-offs</h2>
+  <table class="t" data-in>
+    <thead><tr><th>Conflict</th><th>What we chose</th><th>Shown by</th></tr></thead>
+    <tbody>
+      <tr><td>Detail or privacy</td><td>District and week only; counts of 1 to 4 hidden, with a second cell hidden where a total would reveal them</td><td data-cfg="s2"></td></tr>
+      <tr><td>Efficiency or equity</td><td>One number, the equity floor α, decides how much goes by population</td><td data-cfg="s4"></td></tr>
+      <tr><td>Speed or cost</td><td>A daily batch that can be re-run safely; allocation is a weekly decision</td><td data-cfg="s3"></td></tr>
+      <tr><td>Accuracy or clarity</td><td>A readable count model, tested against a simple baseline</td><td data-cfg="s4"></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 6 -->
+<section class="slide" data-speaker="s1" aria-label="The data story">
+  <h2 data-in>Real places and weather, synthetic patients</h2>
+  <div class="cols">
+    <div data-in>
+      <p><b>Real:</b> district borders and 2022 census population (BBS and OCHA via HDX), daily weather from the Open-Meteo archive.</p>
+      <p><b>Synthetic:</b> every patient, facility and stock record, made by our generator. No real patient data anywhere.</p>
+      <p>Dengue follows rain by a few weeks and peaks in autumn, matching OpenDengue.</p>
+    </div>
+    <div data-in>
+      <p class="stamp d">Planted outbreaks the detector never sees</p>
+      <svg id="ob-chart" viewBox="0 0 620 330" width="620" height="330"></svg>
+      <p class="small">Source: <code>ground_truth/outbreaks.csv</code>, draft run (seed 42)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="slide" data-speaker="s1" aria-label="Architecture">
+  <h2 data-in>One pipeline, each layer rebuilt from the last</h2>
+  <svg viewBox="0 0 1430 520" width="1430" height="520" data-in aria-label="Architecture diagram">
+    <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+    <g style="color: var(--ink)">
+      <rect class="box soft" x="0" y="40" width="210" height="300" rx="10"/>
+      <text x="20" y="80" font-size="26" font-weight="800">Sources</text>
+      <text x="20" y="120" font-size="21" class="m">census, borders</text>
+      <text x="20" y="152" font-size="21" class="m">weather</text>
+      <text x="20" y="184" font-size="21" class="m">encounters</text>
+      <text x="20" y="216" font-size="21" class="m">facilities, stock</text>
+      <text x="20" y="262" font-size="21" class="m">new drops by</text>
+      <text x="20" y="290" font-size="21" class="m">file pattern</text>
+
+      <rect class="box" x="270" y="40" width="200" height="300" rx="10" style="stroke: #8c5a2b"/>
+      <text x="290" y="80" font-size="28" font-weight="800">Bronze</text>
+      <text x="290" y="120" font-size="21" class="m">raw, as strings</text>
+      <text x="290" y="152" font-size="21" class="m">checksum</text>
+      <text x="290" y="184" font-size="21" class="m">batch ID</text>
+      <text x="290" y="216" font-size="21" class="m">ingest log</text>
+
+      <rect class="box" x="530" y="40" width="210" height="300" rx="10" style="stroke: #7d8b90"/>
+      <text x="550" y="80" font-size="28" font-weight="800">Silver</text>
+      <text x="550" y="120" font-size="21" class="m">quality rules</text>
+      <text x="550" y="152" font-size="21" class="m">keyed hash IDs</text>
+      <text x="550" y="184" font-size="21" class="m">Delta MERGE</text>
+      <text x="550" y="216" font-size="21" class="m">late records</text>
+
+      <rect class="box" x="800" y="40" width="200" height="300" rx="10" style="stroke: #b8860b"/>
+      <text x="820" y="80" font-size="28" font-weight="800">Gold</text>
+      <text x="820" y="120" font-size="21" class="m">weekly counts</text>
+      <text x="820" y="152" font-size="21" class="m">by onset week</text>
+      <text x="820" y="184" font-size="21" class="m">quality report</text>
+      <text x="820" y="216" font-size="21" class="m">batch IDs kept</text>
+
+      <rect class="box" x="1060" y="40" width="370" height="140" rx="10"/>
+      <text x="1080" y="80" font-size="26" font-weight="800">Analytics</text>
+      <text x="1080" y="118" font-size="21" class="m">alerts, forecasts, demand,</text>
+      <text x="1080" y="148" font-size="21" class="m">allocation LP, calendar</text>
+
+      <rect class="box" x="1060" y="220" width="370" height="120" rx="10"/>
+      <text x="1080" y="260" font-size="26" font-weight="800">Serving export</text>
+      <text x="1080" y="298" font-size="21" class="m">small JSON, under 10 MB</text>
+
+      <rect class="box" x="1060" y="400" width="370" height="110" rx="10" style="stroke: var(--teal)"/>
+      <text x="1080" y="442" font-size="26" font-weight="800">D3 dashboard</text>
+      <text x="1080" y="478" font-size="21" class="m">five linked views, what-if</text>
+
+      <rect class="box soft" x="530" y="400" width="210" height="100" rx="10" style="stroke: var(--alert)"/>
+      <text x="550" y="440" font-size="24" font-weight="800">Quarantine</text>
+      <text x="550" y="474" font-size="21" class="m">with reason codes</text>
+
+      <path class="ln draw" pathLength="1" style="--d:0" d="M210 190H262" marker-end="url(#ah)"/>
+      <path class="ln draw" pathLength="1" style="--d:1" d="M470 190H522" marker-end="url(#ah)"/>
+      <path class="ln draw" pathLength="1" style="--d:2" d="M740 190H792" marker-end="url(#ah)"/>
+      <path class="ln draw" pathLength="1" style="--d:3" d="M1000 110H1052" marker-end="url(#ah)"/>
+      <path class="ln draw" pathLength="1" style="--d:3" d="M1000 280H1052" marker-end="url(#ah)"/>
+      <path class="ln draw" pathLength="1" style="--d:4" d="M1245 180V212" marker-end="url(#ah)"/>
+      <path class="ln draw" pathLength="1" style="--d:5" d="M1245 340V392" marker-end="url(#ah)"/>
+      <path class="ln alert draw" pathLength="1" style="--d:2" d="M635 340V392" marker-end="url(#ah)"/>
+      <text x="0" y="400" font-size="21" class="m">Spark 4 in local mode,</text>
+      <text x="0" y="430" font-size="21" class="m">Delta Lake tables,</text>
+      <text x="0" y="460" font-size="21" class="m">one command: make all</text>
+    </g>
+  </svg>
+</section>
+
+<!-- 8 -->
+<section class="slide" data-speaker="s3" aria-label="Generator">
+  <h2 data-in>The generator plants the problems we must catch</h2>
+  <div class="cols wide-right">
+    <div data-in>
+      <p>Patients are fake, but seasons, climate and population are real.</p>
+      <p>Defects are injected on purpose, so the pipeline can prove it catches each one.</p>
+      <p>One facility goes silent for three weeks, then back-fills everything at once.</p>
+    </div>
+    <div data-in>
+      <p class="stamp d">Injected defect rates, from <code>generator/config.py</code></p>
+      <svg id="defect-chart" viewBox="0 0 720 360" width="720" height="360"></svg>
+    </div>
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="slide" data-speaker="s3" aria-label="Bronze">
+  <h2 data-in>Bronze: keep what arrived, load it once</h2>
+  <svg viewBox="0 0 1420 330" width="1420" height="330" data-in aria-label="Bronze checksum flow">
+    <g style="color: var(--ink)">
+      <rect class="box" x="0" y="100" width="230" height="110" rx="10"/>
+      <text x="22" y="148" font-size="26" font-weight="800">New file</text>
+      <text x="22" y="182" font-size="21" class="m">found by pattern</text>
+      <rect class="box" x="320" y="100" width="260" height="110" rx="10"/>
+      <text x="342" y="148" font-size="26" font-weight="800">SHA-256</text>
+      <text x="342" y="182" font-size="21" class="m">of the file bytes</text>
+      <path d="M800 70 L960 155 L800 240 L640 155 Z" class="box"/>
+      <text x="800" y="150" font-size="23" font-weight="800" text-anchor="middle">Seen in the</text>
+      <text x="800" y="178" font-size="23" font-weight="800" text-anchor="middle">ingest log?</text>
+      <rect class="box soft" x="1070" y="10" width="340" height="110" rx="10"/>
+      <text x="1092" y="58" font-size="26" font-weight="800">Skip it</text>
+      <text x="1092" y="92" font-size="21" class="m">a re-run does nothing</text>
+      <rect class="box" x="1070" y="200" width="340" height="120" rx="10" style="stroke: #8c5a2b"/>
+      <text x="1092" y="246" font-size="26" font-weight="800">Append as strings</text>
+      <text x="1092" y="280" font-size="21" class="m">+ batch ID, load time,</text>
+      <text x="1092" y="306" font-size="21" class="m">source, checksum</text>
+      <path class="ln draw" pathLength="1" style="--d:0" d="M230 155H312" marker-end="url(#ah)"/>
+      <path class="ln draw" pathLength="1" style="--d:1" d="M580 155H632" marker-end="url(#ah)"/>
+      <path class="ln draw" pathLength="1" style="--d:2" d="M960 155 C1010 155 1010 65 1062 65" marker-end="url(#ah)"/>
+      <path class="ln draw" pathLength="1" style="--d:3" d="M960 155 C1010 155 1010 260 1062 260" marker-end="url(#ah)"/>
+      <text x="1000" y="92" font-size="22" font-weight="800">yes</text>
+      <text x="1000" y="240" font-size="22" font-weight="800">no</text>
+    </g>
+  </svg>
+  <p data-in style="margin-top:30px">No date or file name is written in the code. That is why an unseen test drop loads with no changes.</p>
+  <p class="src">Code: <code>pipeline/bronze/ingest.py</code></p>
+</section>
+
+<!-- 10 -->
+<section class="slide" data-speaker="s3" aria-label="Silver quality">
+  <h2 data-in>Silver: rules decide what we trust</h2>
+  <div class="cols wide-right">
+    <div data-in>
+      <p><b>14 rules</b> for encounters, <b>7</b> each for facilities and stock.</p>
+      <p>A failing row is never deleted. It goes to quarantine with every reason code it broke.</p>
+      <div class="kpis" style="grid-template-columns:1fr 1fr">
+        <div><div class="big num" id="k-quar"></div><p class="small">rows quarantined, draft run</p></div>
+        <div><div class="big num" id="k-quar-pct"></div><p class="small">of <span id="k-in"></span> encounter rows</p></div>
+      </div>
+    </div>
+    <div data-in>
+      <p class="stamp d">Share of rows failing each rule, first load</p>
+      <svg id="dq-chart" viewBox="0 0 720 400" width="720" height="400"></svg>
+    </div>
+  </div>
+  <p class="src">Source: <code>gold.dq_report</code> via <code>dashboard/data/dq.json</code>, draft run of 11 Oct (SF 0.05). Re-check against v1.0.</p>
+</section>
+
+<!-- 11 -->
+<section class="slide" data-speaker="s3" aria-label="Privacy and MERGE">
+  <h2 data-in>No patient ID past silver; one rule for late data</h2>
+  <div class="cols">
+    <div data-in>
+      <p class="formula">patient_key = HMAC-SHA256(salt, patient_id)</p>
+      <p>Built from Spark's own <code>sha2</code>, so no Python UDF slows it down.</p>
+      <p>The salt lives in <code>.env</code>, outside Git. Exact age becomes an age band.</p>
+    </div>
+    <div data-in>
+      <svg viewBox="0 0 640 380" width="640" height="380" aria-label="MERGE rule">
+        <g style="color: var(--ink)">
+          <rect class="box soft" x="0" y="0" width="290" height="120" rx="10"/>
+          <text x="20" y="44" font-size="24" font-weight="800">Row in silver</text>
+          <text x="20" y="80" font-size="21" class="m">reported 3 Jan</text>
+          <rect class="box" x="350" y="0" width="290" height="120" rx="10"/>
+          <text x="370" y="44" font-size="24" font-weight="800">Same ID arrives</text>
+          <text x="370" y="80" font-size="21" class="m">reported 10 Jan</text>
+          <path class="ln draw" pathLength="1" style="--d:0" d="M145 120V180H320" />
+          <path class="ln draw" pathLength="1" style="--d:1" d="M495 120V180H320V222" marker-end="url(#ah)"/>
+          <rect class="box" x="40" y="230" width="560" height="140" rx="10" style="stroke: var(--sp)"/>
+          <text x="64" y="276" font-size="25" font-weight="800">MERGE on encounter_id</text>
+          <text x="64" y="314" font-size="22">replace only if the new report is later</text>
+          <text x="64" y="348" font-size="21" class="m">re-run: no change. late record: right week.</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <p class="src">Code: <code>pipeline/privacy/deid.py</code>, <code>pipeline/silver/build.py</code></p>
+</section>
+
+<!-- 12 -->
+<section class="slide" data-speaker="s3" aria-label="Gold">
+  <h2 data-in>Gold counts by onset week, so a back-fill is not a spike</h2>
+  <div class="cols">
+    <div data-in>
+      <p class="stamp">Illustration: one facility, silent for 3 weeks</p>
+      <svg id="onset-ill" viewBox="0 0 640 360" width="640" height="360"></svg>
+    </div>
+    <div data-in>
+      <p>Gold rebuilds only the weeks a batch touched.</p>
+      <p>Every gold row carries the bronze batch IDs it came from, so any number on the dashboard traces back to its files.</p>
+    </div>
+  </div>
+  <p class="src">Code: <code>pipeline/gold/build.py</code> (replaceWhere on changed weeks)</p>
+</section>
+
+<!-- 13 -->
+<section class="slide" data-speaker="s3" aria-label="Live pipeline run">
+  <span class="cue" data-in>Live run in the terminal, clock visible</span>
+  <h2 data-in>New drop, re-run, quarantine</h2>
+  <div class="cols">
+    <ol class="steps" data-in>
+      <li><code>git describe --tags</code> shows v1.0</li>
+      <li><code>make drop</code> with a new seed: 14 new days</li>
+      <li><code>make bronze silver gold analytics serve</code></li>
+      <li>Run again: nothing new, duplicates = 0</li>
+      <li>One quarantined row: <code>DQ_ORPHAN_FACILITY</code></li>
+      <li>A gold row's batch IDs in the ingest log</li>
+    </ol>
+    <div data-in>
+      <p class="stamp d">Hidden-drop drill, silver rows</p>
+      <svg id="drill-chart" viewBox="0 0 640 330" width="640" height="330"></svg>
+      <p class="small" id="drill-note"></p>
+    </div>
+  </div>
+</section>
+
+<!-- 14 -->
+<section class="slide" data-speaker="s3" aria-label="Spark performance">
+  <h2 data-in>Spark choices, and the 45-minute target</h2>
+  <div class="cols">
+    <ul data-in>
+      <li><b>Broadcast joins</b> for small tables: the encounter table never shuffles for a join.</li>
+      <li><b>Adaptive query execution</b> on.</li>
+      <li><b>Partition by year only</b>: finer keys would mean thousands of tiny files.</li>
+      <li><b>Daily batch</b> for forecasts and allocation: they are weekly decisions.</li>
+    </ul>
+    <div data-in>
+      <table class="t">
+        <thead><tr><th>Scale factor</th><th class="r">Runtime</th></tr></thead>
+        <tbody>
+          <tr><td>0.25</td><td class="r"><span class="pending">result pending</span></td></tr>
+          <tr><td>0.5</td><td class="r"><span class="pending">result pending</span></td></tr>
+          <tr><td>1 (target 45 min)</td><td class="r"><span class="pending">result pending</span></td></tr>
+        </tbody>
+      </table>
+      <p class="small" style="margin-top:14px">From <code>scripts/scaling.sh</code>, written to <code>docs/experiments/scaling.json</code>. Not run yet.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 15 -->
+<section class="slide" data-speaker="s4" aria-label="Detection">
+  <h2 data-in>Two detectors on seasonally adjusted counts</h2>
+  <div class="cols">
+    <div data-in>
+      <p><b>EARS C2</b>: this week against weeks 3 to 9 back. Alarm when z &gt; 3.</p>
+      <p class="formula">z = (y − s·m) / σ</p>
+      <p><b>CUSUM</b>: S = max(0, S + z − 0.5), alarm when S &gt; 5. It adds up small, steady excess.</p>
+      <p class="small">Farrington needs about five years before its first test week. That is all the history we have.</p>
+    </div>
+    <div data-in>
+      <div class="shot"><img src="assets/p-ts.webp" alt="Dashboard weekly dengue chart for Dhaka with CUSUM alert markers"></div>
+      <p class="small">Real output: weekly dengue in Dhaka, triangles are CUSUM alerts (draft run).</p>
+    </div>
+  </div>
+</section>
+
+<!-- 16 -->
+<section class="slide" data-speaker="s4" aria-label="Artefact handling">
+  <h2 data-in>A silent facility is missing data, not zero cases</h2>
+  <div class="cols">
+    <div data-in>
+      <p class="stamp">Illustration</p>
+      <svg id="artefact-ill" viewBox="0 0 640 360" width="640" height="360"></svg>
+    </div>
+    <div data-in>
+      <p>Completeness = reporting facilities ÷ expected.</p>
+      <p>Below 80%: the week is <b>missing</b>. Above it: the count is scaled up by 1 ÷ completeness.</p>
+      <p>Together with onset-week counting in gold, the back-fill spike never reaches the detector.</p>
+    </div>
+  </div>
+  <p class="src">Code: <code>analytics/detection/prepare.py</code>; artefact listed in <code>ground_truth/artefacts.csv</code></p>
+</section>
+
+<!-- 17 -->
+<section class="slide" data-speaker="s4" aria-label="Detection evaluation">
+  <h2 data-in>Picking the threshold against planted outbreaks</h2>
+  <div class="cols">
+    <div data-in>
+      <p>Sweep the threshold. For each value: outbreaks caught, false alerts per district-year, days to detection.</p>
+      <p>Compare with the plain EARS detector on raw counts.</p>
+    </div>
+    <div data-in>
+      <table class="t">
+        <thead><tr><th>Method</th><th class="r">Caught</th><th class="r">False / district-yr</th></tr></thead>
+        <tbody>
+          <tr><td>EARS C2, adjusted</td><td class="r"><span class="pending">pending</span></td><td class="r"><span class="pending">pending</span></td></tr>
+          <tr><td>CUSUM</td><td class="r"><span class="pending">pending</span></td><td class="r"><span class="pending">pending</span></td></tr>
+          <tr><td>Plain EARS</td><td class="r"><span class="pending">pending</span></td><td class="r"><span class="pending">pending</span></td></tr>
+        </tbody>
+      </table>
+      <p class="small" style="margin-top:14px">From <code>analytics/evaluation/run.py</code>. No result file in the repo yet.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 18 -->
+<section class="slide" data-speaker="s4" aria-label="Forecasting">
+  <h2 data-in>A count model a manager can read</h2>
+  <div class="cols">
+    <div data-in>
+      <p class="formula" style="font-size:27px">log μ = season + rain(4–8 wk ago) + temp(4–8 wk ago) + recent level</p>
+      <p>Negative binomial, one per district, for dengue and diarrhoea, horizons 1 to 4 weeks.</p>
+      <p>Backtest: 52 rolling origins. At each one the model sees only the past.</p>
+    </div>
+    <div data-in>
+      <table class="t">
+        <thead><tr><th>Against seasonal naive</th><th class="r">Result</th></tr></thead>
+        <tbody>
+          <tr><td>MAE</td><td class="r"><span class="pending">pending</span></td></tr>
+          <tr><td>80% interval coverage</td><td class="r"><span class="pending">pending</span></td></tr>
+          <tr><td>Relative WIS (&lt; 1 wins)</td><td class="r"><span class="pending">pending</span></td></tr>
+        </tbody>
+      </table>
+      <p class="small" style="margin-top:14px">From <code>analytics/forecast/backtest.py</code>. No result file in the repo yet.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 19 -->
+<section class="slide" data-speaker="s4" aria-label="Allocation model">
+  <h2 data-in>From cases to supplies to a plan</h2>
+  <div class="cols wide-left">
+    <div data-in>
+      <svg viewBox="0 0 760 330" width="760" height="330" aria-label="Demand chain">
+        <g style="color: var(--ink)">
+          <rect class="box" x="0" y="120" width="180" height="90" rx="10"/><text x="20" y="174" font-size="25" font-weight="800">Forecast</text>
+          <rect class="box" x="250" y="120" width="190" height="90" rx="10"/><text x="270" y="160" font-size="25" font-weight="800">Demand</text><text x="270" y="192" font-size="20" class="m">q90, minus stock</text>
+          <rect class="box" x="510" y="0" width="250" height="330" rx="10" style="stroke: var(--sp)"/>
+          <text x="530" y="46" font-size="25" font-weight="800">Need per district</text>
+          <text x="530" y="98" font-size="22">beds</text><text x="530" y="140" font-size="22">IV saline</text><text x="530" y="182" font-size="22">NS1 test kits</text><text x="530" y="224" font-size="22">ORS sachets</text><text x="530" y="266" font-size="22">malaria courses</text>
+          <path class="ln draw" pathLength="1" style="--d:0" d="M180 165H242" marker-end="url(#ah)"/>
+          <path class="ln draw" pathLength="1" style="--d:1" d="M440 165H502" marker-end="url(#ah)"/>
+        </g>
+      </svg>
+    </div>
+    <div data-in>
+      <p class="formula" style="font-size:25px">minimise weighted unmet need<br>budget, transport per division<br>x<sub>d</sub> ≥ α · population share</p>
+      <p>Solved with PuLP and CBC. Every rate lives in one file with its source.</p>
+    </div>
+  </div>
+  <p class="src">Code: <code>analytics/forecast/demand_assumptions.py</code>, <code>analytics/optimise/lp.py</code></p>
+</section>
+
+<!-- 20 -->
+<section class="slide" data-speaker="s4" aria-label="Efficiency and equity">
+  <h2 data-in>The price of fairness</h2>
+  <div class="cols wide-right">
+    <div data-in>
+      <p>At a quarter of the full budget, each step up in α moves supplies from where they help most to where people live.</p>
+      <p>Pure population split meets almost no need.</p>
+    </div>
+    <div data-in>
+      <svg id="curve-chart" viewBox="0 0 760 430" width="760" height="430"></svg>
+    </div>
+  </div>
+  <p class="src">Source: <code>docs/experiments/allocation_curve.csv</code>, draft run (SF 0.05, synthetic climate). Re-run on v1.0 data before recording.</p>
+</section>
+
+<!-- 21 -->
+<section class="slide" data-speaker="s4" aria-label="Preparedness calendar">
+  <h2 data-in>Dengue calendar by division</h2>
+  <svg id="cal-chart" viewBox="0 0 1420 520" width="1420" height="520" data-in></svg>
+  <p class="src">Source: <code>docs/experiments/calendar_summary.csv</code> (STL per division, 5 years), draft run. Rule: stock 3 weeks and campaign 6 weeks before onset.</p>
+</section>
+
+<!-- 22 -->
+<section class="slide" data-speaker="s2" aria-label="Dashboard design">
+  <h2 data-in>Built for a district office laptop</h2>
+  <div class="cols wide-right">
+    <ul data-in>
+      <li>D3 v7 only, no other chart library.</li>
+      <li>Reads small gold summaries, under 10 MB. Never a patient row.</li>
+      <li>Every panel says how fresh its data is.</li>
+    </ul>
+    <div class="shot" data-in><img src="assets/dash-top.webp" alt="EpiScope dashboard: map, weekly chart, seasonal heatmap"></div>
+  </div>
+</section>
+
+<!-- 23 -->
+<section class="slide" data-speaker="s2" aria-label="Linked views">
+  <span class="cue" data-in>Switch to the live dashboard</span>
+  <h2 data-in>One selection, five views</h2>
+  <div class="cols wide-right">
+    <ol class="steps" data-in>
+      <li>Click a district on the map</li>
+      <li>Weekly chart, heatmap, table and allocation follow</li>
+      <li>Drag the time strip: every view follows</li>
+      <li>Forecast band, 80% range</li>
+      <li>What-if: move budget and α</li>
+    </ol>
+    <div class="shot" data-in><img src="assets/dash-ctg.webp" alt="Dashboard after selecting Chattogram: every view shows Chattogram"></div>
+  </div>
+</section>
+
+<!-- 24 -->
+<section class="slide" data-speaker="s2" aria-label="Usability check">
+  <h2 data-in>Two users outside computer science</h2>
+  <div class="cols">
+    <div data-in>
+      <p>Task: find the district that needs help this week, and say how sure the forecast is.</p>
+    </div>
+    <div data-in>
+      <div class="pendbox">Result pending: what they found, and what we changed. No usability record in the repo yet.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 25 -->
+<section class="slide" data-speaker="s2" aria-label="Privacy and ethics">
+  <h2 data-in>Privacy by design, and an equity risk</h2>
+  <div class="cols">
+    <ul data-in>
+      <li>Keyed hash for patient IDs; age in bands.</li>
+      <li>Counts 1 to 4 hidden, with complementary suppression so totals cannot reveal them.</li>
+      <li>k-anonymity check on published tables.</li>
+      <li>Weak reporting looks like good health. The equity floor is one guard against that.</li>
+    </ul>
+    <div data-in>
+      <div class="shot"><img src="assets/p-table.webp" alt="Early warning table with hatched suppressed cells"></div>
+      <p class="small">Hatched cells: suppressed counts under 5.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 26 -->
+<section class="slide" data-speaker="s2" aria-label="Recommendations and limits">
+  <h2 data-in>What we would tell the Ministry</h2>
+  <div class="cols">
+    <ol class="steps" data-in>
+      <li>Dengue supplies in place by week <span class="draft">29</span>, before the season.</li>
+      <li>Treat alerts as a short list; check reporting completeness before acting.</li>
+      <li>Choose α openly, knowing what it costs.</li>
+    </ol>
+    <div data-in>
+      <p class="stamp">Limits</p>
+      <ul>
+        <li>Synthetic data: no real decision yet.</li>
+        <li>Streaming alerts: <span class="pending">status pending</span>.</li>
+        <li>Forecast bands ignore parameter uncertainty, so they are a little narrow.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 27 -->
+<section class="slide" data-speaker="s2" aria-label="Close">
+  <h2 data-in>Thank you</h2>
+  <p class="lede" data-in>Everything shown matches tag <b data-cfg="repo_tag"></b> in our repository.</p>
+  <div class="order" id="chapters" data-in></div>
+</section>
+
+<div class="bar" aria-hidden="false">
+  <div class="who" id="who"><i></i><b></b><span></span></div>
+  <div class="strip" id="strip" aria-hidden="true"></div>
+  <div class="count" id="count"></div>
+  <div class="copy">© 2026 EpiScope team. All rights reserved.</div>
+</div>
+</main>
+<p class="nav-hint">→ / space next, ← back, F fullscreen</p>
+
+<script src="assets/data.js"></script>
+<script src="assets/common.js"></script>
+<script src="script-content.js"></script>
+<script src="assets/deck.js"></script>
+</body>
+</html>

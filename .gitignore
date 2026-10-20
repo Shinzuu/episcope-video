@@ -1,0 +1,5 @@
+node_modules/
+.remember/
+*.log
+BRIEF.md
+HANDOFF.md

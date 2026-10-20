@@ -1,0 +1,37 @@
+{
+  "_note": "Names are the only thing to edit here. Both pages read this file. Confirmed on 2026-10-20.",
+  "group": "[group number]",
+  "repo_tag": "v1.0",
+  "speakers": {
+    "s1": {
+      "name": "Tahsin Ahmed (Rafi)",
+      "short": "Tahsin",
+      "role": "Problem, stakeholders and data",
+      "confirmed": true
+    },
+    "s2": {
+      "name": "Samira",
+      "short": "Samira",
+      "role": "Dashboard, ethics and conclusion",
+      "confirmed": true
+    },
+    "s3": {
+      "name": "Shezan",
+      "short": "Shezan",
+      "role": "Data engineering",
+      "confirmed": true
+    },
+    "s4": {
+      "name": "Rimjhim",
+      "short": "Rimjhim",
+      "role": "Analytics",
+      "confirmed": true
+    }
+  },
+  "order": [
+    "s1",
+    "s3",
+    "s4",
+    "s2"
+  ]
+}
