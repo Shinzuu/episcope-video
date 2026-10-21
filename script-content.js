@@ -19,26 +19,8 @@ window.EPI_SCRIPT = [
   {
     id: "1t", speaker: "s1", title: "Meet our team", slides: [2], chapter: 1, pause: 2,
     paras: [
-      "[NEXT SLIDE] [each person says one line, on camera]",
-      "I'm {n1}. In the project I built outbreak detection and forecasting. Today I start with the problem and the data.",
-    ],
-  },
-  {
-    id: "3t", speaker: "s3", title: "Meet our team", slides: [2], chapter: 1, pause: 1,
-    paras: [
-      "I'm {n3}, the data engineering lead. I built ingestion, the Delta lakehouse and the quality checks.",
-    ],
-  },
-  {
-    id: "4t", speaker: "s4", title: "Meet our team", slides: [2], chapter: 1, pause: 1,
-    paras: [
-      "I'm {n4}. I built the dashboard, and today I'll explain the analytics.",
-    ],
-  },
-  {
-    id: "2t", speaker: "s2", title: "Meet our team", slides: [2], chapter: 1, pause: 2,
-    paras: [
-      "I'm {n2}. I worked on the platform and the evaluation, and I'll show the dashboard.",
+      "[NEXT SLIDE]",
+      "Let me introduce our team. I'm {n1}, and I built outbreak detection and forecasting. {n3} led the data engineering. {n4} built the dashboard. {n2} worked on the platform and the evaluation. I'll start with the problem and the data.",
     ],
   },
   {
