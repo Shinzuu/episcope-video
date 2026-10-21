@@ -2,8 +2,8 @@
 //
 // Markup inside a paragraph:
 //   {s1} {s2} {s3} {s4}  speaker short name from config.json
-//   {{text}}            a number from the 11 Oct SF=0.05 draft run; re-check against the v1.0 run before recording
-//   [[pending: what]]   a result that does not exist yet in the repo; fill in after the run, never guess
+//   {{text}}            a number from a repo file that docs/FINAL-NUMBERS.md does not list; check it before recording
+//   [[pending: what]]   a result that is not final yet (only the hidden-drop drill); fill in, never guess
 // A paragraph that starts with "[" and ends with "]" is a cue (NEXT SLIDE, SHOW, PAUSE), not spoken.
 // `pause` is the seconds of silence the section needs for slide changes and demo moments.
 window.EPI_SCRIPT = [
@@ -22,7 +22,7 @@ window.EPI_SCRIPT = [
     paras: [
       "[NEXT SLIDE]",
       "Every year we deal with dengue, diarrhoea, flu-like illness and malaria. Reports come from all sixty-four districts, but they come late. Some facilities go quiet for weeks. The same patient can show up twice.",
-      "So the Ministry wants four things from us. An early warning when cases rise more than normal. A forecast for the next one to four weeks. A plan to split a fixed stock of supplies. And a calendar that says when to get ready. The users aren't data scientists, so it has to explain itself.",
+      "So the Ministry wants four things from us. An early warning when cases rise more than normal. A forecast for the next one to four weeks. A plan to split a fixed stock of supplies. And a calendar that says when to get ready. The people using it aren't data scientists, so it has to explain itself.",
     ],
   },
   {
@@ -41,7 +41,7 @@ window.EPI_SCRIPT = [
     paras: [
       "[NEXT SLIDE]",
       "Now the data. We can't use real patient records. So the patients are synthetic, but the world around them is real. District borders and populations come from the census, through HDX. Weather comes from the Open-Meteo archive.",
-      "That's why dengue in our data follows rain by a few weeks and peaks around October, the same as the OpenDengue records. We also planted {{35}} outbreaks. Only the evaluation code knows where they are. The detector never sees that file.",
+      "That's why dengue in our data follows rain by a few weeks and peaks around October, the same as the OpenDengue records. We also planted 35 outbreaks. Only the evaluation code knows where they are. The detector never sees that file.",
     ],
   },
   {
@@ -73,7 +73,7 @@ window.EPI_SCRIPT = [
     id: "3c", speaker: "s3", title: "Silver: rules, quarantine, privacy", slides: [10, 11], chapter: 3, pause: 4,
     paras: [
       "[NEXT SLIDE]",
-      "Silver is where data gets trusted. Encounters go through fourteen rules. A failing row isn't deleted. It goes to a quarantine table with every reason code it broke, so someone can check it later. In our draft run that was {{66,979}} rows, about {{four percent}}.",
+      "Silver is where data gets trusted. Encounters go through fourteen rules. A failing row isn't deleted. It goes to a quarantine table with every reason code it broke. At full scale that was 1,367,440 rows, 4.0 percent.",
       "[NEXT SLIDE]",
       "The patient ID never gets past this step. We replace it with an HMAC-SHA256 keyed hash, built from Spark's own sha2 function, so there's no slow Python code. The key lives in a .env file outside Git.",
       "Clean rows go in with a Delta MERGE on encounter ID. A row is replaced only if the new copy has a later report date. So a re-run changes nothing, and a late record moves into its correct week.",
@@ -83,16 +83,16 @@ window.EPI_SCRIPT = [
     id: "3d", speaker: "s3", title: "Gold and lineage", slides: [12], chapter: 3, pause: 2,
     paras: [
       "[NEXT SLIDE]",
-      "Gold counts cases by the week of onset, not the week of report. That matters for {s4}'s detector. When the silent facility back-fills, its cases land on the weeks they happened, so there's no fake spike. Every gold row keeps the bronze batch IDs it came from, so any number on the dashboard can be traced back to its files.",
+      "Gold counts cases by the week of onset, not the week of report. When the silent facility back-fills, its cases land on the weeks they happened, so there's no fake spike. Every gold row keeps the bronze batch IDs it came from, so any number on the dashboard can be traced back to its files.",
     ],
   },
   {
     id: "3e", speaker: "s3", title: "Live run: new drop, re-run, quarantine", slides: [13], chapter: 3, pause: 35,
     paras: [
       "[NEXT SLIDE] [SHOW terminal with the clock visible; git describe --tags shows v1.0]",
-      "Here's the instructor's test. I make a new fourteen-day drop with a seed the pipeline has never seen.",
+      "I make a new fourteen-day drop with a seed the pipeline has never seen.",
       "[SHOW make drop DROP_SEED=<new seed>, then make bronze silver gold analytics serve; speed up, keep timestamps]",
-      "It finds the new files as one new batch. In our drill that added {{8,292}} rows.",
+      "It finds the new files as one new batch. In our final drill that added [[pending: rows added by the drop]] rows.",
       "[SHOW make bronze silver gold again, then the duplicate-count query]",
       "Now I run it again. Bronze finds nothing new, and the duplicate count is zero.",
       "[SHOW one silver.quarantine row with DQ_ORPHAN_FACILITY, then one gold row's batch_ids in the ingest log]",
@@ -103,8 +103,8 @@ window.EPI_SCRIPT = [
     id: "3f", speaker: "s3", title: "Spark choices and scaling", slides: [14], chapter: 3, pause: 2,
     paras: [
       "[NEXT SLIDE]",
-      "Small tables are broadcast, so the big encounter table never shuffles for a join. We partition by year only, because finer keys would make thousands of tiny files. And forecasts and allocations run as a daily batch, because they're weekly decisions.",
-      "At full scale the target is forty-five minutes. Our runs took [[pending: minutes at SF 0.25, 0.5 and 1]]. That's my layer. {s4}, over to you.",
+      "Small tables are broadcast, so the big encounter table never shuffles for a join. We partition by year only, because finer keys would make thousands of tiny files. Forecasts and allocations run daily, because they're weekly decisions.",
+      "At full scale the limit is forty-five minutes. Our timed run took 28.3 minutes. Checking the rules once, not once per output, cut silver's Spark time from 325 to 214 seconds at quarter scale. That's my layer. {s4}, over to you.",
     ],
   },
 
@@ -130,7 +130,7 @@ window.EPI_SCRIPT = [
     paras: [
       "[NEXT SLIDE]",
       "To pick the threshold, we swept it against the planted outbreaks. For each value we measure how many outbreaks we catch against how many false alarms we raise. That's the first conflict, in numbers.",
-      "At our chosen point we catch [[pending: sensitivity]] of the outbreaks with [[pending: false alerts per district-year]] false alerts per district each year. The plain detector gets [[pending: naive result]].",
+      "At a threshold of 4.0, EARS C2 catches 33 of the 35 outbreaks, with 1.89 false alerts per district each year. Half of them it catches within 8 days. CUSUM catches 32, with 1.82 false alerts.",
     ],
   },
   {
@@ -138,23 +138,23 @@ window.EPI_SCRIPT = [
     paras: [
       "[NEXT SLIDE]",
       "For forecasts we fit a negative binomial model for each district, for dengue and diarrhoea. It uses rain and temperature from four to eight weeks earlier. Why not machine learning? A hospital manager can read this model: more rain now, more dengue in a month.",
-      "We tested it with a rolling backtest over the last fifty-two weeks. At each week the model sees only data up to that week. Against the seasonal naive baseline, our interval score ratio is [[pending: relative WIS]], where below one means we win.",
+      "We tested it with a rolling backtest over the last fifty-two weeks. At each week the model sees only data up to that week. Against the seasonal naive baseline, our interval score ratio is 0.84, where below one means we win. It's 0.89 for dengue and 0.72 for diarrhoea. The average error drops from 133 to 113.",
     ],
   },
   {
     id: "4e", speaker: "s4", title: "From forecasts to supplies", slides: [19, 20], chapter: 4, pause: 4,
     paras: [
       "[NEXT SLIDE]",
-      "Forecasts become supplies. We turn expected cases into beds, saline, test kits, ORS and malaria drugs. Every rate sits in one file with its source. Then a linear program splits the budget. It keeps unmet need as low as it can, within the budget and transport limits. Alpha says every district gets at least alpha times its population share.",
+      "We turn expected cases into beds, saline, test kits, ORS and malaria drugs. Then a linear program splits the budget. It keeps unmet need as low as it can, within the budget and transport limits. Alpha says every district gets at least alpha times its population share.",
       "[NEXT SLIDE]",
-      "This curve is the price of fairness. In our draft run, at a quarter of the full budget, alpha zero meets {{25}} percent of need. Alpha point two drops it to {{20}}. Splitting only by population meets about {{0.24}} percent, because it sends supplies where nobody needs them.",
+      "At half the budget, the plan meets 67.8 percent of need. A plain population split meets only 34.4 percent. Our first version sent almost everything to two districts. We found three faults and fixed them. Now the plan reaches all sixty-four districts, and the top five get only 22 percent. This curve shows the price of fairness: raising alpha lowers need met, so at this budget we recommend alpha zero.",
     ],
   },
   {
     id: "4f", speaker: "s4", title: "Preparedness calendar", slides: [21], chapter: 4, pause: 2,
     paras: [
       "[NEXT SLIDE]",
-      "Last, the calendar. We split each division's history into trend and season. Dengue starts rising around week {{32}} and peaks around week {{38}}. So supplies should be in place by week {{29}}, and the campaign should start by week {{26}}, in late June. Over to {s2}.",
+      "Last, the calendar. We split each division's history into trend and season. Dengue starts rising around week {{32}} and peaks around week {{39}}. So supplies should be in place by week {{29}}, and the campaign should start by week {{26}}, in late June. Over to {s2}.",
     ],
   },
 
@@ -164,7 +164,7 @@ window.EPI_SCRIPT = [
     paras: [
       "[NEXT SLIDE] [name on screen]",
       "Thank you, {s4}. I'm {s2}. I'll show the dashboard, then talk about privacy and what we recommend.",
-      "The dashboard is built with D3 version seven. It reads only small summary files from gold, under ten megabytes in total. It never loads a patient row. That keeps it fast on a district office laptop, and there's nothing private in the browser to leak. Every panel also says how fresh its data is.",
+      "The dashboard is built with D3 version seven. It reads only small summary files from gold, under ten megabytes in total. It never loads a patient row. That keeps it fast on a district office laptop, and there's nothing private in the browser to leak.",
     ],
   },
   {
@@ -177,14 +177,14 @@ window.EPI_SCRIPT = [
       "[NEXT SLIDE] [then back to the browser: drag on the lower time strip]",
       "If I drag here, every view follows the new time range. The blue band is the forecast with its eighty percent range. We show the band, not one line, because a planner needs to know how sure we are.",
       "[SHOW the hatched cells, then move the budget and alpha sliders]",
-      "Striped cells are hidden counts under five. And in the what-if panel, when I change the budget or alpha, the plan updates at once. The browser doesn't solve anything. We solved the plan ahead of time for each budget and alpha on a grid, and the page just looks up the answer. That's why it's instant on a slow laptop.",
+      "Striped cells are hidden counts under five. And in the what-if panel, when I change the budget or alpha, the plan updates at once. The browser doesn't solve anything. We solved the plan ahead of time for each budget and alpha on a grid, and the page just looks up the answer.",
     ],
   },
   {
     id: "2c", speaker: "s2", title: "Usability check", slides: [25], chapter: 5, pause: 2,
     paras: [
       "[NEXT SLIDE]",
-      "We asked two people outside computer science to use it. Each got one task: find the district that needs help this week, and say how sure the forecast is. [[pending: what they struggled with]]. [[pending: what we changed]].",
+      "We checked it with simulated persona walkthroughs run with AI agents. Three agents each played a non-technical role and tried five tasks on the real dashboard. In round one they finished 0 of 15 tasks. After our fixes, round two finished 13 of 15. Of the 48 problems found, 26 are fixed, 20 partly, and 2 not yet.",
     ],
   },
   {
@@ -200,7 +200,7 @@ window.EPI_SCRIPT = [
     paras: [
       "[NEXT SLIDE]",
       "So what would we tell the Ministry? Get dengue supplies in place by week {{29}}, before the season starts. Treat alerts as a short list to check, and look at reporting completeness before acting on a spike. And choose alpha openly, knowing what it costs in unmet need.",
-      "Our limits. The data is synthetic, so none of these numbers should drive a real decision yet. [[pending: streaming status; pipeline/stream.py was in progress on 20 Oct]]. And the forecast bands ignore uncertainty in the model's own parameters, so they're a bit too narrow.",
+      "Our limits. The data is synthetic, so none of these numbers should drive a real decision yet. Streaming alerts take about 219.2 seconds at full scale, so they're fast, not instant. And the forecast bands ignore uncertainty in the model's own parameters, so they're a bit too narrow.",
     ],
   },
   {

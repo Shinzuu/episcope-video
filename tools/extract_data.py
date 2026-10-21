@@ -5,8 +5,7 @@ re-synced after the v1.0 run with:
 
     python3 tools/extract_data.py <path to the EpiScope repo>
 
-Files that do not exist yet (detection evaluation, backtest, scaling) are reported as missing and the slides
-show "[result pending]" for them.
+Headline numbers are not extracted: they are typed into the slides and script from docs/FINAL-NUMBERS.md.
 """
 
 import csv
@@ -23,17 +22,11 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets" / "data.js"
 SOURCES = {
     "dq": "dashboard/data/dq.json",
     "meta": "dashboard/data/meta.json",
-    "drill": "docs/experiments/hidden_drop_drill.json",
-    "dedup": "docs/experiments/dq4_patient_dedup.json",
     "curve": "docs/experiments/allocation_curve.csv",
     "calendar": "docs/experiments/calendar_summary.csv",
-    "outbreaks": "ground_truth/outbreaks.csv",
     "districts": "data/reference/districts.csv",
     "weekly": "dashboard/data/weekly.json",
     "gen_config": "generator/config.py",
-    "detection": "docs/experiments/detection_tradeoff.json",
-    "backtest": "docs/experiments/backtest_summary.json",
-    "scaling": "docs/experiments/scaling.json",
 }
 
 
@@ -48,17 +41,13 @@ def main():
 
     data["meta"] = json.loads((REPO / SOURCES["meta"]).read_text())
     enc = [b for b in json.loads((REPO / SOURCES["dq"]).read_text()) if b["source"] == "encounters"][0]
-    data["dq"] = {k: enc[k] for k in ("rows_in", "rows_clean", "rows_quarantined", "rules")}
+    # Rule pass rates only. Headline counts (rows, quarantined, drill, detection, backtest, allocation) are typed
+    # into the slides from docs/FINAL-NUMBERS.md, which is the single source for them.
+    data["dq"] = {"rules": enc["rules"]}
 
-    drill = json.loads((REPO / SOURCES["drill"]).read_text())
-    data["drill"] = {k: drill[k] for k in ("rows_added", "duplicates_after_rerun", "sf", "seconds", "before",
-                                           "after", "rerun", "export", "checks")}
-    dedup = json.loads((REPO / SOURCES["dedup"]).read_text())
-    data["dedup"] = {k: dedup[k] for k in ("flagged_pairs", "precision", "recall_in_window")}
-
-    curve = [r for r in rows(REPO / SOURCES["curve"]) if r["budget_level"] == "0.25"]
+    curve = [r for r in rows(REPO / SOURCES["curve"]) if float(r["budget_level"]) == 0.5]
     data["curve"] = {
-        "budget_level": 0.25,
+        "budget_level": 0.5,
         "lp": [{"alpha": float(r["alpha"]), "pct": float(r["pct_need_met"]), "min_cov": float(r["min_district_coverage"])}
                for r in curve if r["kind"] == "lp"],
         "baseline_pct": [float(r["pct_need_met"]) for r in curve if r["kind"] != "lp"][0],
@@ -71,12 +60,6 @@ def main():
          "campaign": int(r["campaign_by_week"]), "no_season": r["no_seasonality"] == "True"}
         for r in rows(REPO / SOURCES["calendar"]) if r["disease"] in ("dengue", "diarrhoea")
     ]
-
-    ob = rows(REPO / SOURCES["outbreaks"])
-    data["outbreaks"] = {"total": len(ob), "by_disease": {}, "by_shape": {}}
-    for r in ob:
-        data["outbreaks"]["by_disease"][r["disease"]] = data["outbreaks"]["by_disease"].get(r["disease"], 0) + 1
-        data["outbreaks"]["by_shape"][r["shape"]] = data["outbreaks"]["by_shape"].get(r["shape"], 0) + 1
 
     # Injected defect rates: the *_RATE constants in the generator config
     data["defects"] = {m.group(1): float(m.group(2)) for m in

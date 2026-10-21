@@ -79,14 +79,8 @@
     el(svg, "path", { d: `${d}L1600 330L0 330Z`, fill: "var(--teal)", opacity: 0.1 });
     el(svg, "path", { d, class: "ln draw", pathLength: 1, style: "stroke: var(--teal); stroke-width: 4; --d:0" });
     el(svg, "text", { x: 1580, y: 24, "font-size": 20, "text-anchor": "end", class: "m" },
-      `Weekly dengue cases, all districts, ${pts[0][0].slice(0, 7)} to ${pts[pts.length - 1][0].slice(0, 7)} (pipeline output, draft run)`);
+      `Weekly dengue cases, all districts, ${pts[0][0].slice(0, 7)} to ${pts[pts.length - 1][0].slice(0, 7)} (pipeline output, SF=0.25 build of 21 Oct)`);
   })();
-
-  // planted outbreaks by disease
-  hbars(document.getElementById("ob-chart"),
-    Object.entries(D.outbreaks.by_disease).sort((a, b) => b[1] - a[1]).map(([k, v]) => [k === "ili" ? "flu-like (ILI)" : k, v]),
-    { w: 620, label: 200, fmt: (v) => v });
-  el(document.getElementById("ob-chart"), "text", { x: 200, y: 240, "font-size": 24, "font-weight": 800 }, `${D.outbreaks.total} outbreaks in total`);
 
   // injected defects
   const DEF = { DUP_RATE: "repeated encounter ID", REPEAT_PATIENT_RATE: "same patient again", ORPHAN_RATE: "unknown facility",
@@ -97,27 +91,12 @@
     { w: 720, label: 300, fmt: (v) => `${(v * 100).toFixed(1)}%` });
 
   // DQ rule failures (1 - pass rate)
-  document.getElementById("k-quar").textContent = fmtInt(D.dq.rows_quarantined);
-  document.getElementById("k-quar-pct").textContent = `${((D.dq.rows_quarantined / D.dq.rows_in) * 100).toFixed(1)}%`;
-  document.getElementById("k-in").textContent = fmtInt(D.dq.rows_in);
   const RULE = { DQ_DUP_ENCOUNTER: "duplicate encounter", DQ_BAD_ICD10: "bad ICD-10", DQ_INVALID_AGE: "invalid age",
     DQ_INVALID_SEX: "invalid sex", DQ_ONSET_AFTER_REPORT: "onset after report", DQ_ORPHAN_FACILITY: "orphan facility",
     DQ_NULL_REQUIRED: "required field empty" };
   hbars(document.getElementById("dq-chart"),
     Object.entries(D.dq.rules).map(([k, v]) => [RULE[k] || k, 1 - v]).filter((r) => r[1] > 0.0002).sort((a, b) => b[1] - a[1]),
     { w: 720, label: 270, fmt: (v) => `${(v * 100).toFixed(2)}%` });
-
-  // drill: rows added by the new drop and by the re-run
-  (() => {
-    const dr = D.drill;
-    const svg = document.getElementById("drill-chart");
-    hbars(svg, [["new drop", dr.after.silver_rows - dr.before.silver_rows], ["same drop again", dr.rerun.silver_rows - dr.after.silver_rows]],
-      { w: 640, label: 200, fmt: (v) => `+${fmtInt(v)}` });
-    el(svg, "text", { x: 200, y: 150, "font-size": 24 }, `duplicate IDs after re-run: ${dr.duplicates_after_rerun}`);
-    el(svg, "text", { x: 200, y: 190, "font-size": 24 }, `dashboard export: ${(dr.export.bytes / 1e6).toFixed(2)} MB, no counts 1 to 4`);
-    document.getElementById("drill-note").textContent =
-      `docs/experiments/hidden_drop_drill.json: clean clone, SF ${dr.sf}, ${Math.round(dr.seconds / 60)} min end to end. Re-run on v1.0.`;
-  })();
 
   // illustration: report week vs onset week
   (() => {
@@ -154,9 +133,9 @@
   (() => {
     const svg = document.getElementById("curve-chart");
     const c = D.curve, W = 760, H = 430, L = 90, B = 360, T = 20, R = 40;
-    const max = Math.ceil(Math.max(...c.lp.map((p) => p.pct)) / 5) * 5;
+    const max = Math.ceil(Math.max(...c.lp.map((p) => p.pct)) / 10) * 10;
     const x = (a) => L + a * (W - L - R), y = (v) => B - (v / max) * (B - T);
-    for (let v = 0; v <= max; v += 5) {
+    for (let v = 0; v <= max; v += 10) {
       el(svg, "line", { x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: "var(--rule)", "stroke-width": 1.5 });
       el(svg, "text", { x: L - 12, y: y(v) + 7, "font-size": 20, "text-anchor": "end", class: "m" }, `${v}%`);
     }
@@ -165,11 +144,11 @@
     el(svg, "text", { x: L - 80, y: T - 30, "font-size": 20, class: "m" }, "share of need met");
     el(svg, "path", { d: c.lp.map((p, i) => `${i ? "L" : "M"}${x(p.alpha)} ${y(p.pct)}`).join(""), class: "ln draw", pathLength: 1, style: "stroke: var(--sp); stroke-width: 5; --d:0" });
     el(svg, "line", { x1: L, x2: W - R, y1: y(c.baseline_pct), y2: y(c.baseline_pct), stroke: "var(--alert)", "stroke-width": 3, "stroke-dasharray": "8 6" });
-    el(svg, "text", { x: W - R, y: y(c.baseline_pct) - 12, "font-size": 20, "text-anchor": "end", fill: "var(--alert)" }, `population split: ${c.baseline_pct.toFixed(2)}%`);
-    for (const a of [0, 0.2]) {
+    el(svg, "text", { x: W - R, y: y(c.baseline_pct) - 12, "font-size": 20, "text-anchor": "end", fill: "var(--alert)" }, `population split: ${c.baseline_pct.toFixed(1)}%`);
+    for (const a of [0]) {
       const p = c.lp.find((q) => Math.abs(q.alpha - a) < 1e-9);
       el(svg, "circle", { cx: x(a), cy: y(p.pct), r: 9, fill: "var(--sp)" });
-      el(svg, "text", { x: x(a) + 18, y: y(p.pct) + 30, "font-size": 24, "font-weight": 800 }, `α ${a.toFixed(1)}: ${p.pct.toFixed(0)}%`);
+      el(svg, "text", { x: x(a) + 18, y: y(p.pct) + 30, "font-size": 24, "font-weight": 800 }, `α ${a.toFixed(1)}: ${p.pct.toFixed(1)}%`);
     }
     el(svg, "text", { x: W - R, y: T + 20, "font-size": 20, "text-anchor": "end", class: "m" }, `budget = ${c.budget_level} × full need`);
   })();

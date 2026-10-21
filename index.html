@@ -162,7 +162,7 @@
   <h1 data-in>EpiScope</h1>
   <p class="lede" data-in>Catching outbreaks early in Bangladesh, and planning supplies before the season peaks.</p>
   <p class="meta" data-in><span data-cfg="team"></span></p>
-  <svg class="curve" id="title-curve" viewBox="0 0 1600 330" preserveAspectRatio="none" aria-label="Weekly dengue cases, all districts, from the pipeline's draft run"></svg>
+  <svg class="curve" id="title-curve" viewBox="0 0 1600 330" preserveAspectRatio="none" aria-label="Weekly dengue cases, all districts, from the pipeline's SF=0.25 build of 21 Oct"></svg>
 </section>
 
 <!-- 2 -->
@@ -182,7 +182,7 @@
     <div data-in><h3>Allocate</h3><p>Split a fixed national stock of supplies across districts.</p></div>
     <div data-in><h3>Prepare</h3><p>A calendar of when to stock up and when to start campaigns.</p></div>
   </div>
-  <p class="verdict" data-in>The users are not data scientists. Every output has to explain itself.</p>
+  <p class="verdict" data-in>The people using it are not data scientists. Every output has to explain itself.</p>
 </section>
 
 <!-- 4 -->
@@ -221,8 +221,9 @@
     </div>
     <div data-in>
       <p class="stamp d">Planted outbreaks the detector never sees</p>
-      <svg id="ob-chart" viewBox="0 0 620 330" width="620" height="330"></svg>
-      <p class="small">Source: <code>ground_truth/outbreaks.csv</code>, draft run (seed 42)</p>
+      <div class="big num" style="font-size:160px">35</div>
+      <p>Found by EARS C2: <b>33</b>. Found by CUSUM: <b>32</b>.</p>
+      <p class="small">Source: <code>docs/FINAL-NUMBERS.md</code> (<code>detection_tradeoff.json</code>), final SF=1 build, seed 42</p>
     </div>
   </div>
 </section>
@@ -352,8 +353,8 @@
       <p><b>14 rules</b> for encounters, <b>7</b> each for facilities and stock.</p>
       <p>A failing row is never deleted. It goes to quarantine with every reason code it broke.</p>
       <div class="kpis" style="grid-template-columns:1fr 1fr">
-        <div><div class="big num" id="k-quar"></div><p class="small">rows quarantined, draft run</p></div>
-        <div><div class="big num" id="k-quar-pct"></div><p class="small">of <span id="k-in"></span> encounter rows</p></div>
+        <div><div class="big num">1,367,440</div><p class="small">rows quarantined at SF=1</p></div>
+        <div><div class="big num">4.0%</div><p class="small">of 34,136,930 encounter rows</p></div>
       </div>
     </div>
     <div data-in>
@@ -361,7 +362,7 @@
       <svg id="dq-chart" viewBox="0 0 720 400" width="720" height="400"></svg>
     </div>
   </div>
-  <p class="src">Source: <code>gold.dq_report</code> via <code>dashboard/data/dq.json</code>, draft run of 11 Oct (SF 0.05). Re-check against v1.0.</p>
+  <p class="src">Counts: <code>docs/FINAL-NUMBERS.md</code> (<code>sf1_final_run.json</code>). Rule chart: <code>dashboard/data/dq.json</code>, SF=0.25 build of 21 Oct.</p>
 </section>
 
 <!-- 11 -->
@@ -425,9 +426,8 @@
       <li>A gold row's batch IDs in the ingest log</li>
     </ol>
     <div data-in>
-      <p class="stamp d">Hidden-drop drill, silver rows</p>
-      <svg id="drill-chart" viewBox="0 0 640 330" width="640" height="330"></svg>
-      <p class="small" id="drill-note"></p>
+      <p class="stamp d">Hidden-drop drill, final run on HEAD</p>
+      <div class="pendbox">Result pending: rows added, duplicates after re-run, export size. From <code>docs/experiments/hidden_drop_drill.json</code>.</div>
     </div>
   </div>
 </section>
@@ -446,12 +446,13 @@
       <table class="t">
         <thead><tr><th>Scale factor</th><th class="r">Runtime</th></tr></thead>
         <tbody>
-          <tr><td>0.25</td><td class="r"><span class="pending">result pending</span></td></tr>
-          <tr><td>0.5</td><td class="r"><span class="pending">result pending</span></td></tr>
-          <tr><td>1 (target 45 min)</td><td class="r"><span class="pending">result pending</span></td></tr>
+          <tr><td>0.25</td><td class="r">15.4 min</td></tr>
+          <tr><td>0.5</td><td class="r">20.4 min</td></tr>
+          <tr><td>1 (limit 45 min)</td><td class="r"><b>28.3 min, pass</b></td></tr>
         </tbody>
       </table>
-      <p class="small" style="margin-top:14px">From <code>scripts/scaling.sh</code>, written to <code>docs/experiments/scaling.json</code>. Not run yet.</p>
+      <p class="small" style="margin-top:14px">Silver: rules checked once, 325 s to 214 s Spark time at SF=0.25, outputs identical.
+      Backtest: 1 task to 64, 325 s to 165 s. Source: <code>docs/FINAL-NUMBERS.md</code>.</p>
     </div>
   </div>
 </section>
@@ -461,14 +462,14 @@
   <h2 data-in>Two detectors on seasonally adjusted counts</h2>
   <div class="cols">
     <div data-in>
-      <p><b>EARS C2</b>: this week against weeks 3 to 9 back. Alarm when z &gt; 3.</p>
+      <p><b>EARS C2</b>: this week against weeks 3 to 9 back. Alarm when z &gt; 4.0.</p>
       <p class="formula">z = (y − s·m) / σ</p>
-      <p><b>CUSUM</b>: S = max(0, S + z − 0.5), alarm when S &gt; 5. It adds up small, steady excess.</p>
+      <p><b>CUSUM</b>: S = max(0, S + z − 0.5), alarm when S &gt; 6.5. It adds up small, steady excess.</p>
       <p class="small">Farrington needs about five years before its first test week. That is all the history we have.</p>
     </div>
     <div data-in>
-      <div class="shot"><img src="assets/p-ts.webp" alt="Dashboard weekly dengue chart for Dhaka with CUSUM alert markers"></div>
-      <p class="small">Real output: weekly dengue in Dhaka, triangles are CUSUM alerts (draft run).</p>
+      <div class="shot"><img src="assets/p-ts.webp" alt="Dashboard weekly dengue chart for Dhaka with EARS C2 alert markers"></div>
+      <p class="small">Real output: weekly dengue in Dhaka, triangles are EARS C2 alerts (SF=0.25 build, 21 Oct).</p>
     </div>
   </div>
 </section>
@@ -496,18 +497,17 @@
   <div class="cols">
     <div data-in>
       <p>Sweep the threshold. For each value: outbreaks caught, false alerts per district-year, days to detection.</p>
-      <p>Compare with the plain EARS detector on raw counts.</p>
+      <p>Chosen points: EARS C2 threshold 4.0; CUSUM k 0.5, h 6.5.</p>
     </div>
     <div data-in>
       <table class="t">
-        <thead><tr><th>Method</th><th class="r">Caught</th><th class="r">False / district-yr</th></tr></thead>
+        <thead><tr><th>Method</th><th class="r">Caught</th><th class="r">False / district-yr</th><th class="r">Median days</th><th class="r">PPV</th></tr></thead>
         <tbody>
-          <tr><td>EARS C2, adjusted</td><td class="r"><span class="pending">pending</span></td><td class="r"><span class="pending">pending</span></td></tr>
-          <tr><td>CUSUM</td><td class="r"><span class="pending">pending</span></td><td class="r"><span class="pending">pending</span></td></tr>
-          <tr><td>Plain EARS</td><td class="r"><span class="pending">pending</span></td><td class="r"><span class="pending">pending</span></td></tr>
+          <tr><td>EARS C2</td><td class="r">33 of 35 (0.94)</td><td class="r">1.89</td><td class="r">8</td><td class="r">0.15</td></tr>
+          <tr><td>CUSUM</td><td class="r">32 of 35 (0.91)</td><td class="r">1.82</td><td class="r">9.5</td><td class="r">0.25</td></tr>
         </tbody>
       </table>
-      <p class="small" style="margin-top:14px">From <code>analytics/evaluation/run.py</code>. No result file in the repo yet.</p>
+      <p class="small" style="margin-top:14px">EARS C2 catches 91% within 14 days. Source: <code>docs/FINAL-NUMBERS.md</code> (<code>detection_tradeoff.json</code>).</p>
     </div>
   </div>
 </section>
@@ -525,12 +525,13 @@
       <table class="t">
         <thead><tr><th>Against seasonal naive</th><th class="r">Result</th></tr></thead>
         <tbody>
-          <tr><td>MAE</td><td class="r"><span class="pending">pending</span></td></tr>
-          <tr><td>80% interval coverage</td><td class="r"><span class="pending">pending</span></td></tr>
-          <tr><td>Relative WIS (&lt; 1 wins)</td><td class="r"><span class="pending">pending</span></td></tr>
+          <tr><td>MAE (model vs naive)</td><td class="r">113 vs 133</td></tr>
+          <tr><td>80% interval coverage</td><td class="r">0.79 vs 0.77</td></tr>
+          <tr><td>Relative WIS (&lt; 1 wins)</td><td class="r"><b>0.84</b></td></tr>
+          <tr><td>dengue / diarrhoea</td><td class="r">0.89 / 0.72</td></tr>
         </tbody>
       </table>
-      <p class="small" style="margin-top:14px">From <code>analytics/forecast/backtest.py</code>. No result file in the repo yet.</p>
+      <p class="small" style="margin-top:14px">Source: <code>docs/FINAL-NUMBERS.md</code> (<code>backtest_metrics.csv</code>).</p>
     </div>
   </div>
 </section>
@@ -565,21 +566,21 @@
   <h2 data-in>The price of fairness</h2>
   <div class="cols wide-right">
     <div data-in>
-      <p>At a quarter of the full budget, each step up in α moves supplies from where they help most to where people live.</p>
-      <p>Pure population split meets almost no need.</p>
+      <p>At half the budget: <b>67.8%</b> of need met, against <b>34.4%</b> for a population split. Recommended α = 0.</p>
+      <p>Spread across all 64 districts: top-5 share 0.22, Gini 0.27 (before the fix: 1.00 and 0.98).</p>
     </div>
     <div data-in>
       <svg id="curve-chart" viewBox="0 0 760 430" width="760" height="430"></svg>
     </div>
   </div>
-  <p class="src">Source: <code>docs/experiments/allocation_curve.csv</code>, draft run (SF 0.05, synthetic climate). Re-run on v1.0 data before recording.</p>
+  <p class="src">Source: <code>docs/FINAL-NUMBERS.md</code> (<code>allocation_summary.json</code>, <code>allocation_diagnosis.md</code>); curve from <code>allocation_curve.csv</code>.</p>
 </section>
 
 <!-- 21 -->
 <section class="slide" data-speaker="s4" aria-label="Preparedness calendar">
   <h2 data-in>Dengue calendar by division</h2>
   <svg id="cal-chart" viewBox="0 0 1420 520" width="1420" height="520" data-in></svg>
-  <p class="src">Source: <code>docs/experiments/calendar_summary.csv</code> (STL per division, 5 years), draft run. Rule: stock 3 weeks and campaign 6 weeks before onset.</p>
+  <p class="src">Source: <code>docs/experiments/calendar_summary.csv</code> (STL per division, 5 years). Rule: stock 3 weeks and campaign 6 weeks before onset.</p>
 </section>
 
 <!-- 22 -->
@@ -624,14 +625,22 @@
 </section>
 
 <!-- 25 -->
-<section class="slide" data-speaker="s2" aria-label="Usability check">
-  <h2 data-in>Two users outside computer science</h2>
+<section class="slide" data-speaker="s2" aria-label="Persona walkthroughs">
+  <h2 data-in>Simulated persona walkthroughs run with AI agents</h2>
   <div class="cols">
     <div data-in>
-      <p>Task: find the district that needs help this week, and say how sure the forecast is.</p>
+      <p>Three AI agents, each briefed as a non-technical persona, tried five tasks each on the real dashboard. Not a test with real people.</p>
     </div>
     <div data-in>
-      <div class="pendbox">Result pending: what they found, and what we changed. No usability record in the repo yet.</div>
+      <table class="t">
+        <tbody>
+          <tr><td>Round 1</td><td class="r">0 of 15 tasks done</td></tr>
+          <tr><td>Round 2, after fixes</td><td class="r"><b>13 of 15</b></td></tr>
+          <tr><td>Problems found</td><td class="r">48</td></tr>
+          <tr><td>Fixed / partly / not</td><td class="r">26 / 20 / 2</td></tr>
+        </tbody>
+      </table>
+      <p class="small" style="margin-top:14px">Source: <code>docs/FINAL-NUMBERS.md</code> (<code>docs/usability/</code>).</p>
     </div>
   </div>
 </section>
@@ -658,7 +667,7 @@
   <h2 data-in>What we would tell the Ministry</h2>
   <div class="cols">
     <ol class="steps" data-in>
-      <li>Dengue supplies in place by week <span class="draft">29</span>, before the season.</li>
+      <li>Dengue supplies in place by week 29, before the season.</li>
       <li>Treat alerts as a short list; check reporting completeness before acting.</li>
       <li>Choose α openly, knowing what it costs.</li>
     </ol>
@@ -666,7 +675,7 @@
       <p class="stamp">Limits</p>
       <ul>
         <li>Synthetic data: no real decision yet.</li>
-        <li>Streaming alerts: <span class="pending">status pending</span>.</li>
+        <li>Streaming alerts take 219.2 s at full scale: fast, not instant.</li>
         <li>Forecast bands ignore parameter uncertainty, so they are a little narrow.</li>
       </ul>
     </div>

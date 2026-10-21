@@ -71,8 +71,8 @@
 <main>
   <div class="key">
     <p>Times assume 110 words a minute plus pauses for slide changes and demos. Read slowly; pauses are fine.</p>
-    <p><span class="draft">Shaded numbers</span> come from the 11 Oct draft run. Check them against the v1.0 run before recording.</p>
-    <p><span class="pending">Dashed boxes</span> are results that don't exist yet. Fill them in after the run; never guess.</p>
+    <p>Numbers match <code>docs/FINAL-NUMBERS.md</code> in the project repo. <span class="draft">Shaded numbers</span> (calendar weeks) come from a repo file that table does not list.</p>
+    <p><span class="pending">Dashed boxes</span> are results that are not final yet (only the hidden-drop drill). Never guess them.</p>
     <p>Slides: <a href="index.html">open the deck</a>. Right arrow moves to the next slide.</p>
   </div>
   <div id="sections"></div>
@@ -91,7 +91,7 @@
   const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
   document.getElementById("total").textContent = `${EPI.fmt(total)} total`;
 
-  // text markup: names, draft numbers, pending results
+  // text markup: names, unlisted numbers, pending results
   function render(p) {
     let h = esc(p);
     h = h.replace(/\{(s[1-4])\}/g, (_, id) => esc(sp(id).short));
