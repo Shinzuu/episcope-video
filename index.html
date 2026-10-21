@@ -426,8 +426,17 @@
       <li>A gold row's batch IDs in the ingest log</li>
     </ol>
     <div data-in>
-      <p class="stamp d">Hidden-drop drill, final run on HEAD</p>
-      <div class="pendbox">Result pending: rows added, duplicates after re-run, export size. From <code>docs/experiments/hidden_drop_drill.json</code>.</div>
+      <p class="stamp">Hidden-drop drill on the final code</p>
+      <table class="t">
+        <tbody>
+          <tr><td>Drop seed</td><td class="r">4675</td></tr>
+          <tr><td>Rows added to silver</td><td class="r"><b>+8,888</b></td></tr>
+          <tr><td>Duplicates after re-run</td><td class="r"><b>0</b></td></tr>
+          <tr><td>Export</td><td class="r">9.76 MB</td></tr>
+          <tr><td>Whole drill</td><td class="r">28.6 min, pass</td></tr>
+        </tbody>
+      </table>
+      <p class="small" style="margin-top:14px">Clean clone, SF=0.05. Source: <code>docs/FINAL-NUMBERS.md</code> (<code>hidden_drop_drill.json</code>).</p>
     </div>
   </div>
 </section>
@@ -449,6 +458,7 @@
           <tr><td>0.25</td><td class="r">15.4 min</td></tr>
           <tr><td>0.5</td><td class="r">20.4 min</td></tr>
           <tr><td>1 (limit 45 min)</td><td class="r"><b>28.3 min, pass</b></td></tr>
+          <tr><td>1, final code</td><td class="r"><b>25.0 min</b></td></tr>
         </tbody>
       </table>
       <p class="small" style="margin-top:14px">Silver: rules checked once, 325 s to 214 s Spark time at SF=0.25, outputs identical.
@@ -554,7 +564,7 @@
       </svg>
     </div>
     <div data-in>
-      <p class="formula" style="font-size:25px">minimise weighted unmet need<br>budget, transport per division<br>x<sub>d</sub> ≥ α · population share</p>
+      <p class="formula" style="font-size:25px">minimise weighted unmet need<br>budget, transport per division<br>x<sub>d</sub> ≥ min(α · population share, need)<br>x<sub>d</sub> ≤ need</p>
       <p>Solved with PuLP and CBC. Every rate lives in one file with its source.</p>
     </div>
   </div>
@@ -568,6 +578,7 @@
     <div data-in>
       <p>At half the budget: <b>67.8%</b> of need met, against <b>34.4%</b> for a population split. Recommended α = 0.</p>
       <p>Spread across all 64 districts: top-5 share 0.22, Gini 0.27 (before the fix: 1.00 and 0.98).</p>
+      <p>A floor of α 0.1 to 0.9 costs 2.5 points (65.3%); α 1 costs 1.5. No district gets more than it needs.</p>
     </div>
     <div data-in>
       <svg id="curve-chart" viewBox="0 0 760 430" width="760" height="430"></svg>
@@ -620,7 +631,8 @@
       <li>Striped cells: counts under 5, hidden</li>
       <li>What-if: move budget and α; the plan is looked up from a grid solved in advance</li>
     </ol>
-    <div class="shot" data-in><img src="assets/p-alloc.webp" alt="Allocation panel with budget, equity floor and threshold sliders"></div>
+    <div data-in><div class="shot" style="width:fit-content;margin-left:auto"><img src="assets/p-alloc.webp" style="max-height:540px;width:auto" alt="Allocation panel with budget, equity floor and threshold sliders"></div>
+    <p class="small" style="text-align:right">Final SF=1 build, allocation capped at need.</p></div>
   </div>
 </section>
 

@@ -133,7 +133,7 @@
   (() => {
     const svg = document.getElementById("curve-chart");
     const c = D.curve, W = 760, H = 430, L = 90, B = 360, T = 20, R = 40;
-    const max = Math.ceil(Math.max(...c.lp.map((p) => p.pct)) / 10) * 10;
+    const max = Math.ceil(Math.max(...c.lp.map((p) => p.pct)) / 10) * 10 + 10;
     const x = (a) => L + a * (W - L - R), y = (v) => B - (v / max) * (B - T);
     for (let v = 0; v <= max; v += 10) {
       el(svg, "line", { x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: "var(--rule)", "stroke-width": 1.5 });
@@ -150,6 +150,8 @@
       el(svg, "circle", { cx: x(a), cy: y(p.pct), r: 9, fill: "var(--sp)" });
       el(svg, "text", { x: x(a) + 18, y: y(p.pct) + 30, "font-size": 24, "font-weight": 800 }, `α ${a.toFixed(1)}: ${p.pct.toFixed(1)}%`);
     }
+    const mid = c.lp.find((q) => Math.abs(q.alpha - 0.5) < 1e-9);
+    el(svg, "text", { x: x(0.5), y: y(mid.pct) - 18, "font-size": 22, "text-anchor": "middle" }, `α 0.1 to 0.9: ${mid.pct.toFixed(1)}%`);
     el(svg, "text", { x: W - R, y: T + 20, "font-size": 20, "text-anchor": "end", class: "m" }, `budget = ${c.budget_level} × full need`);
   })();
 

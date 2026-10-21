@@ -3,7 +3,7 @@
 // Markup inside a paragraph:
 //   {s1} {s2} {s3} {s4}  speaker short name from config.json
 //   {{text}}            a number from a repo file that docs/FINAL-NUMBERS.md does not list; check it before recording
-//   [[pending: what]]   a result that is not final yet (only the hidden-drop drill); fill in, never guess
+//   [[pending: what]]   a result that is not final yet (none left); fill in, never guess
 // A paragraph that starts with "[" and ends with "]" is a cue (NEXT SLIDE, SHOW, PAUSE), not spoken.
 // `pause` is the seconds of silence the section needs for slide changes and demo moments.
 window.EPI_SCRIPT = [
@@ -92,7 +92,7 @@ window.EPI_SCRIPT = [
       "[NEXT SLIDE] [SHOW terminal with the clock visible; git describe --tags shows v1.0]",
       "I make a new fourteen-day drop with a seed the pipeline has never seen.",
       "[SHOW make drop DROP_SEED=<new seed>, then make bronze silver gold analytics serve; speed up, keep timestamps]",
-      "It finds the new files as one new batch. In our final drill that added [[pending: rows added by the drop]] rows.",
+      "It finds the new files as one new batch. In our final drill, with seed 4675, that added 8,888 rows.",
       "[SHOW make bronze silver gold again, then the duplicate-count query]",
       "Now I run it again. Bronze finds nothing new, and the duplicate count is zero.",
       "[SHOW one silver.quarantine row with DQ_ORPHAN_FACILITY, then one gold row's batch_ids in the ingest log]",
@@ -104,7 +104,7 @@ window.EPI_SCRIPT = [
     paras: [
       "[NEXT SLIDE]",
       "Small tables are broadcast, so the big encounter table never shuffles for a join. We partition by year only, because finer keys would make thousands of tiny files. Forecasts and allocations run daily, because they're weekly decisions.",
-      "At full scale the limit is forty-five minutes. Our timed run took 28.3 minutes. Checking the rules once, not once per output, cut silver's Spark time from 325 to 214 seconds at quarter scale. That's my layer. {s4}, over to you.",
+      "At full scale the limit is forty-five minutes. Our timed run took 28.3 minutes, and 25.0 on the final code. Checking the rules once, not once per output, cut silver's Spark time from 325 to 214 seconds at quarter scale. {s4}, over to you.",
     ],
   },
 
@@ -145,9 +145,9 @@ window.EPI_SCRIPT = [
     id: "4e", speaker: "s4", title: "From forecasts to supplies", slides: [19, 20], chapter: 4, pause: 4,
     paras: [
       "[NEXT SLIDE]",
-      "We turn expected cases into beds, saline, test kits, ORS and malaria drugs. Then a linear program splits the budget. It keeps unmet need as low as it can, within the budget and transport limits. Alpha says every district gets at least alpha times its population share.",
+      "We turn expected cases into beds, saline, test kits, ORS and malaria drugs. Then a linear program splits the budget. It keeps unmet need as low as it can, within the budget and transport limits. Alpha says every district gets at least alpha times its population share, but never more than it needs.",
       "[NEXT SLIDE]",
-      "At half the budget, the plan meets 67.8 percent of need. A plain population split meets only 34.4 percent. Our first version sent almost everything to two districts. We found three faults and fixed them. Now the plan reaches all sixty-four districts, and the top five get only 22 percent. This curve shows the price of fairness: raising alpha lowers need met, so at this budget we recommend alpha zero.",
+      "At half the budget, the plan meets 67.8 percent of need. A plain population split meets only 34.4 percent. Our first version sent almost everything to two districts. We found three faults and fixed them. Now the plan reaches all sixty-four districts, and the top five get only 22 percent. This curve shows the price of fairness: any floor costs up to 2.5 points of need met, so at this budget we recommend alpha zero.",
     ],
   },
   {
