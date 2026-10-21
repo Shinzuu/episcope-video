@@ -175,9 +175,9 @@ window.EPI_SCRIPT = [
       "[SHOW click Chattogram on the map]",
       "When I click Chattogram, the weekly chart, the seasonal pattern and the allocation all switch to Chattogram.",
       "[NEXT SLIDE] [then back to the browser: drag on the lower time strip]",
-      "If I drag here, every view follows the new time range. The blue band is the forecast with its eighty percent range. We show the band, not one line, because a planner needs to know how sure we are.",
+      "If I drag here, every view follows the new time range. The blue band is the forecast with its eighty percent range. A planner needs to know how sure we are.",
       "[SHOW the hatched cells, then move the budget and alpha sliders]",
-      "Striped cells are hidden counts under five. And in the what-if panel, when I change the budget or alpha, the plan updates at once. The browser doesn't solve anything. We solved the plan ahead of time for each budget and alpha on a grid, and the page just looks up the answer.",
+      "Striped cells are hidden counts under five. And in the what-if panel, when I change the budget or alpha, the plan updates at once. The plan was solved ahead of time on a grid, and the page just looks it up.",
     ],
   },
   {
@@ -192,7 +192,7 @@ window.EPI_SCRIPT = [
     paras: [
       "[NEXT SLIDE]",
       "On privacy. Patient IDs are hashed with a secret key before anything reaches gold, and exact age becomes an age band. Every count under five is hidden. Where needed we hide a second cell too, so nobody can get the small number back by subtracting from a total.",
-      "There's a fairness risk as well. Districts with weak reporting look healthier than they are, so a pure efficiency plan would give them less. That's one reason the equity floor exists.",
+      "The equity floor gives every district a population share of what is sent, but never more than it needs. A district that shows no need gets nothing. So the floor can't protect a district whose reports are missing. That's why the pipeline marks silent weeks as missing, not zero, and the dashboard shows them as no report.",
     ],
   },
   {

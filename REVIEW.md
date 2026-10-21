@@ -29,19 +29,19 @@ Tool: `node tools/timing.mjs 110` (and `105` for the slow case). Spoken words ex
 | 4e From forecasts to supplies | s4 | 128 | 4 | 1:13 | 12:30 |
 | 4f Preparedness calendar | s4 | 46 | 2 | 0:27 | 13:43 |
 | 2a Why the dashboard looks like this | s2 | 62 | 3 | 0:36 | 14:10 |
-| 2b Live walkthrough | s2 | 147 | 27 | 1:47 | 14:47 |
-| 2c Usability check | s2 | 58 | 2 | 0:33 | 16:34 |
-| 2d Privacy and ethics | s2 | 79 | 2 | 0:45 | 17:08 |
-| 2e Recommendations and limits | s2 | 96 | 2 | 0:54 | 17:53 |
-| 2f Close | s2 | 17 | 3 | 0:12 | 18:48 |
+| 2b Live walkthrough | s2 | 128 | 27 | 1:36 | 14:47 |
+| 2c Usability check | s2 | 58 | 2 | 0:33 | 16:24 |
+| 2d Privacy and ethics | s2 | 105 | 2 | 0:59 | 16:58 |
+| 2e Recommendations and limits | s2 | 96 | 2 | 0:54 | 17:57 |
+| 2f Close | s2 | 17 | 3 | 0:12 | 18:51 |
 
 | Speaker | Slides | Words | At 110 wpm | At 105 wpm | 4 to 5 min at 110 |
 |---|---|---:|---:|---:|---|
 | s1 Rafi | 6 (+ title) | 455 | 4:23 | 4:35 | yes |
 | s3 Shezan | 7 | 459 | 4:58 | 5:10 | yes |
 | s4 Rimjhim | 7 | 503 | 4:49 | 5:02 | yes |
-| s2 Samira | 6 (+ closing) | 459 | 4:49 | 5:01 | yes |
-| **Total** | 28 | 1,876 | **19:00** | **19:49** | limit 15:00 to 20:00 |
+| s2 Samira | 6 (+ closing) | 466 | 4:53 | 5:05 | yes |
+| **Total** | 28 | 1,883 | **19:04** | **19:53** | limit 15:00 to 20:00 |
 
 Changes made in this pass: the first draft ran 19:16 at 110 wpm and 20:05 at 105 wpm, which is over the limit
 for slow readers. Cut about 160 words, mostly repeated explanations (Shezan's transcript was written for 145
@@ -157,4 +157,11 @@ read with pdftotext). Changes:
   backtest (overall 0.84, dengue 0.89, diarrhoea 0.72; the report's per-horizon rows are not on a slide).
 
 Timing: 19:00 at 110 wpm, every speaker between 4:23 and 4:58. Shezan lost "That's my layer" to stay under 5 minutes.
+
+Equity claim (Lilith's decision, 21 Oct): slide 26 and script 2d no longer say the floor guards districts that
+report badly. With the cap at need, a district that shows no need gets nothing, so the floor cannot protect a
+district whose reports are missing; the pipeline marks silent weeks as missing, not zero
+(`analytics/detection/prepare.py`), and the dashboard shows them as "no report" (`timeseries.js`, `heatmap.js`).
+The detector does not raise an alert on a silent week, so the script does not say it does. Samira's what-if and
+band lines were shortened to keep her at 4:53.
 

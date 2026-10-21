@@ -659,17 +659,17 @@
 
 <!-- 26 -->
 <section class="slide" data-speaker="s2" aria-label="Privacy and ethics">
-  <h2 data-in>Privacy by design, and an equity risk</h2>
+  <h2 data-in>Privacy by design, and a limit of the equity floor</h2>
   <div class="cols">
     <ul data-in>
       <li>Keyed hash for patient IDs; age in bands.</li>
       <li>Counts 1 to 4 hidden, with complementary suppression so totals cannot reveal them.</li>
       <li>k-anonymity check on published tables.</li>
-      <li>Weak reporting looks like good health. The equity floor is one guard against that.</li>
+      <li>Equity floor: a population share, never more than need. No need shown, nothing sent, so it cannot protect a district whose reports are missing. Silent weeks are marked missing, not zero.</li>
     </ul>
     <div data-in>
-      <div class="shot"><img src="assets/p-table.webp" alt="Early warning table with hatched suppressed cells"></div>
-      <p class="small">Hatched cells: suppressed counts under 5.</p>
+      <div class="shot" style="width:fit-content;margin-left:auto"><img src="assets/p-table.webp" style="max-height:560px;width:auto;max-width:100%" alt="Early warning table with hatched suppressed cells"></div>
+      <p class="small" style="text-align:right">Hatched cells: suppressed counts under 5.</p>
     </div>
   </div>
 </section>
