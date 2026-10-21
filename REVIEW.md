@@ -11,37 +11,37 @@ Tool: `node tools/timing.mjs 110` (and `105` for the slow case). Spoken words ex
 
 | Section | Speaker | Words | Pause s | Time | Starts |
 |---|---|---:|---:|---:|---:|
-| 1a Opening | s1 | 62 | 4 | 0:37 | 0:00 |
-| 1b The problem | s1 | 89 | 2 | 0:50 | 0:37 |
-| 1c Stakeholders and conflicts | s1 | 136 | 4 | 1:18 | 1:28 |
-| 1d The data story | s1 | 78 | 2 | 0:44 | 2:46 |
-| 1e Architecture | s1 | 91 | 3 | 0:52 | 3:31 |
-| 3a My part and the generator | s3 | 74 | 3 | 0:43 | 4:23 |
-| 3b Bronze | s3 | 64 | 2 | 0:36 | 5:07 |
-| 3c Silver | s3 | 121 | 4 | 1:10 | 5:44 |
-| 3d Gold and lineage | s3 | 60 | 2 | 0:34 | 6:54 |
-| 3e Live run | s3 | 72 | 35 | 1:14 | 7:28 |
-| 3f Spark choices and scaling | s3 | 64 | 2 | 0:36 | 8:43 |
-| 4a Detection | s4 | 106 | 3 | 1:00 | 9:19 |
-| 4b Reporting artefact | s4 | 51 | 2 | 0:29 | 10:20 |
-| 4c Detection vs baseline | s4 | 69 | 2 | 0:39 | 10:50 |
-| 4d Forecasts and backtest | s4 | 90 | 2 | 0:51 | 11:30 |
-| 4e Forecasts to supplies | s4 | 107 | 4 | 1:02 | 12:21 |
-| 4f Preparedness calendar | s4 | 46 | 2 | 0:27 | 13:23 |
-| 2a Dashboard design | s2 | 71 | 3 | 0:41 | 13:50 |
-| 2b Live walkthrough | s2 | 115 | 25 | 1:27 | 14:32 |
-| 2c Usability check | s2 | 39 | 2 | 0:23 | 16:00 |
-| 2d Privacy and ethics | s2 | 75 | 2 | 0:42 | 16:23 |
-| 2e Recommendations and limits | s2 | 83 | 2 | 0:47 | 17:06 |
-| 2f Close | s2 | 17 | 3 | 0:12 | 17:53 |
+| 1a Opening | s1 | 59 | 4 | 0:36 | 0:00 |
+| 1b The problem | s1 | 89 | 2 | 0:50 | 0:36 |
+| 1c Stakeholders and conflicts | s1 | 136 | 4 | 1:18 | 1:26 |
+| 1d The data story | s1 | 78 | 2 | 0:44 | 2:44 |
+| 1e Architecture | s1 | 91 | 3 | 0:52 | 3:29 |
+| 3a My part and the generator | s3 | 74 | 3 | 0:43 | 4:22 |
+| 3b Bronze | s3 | 64 | 2 | 0:36 | 5:05 |
+| 3c Silver: rules, quarantine, privacy | s3 | 121 | 4 | 1:10 | 5:42 |
+| 3d Gold and lineage | s3 | 60 | 2 | 0:34 | 6:52 |
+| 3e Live run: new drop, re-run, quarantine | s3 | 72 | 35 | 1:14 | 7:27 |
+| 3f Spark choices and scaling | s3 | 64 | 2 | 0:36 | 8:41 |
+| 4a Detection: why EARS C2 and CUSUM | s4 | 106 | 3 | 1:00 | 9:18 |
+| 4b The reporting artefact | s4 | 51 | 2 | 0:29 | 10:19 |
+| 4c Detection against the baseline | s4 | 69 | 2 | 0:39 | 10:48 |
+| 4d Forecasts and the backtest | s4 | 90 | 2 | 0:51 | 11:28 |
+| 4e From forecasts to supplies | s4 | 107 | 4 | 1:02 | 12:19 |
+| 4f Preparedness calendar | s4 | 46 | 2 | 0:27 | 13:22 |
+| 2a Why the dashboard looks like this | s2 | 71 | 3 | 0:41 | 13:49 |
+| 2b Live walkthrough | s2 | 155 | 27 | 1:51 | 14:30 |
+| 2c Usability check | s2 | 39 | 2 | 0:23 | 16:22 |
+| 2d Privacy and ethics | s2 | 79 | 2 | 0:45 | 16:45 |
+| 2e Recommendations and limits | s2 | 87 | 2 | 0:49 | 17:30 |
+| 2f Close | s2 | 17 | 3 | 0:12 | 18:20 |
 
-| Speaker | Words | At 110 wpm | At 105 wpm | ≥ 4:00 |
-|---|---:|---:|---:|---|
-| s1 Tahsin Ahmed (Rafi) | 456 | 4:23 | 4:35 | yes |
-| s3 Shezan | 455 | 4:56 | 5:08 | yes |
-| s4 Rimjhim | 469 | 4:30 | 4:43 | yes |
-| s2 Samira | 400 | 4:15 | 4:25 | yes |
-| **Total** | 1,780 | **18:05** | **18:52** | limit 15:00 to 20:00 |
+| Speaker | Slides | Words | At 110 wpm | At 105 wpm | 4 to 5 min at 110 |
+|---|---|---:|---:|---:|---|
+| s1 Rafi | 6 (+ title) | 453 | 4:22 | 4:33 | yes |
+| s3 Shezan | 7 | 455 | 4:56 | 5:08 | yes |
+| s4 Rimjhim | 7 | 469 | 4:30 | 4:43 | yes |
+| s2 Samira | 6 (+ closing) | 448 | 4:43 | 4:55 | yes |
+| **Total** | 28 | 1,825 | **18:32** | **19:19** | limit 15:00 to 20:00 |
 
 Changes made in this pass: the first draft ran 19:16 at 110 wpm and 20:05 at 105 wpm, which is over the limit
 for slow readers. Cut about 160 words, mostly repeated explanations (Shezan's transcript was written for 145
@@ -52,8 +52,9 @@ Word counts sit a little under the brief's 470 to 500 per speaker. That is on pu
 keep pauses for slide changes and demos, and two speakers carry a live demo (35 s and 25 s of silence). At the
 brief's word counts the total would pass 20 minutes at 105 wpm.
 
-Margins to watch: Samira has 15 s over the 4-minute floor. If the usability placeholders get short answers,
-keep at least 40 words there. Each speaker should rehearse once with a timer.
+2026-10-21 update: names changed (Rafi, Rimjhim Dey), the group-number line removed, and Samira's dashboard
+walkthrough split over two slides with one added explanation of the precomputed what-if grid, which brought her
+from 400 to 448 words. Every speaker is now inside 4 to 5 minutes at 110 wpm (440 to 550 words). Each speaker should rehearse once with a timer.
 
 ## (b) Style pass (`no-ai-slop` skill)
 

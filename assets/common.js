@@ -4,7 +4,6 @@ window.EPI = (() => {
   const WPM = 110;
   const PENDING_WORDS = 5;
   const FALLBACK = {
-    group: "[group number]",
     repo_tag: "v1.0",
     speakers: {
       s1: { name: "Speaker 1", short: "Speaker 1", role: "Problem, stakeholders and data" },

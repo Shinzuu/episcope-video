@@ -2,18 +2,17 @@
 //
 // Markup inside a paragraph:
 //   {s1} {s2} {s3} {s4}  speaker short name from config.json
-//   {group}             group number from config.json
 //   {{text}}            a number from the 11 Oct SF=0.05 draft run; re-check against the v1.0 run before recording
 //   [[pending: what]]   a result that does not exist yet in the repo; fill in after the run, never guess
 // A paragraph that starts with "[" and ends with "]" is a cue (NEXT SLIDE, SHOW, PAUSE), not spoken.
 // `pause` is the seconds of silence the section needs for slide changes and demo moments.
 window.EPI_SCRIPT = [
-  // ---------------- Speaker 1 (Tahsin Ahmed): problem, stakeholders, data, architecture (chapters 1 and 2) ----------------
+  // ---------------- Speaker 1 (Tahsin Ahmed Rafi): problem, stakeholders, data, architecture (chapters 1 and 2) ----------------
   {
     id: "1a", speaker: "s1", title: "Opening", slides: [1, 2], chapter: 1, pause: 4,
     paras: [
       "[SHOW slide 1, camera on, name on screen]",
-      "Assalamu alaikum. We're group {group}, and this is EpiScope. It's a big data platform that watches for outbreaks in Bangladesh and helps plan supplies.",
+      "Assalamu alaikum. We're the EpiScope team. It's a big data platform that watches for outbreaks in Bangladesh and helps plan supplies.",
       "[NEXT SLIDE]",
       "I'm {s1}. I'll start with the problem and the data. Then {s3} shows the pipeline, {s4} shows the analytics, and {s2} shows the dashboard and closes. Each of us will explain why we built our part this way.",
     ],
@@ -109,7 +108,7 @@ window.EPI_SCRIPT = [
     ],
   },
 
-  // ---------------- Speaker 4 (Rimjhim): analytics (chapter 4) ----------------
+  // ---------------- Speaker 4 (Rimjhim Dey): analytics (chapter 4) ----------------
   {
     id: "4a", speaker: "s4", title: "Detection: why EARS C2 and CUSUM", slides: [15], chapter: 4, pause: 3,
     paras: [
@@ -169,43 +168,43 @@ window.EPI_SCRIPT = [
     ],
   },
   {
-    id: "2b", speaker: "s2", title: "Live walkthrough", slides: [23], chapter: 5, pause: 25,
+    id: "2b", speaker: "s2", title: "Live walkthrough", slides: [23, 24], chapter: 5, pause: 27,
     paras: [
       "[SHOW the dashboard in the browser at 125% zoom]",
-      "There are five views, and they share one selection. The map shows cases per hundred thousand people. The triangles are alerts. The table ranks districts by alerts, so an officer knows where to look first.",
+      "There are five views, and they share one selection. The map shows cases per hundred thousand people. The orange triangles are alerts from the detector. The table ranks districts by alerts, so an officer knows where to look first.",
       "[SHOW click Chattogram on the map]",
       "When I click Chattogram, the weekly chart, the seasonal pattern and the allocation all switch to Chattogram.",
-      "[SHOW drag on the lower time strip]",
+      "[NEXT SLIDE] [then back to the browser: drag on the lower time strip]",
       "If I drag here, every view follows the new time range. The blue band is the forecast with its eighty percent range. We show the band, not one line, because a planner needs to know how sure we are.",
       "[SHOW the hatched cells, then move the budget and alpha sliders]",
-      "Striped cells are hidden counts under five. And in the what-if panel, when I change the budget or alpha, the plan updates at once.",
+      "Striped cells are hidden counts under five. And in the what-if panel, when I change the budget or alpha, the plan updates at once. The browser doesn't solve anything. We solved the plan ahead of time for each budget and alpha on a grid, and the page just looks up the answer. That's why it's instant on a slow laptop.",
     ],
   },
   {
-    id: "2c", speaker: "s2", title: "Usability check", slides: [24], chapter: 5, pause: 2,
+    id: "2c", speaker: "s2", title: "Usability check", slides: [25], chapter: 5, pause: 2,
     paras: [
       "[NEXT SLIDE]",
       "We asked two people outside computer science to use it. Each got one task: find the district that needs help this week, and say how sure the forecast is. [[pending: what they struggled with]]. [[pending: what we changed]].",
     ],
   },
   {
-    id: "2d", speaker: "s2", title: "Privacy and ethics", slides: [25], chapter: 6, pause: 2,
+    id: "2d", speaker: "s2", title: "Privacy and ethics", slides: [26], chapter: 6, pause: 2,
     paras: [
       "[NEXT SLIDE]",
-      "On privacy. Patient IDs are hashed with a secret key, and exact age becomes an age band. Every count under five is hidden. Where needed we hide a second cell too, so nobody can get the small number back by subtracting from a total.",
+      "On privacy. Patient IDs are hashed with a secret key before anything reaches gold, and exact age becomes an age band. Every count under five is hidden. Where needed we hide a second cell too, so nobody can get the small number back by subtracting from a total.",
       "There's a fairness risk as well. Districts with weak reporting look healthier than they are, so a pure efficiency plan would give them less. That's one reason the equity floor exists.",
     ],
   },
   {
-    id: "2e", speaker: "s2", title: "Recommendations and limits", slides: [26], chapter: 6, pause: 2,
+    id: "2e", speaker: "s2", title: "Recommendations and limits", slides: [27], chapter: 6, pause: 2,
     paras: [
       "[NEXT SLIDE]",
-      "So what would we tell the Ministry? Get dengue supplies in place by week {{29}}, before the season starts. Treat alerts as a short list to check, and look at reporting completeness before acting on a spike. And choose alpha openly, knowing its cost.",
+      "So what would we tell the Ministry? Get dengue supplies in place by week {{29}}, before the season starts. Treat alerts as a short list to check, and look at reporting completeness before acting on a spike. And choose alpha openly, knowing what it costs in unmet need.",
       "Our limits. The data is synthetic, so none of these numbers should drive a real decision yet. [[pending: streaming status; pipeline/stream.py was in progress on 20 Oct]]. And the forecast bands ignore uncertainty in the model's own parameters, so they're a bit too narrow.",
     ],
   },
   {
-    id: "2f", speaker: "s2", title: "Close", slides: [27], chapter: 6, pause: 3,
+    id: "2f", speaker: "s2", title: "Close", slides: [28], chapter: 6, pause: 3,
     paras: [
       "[NEXT SLIDE]",
       "That's EpiScope. Everything you saw matches version one point zero in our repository. Thank you for watching.",

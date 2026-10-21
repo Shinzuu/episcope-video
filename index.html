@@ -63,6 +63,13 @@
     border-top: 2px solid var(--rule); background: var(--paper);
     font-size: 22px; z-index: 5;
   }
+  .presenter {
+    position: absolute; top: 34px; right: 40px; z-index: 4;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 26px; font-weight: 800; color: var(--ink);
+    background: var(--panel); border: 3px solid var(--sp); border-radius: 999px; padding: 6px 18px 6px 12px;
+  }
+  .presenter i { width: 20px; height: 20px; border-radius: 50%; background: var(--sp); }
   .who { display: flex; align-items: center; gap: 12px; min-width: 360px; font-weight: 600; }
   .who i { width: 18px; height: 18px; border-radius: 4px; background: var(--cur); display: inline-block; }
   .who span { color: var(--muted); font-weight: 400; }
@@ -144,9 +151,6 @@
   .kpis div { border-top: 4px solid var(--sp); padding-top: 12px; }
   .kpis .big { font-size: 70px; }
 
-  .nav-hint { position: fixed; right: 14px; top: 10px; transition: opacity .4s; font: 14px var(--font); color: #5a6b70; opacity: .8; }
-  @media (max-width: 700px) { .nav-hint { display: none; } }
-  .nav-hint.gone { opacity: 0; }
 </style>
 </head>
 <body>
@@ -157,7 +161,7 @@
   <p class="meta" data-in>CSE 4345 Big Data Analytics, Premier University, Chittagong</p>
   <h1 data-in>EpiScope</h1>
   <p class="lede" data-in>Catching outbreaks early in Bangladesh, and planning supplies before the season peaks.</p>
-  <p class="meta" data-in>Group <span data-cfg="group"></span>: <span data-cfg="team"></span></p>
+  <p class="meta" data-in><span data-cfg="team"></span></p>
   <svg class="curve" id="title-curve" viewBox="0 0 1600 330" preserveAspectRatio="none" aria-label="Weekly dengue cases, all districts, from the pipeline's draft run"></svg>
 </section>
 
@@ -597,17 +601,29 @@
   <h2 data-in>One selection, five views</h2>
   <div class="cols wide-right">
     <ol class="steps" data-in>
-      <li>Click a district on the map</li>
-      <li>Weekly chart, heatmap, table and allocation follow</li>
-      <li>Drag the time strip: every view follows</li>
-      <li>Forecast band, 80% range</li>
-      <li>What-if: move budget and α</li>
+      <li>The map shows cases per 100,000; triangles are alerts</li>
+      <li>The table ranks districts by alerts</li>
+      <li>Click a district: weekly chart, heatmap and allocation follow</li>
     </ol>
     <div class="shot" data-in><img src="assets/dash-ctg.webp" alt="Dashboard after selecting Chattogram: every view shows Chattogram"></div>
   </div>
 </section>
 
 <!-- 24 -->
+<section class="slide" data-speaker="s2" aria-label="Uncertainty, suppression and what-if">
+  <h2 data-in>Ranges, hidden counts and the what-if panel</h2>
+  <div class="cols wide-right">
+    <ol class="steps" data-in>
+      <li>Drag the time strip: every view follows</li>
+      <li>Blue band: the forecast's 80% range</li>
+      <li>Striped cells: counts under 5, hidden</li>
+      <li>What-if: move budget and α; the plan is looked up from a grid solved in advance</li>
+    </ol>
+    <div class="shot" data-in><img src="assets/p-alloc.webp" alt="Allocation panel with budget, equity floor and threshold sliders"></div>
+  </div>
+</section>
+
+<!-- 25 -->
 <section class="slide" data-speaker="s2" aria-label="Usability check">
   <h2 data-in>Two users outside computer science</h2>
   <div class="cols">
@@ -620,7 +636,7 @@
   </div>
 </section>
 
-<!-- 25 -->
+<!-- 26 -->
 <section class="slide" data-speaker="s2" aria-label="Privacy and ethics">
   <h2 data-in>Privacy by design, and an equity risk</h2>
   <div class="cols">
@@ -637,7 +653,7 @@
   </div>
 </section>
 
-<!-- 26 -->
+<!-- 27 -->
 <section class="slide" data-speaker="s2" aria-label="Recommendations and limits">
   <h2 data-in>What we would tell the Ministry</h2>
   <div class="cols">
@@ -657,7 +673,7 @@
   </div>
 </section>
 
-<!-- 27 -->
+<!-- 28 -->
 <section class="slide" data-speaker="s2" aria-label="Close">
   <h2 data-in>Thank you</h2>
   <p class="lede" data-in>Everything shown matches tag <b data-cfg="repo_tag"></b> in our repository.</p>
@@ -671,7 +687,6 @@
   <div class="copy">© 2026 EpiScope team. All rights reserved.</div>
 </div>
 </main>
-<p class="nav-hint">→ / space next, ← back, F fullscreen</p>
 
 <script src="assets/data.js"></script>
 <script src="assets/common.js"></script>

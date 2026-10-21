@@ -1,11 +1,10 @@
 {
-  "_note": "Names are the only thing to edit here. Both pages read this file. Confirmed on 2026-10-20.",
-  "group": "[group number]",
+  "_note": "Names are the only thing to edit here. Both pages read this file. Confirmed on 2026-10-21.",
   "repo_tag": "v1.0",
   "speakers": {
     "s1": {
-      "name": "Tahsin Ahmed (Rafi)",
-      "short": "Tahsin",
+      "name": "Tahsin Ahmed Rafi",
+      "short": "Rafi",
       "role": "Problem, stakeholders and data",
       "confirmed": true
     },
@@ -22,7 +21,7 @@
       "confirmed": true
     },
     "s4": {
-      "name": "Rimjhim",
+      "name": "Rimjhim Dey",
       "short": "Rimjhim",
       "role": "Analytics",
       "confirmed": true

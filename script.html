@@ -94,7 +94,7 @@
   // text markup: names, draft numbers, pending results
   function render(p) {
     let h = esc(p);
-    h = h.replace(/\{(s[1-4])\}/g, (_, id) => esc(sp(id).short)).replace(/\{group\}/g, esc(cfg.group));
+    h = h.replace(/\{(s[1-4])\}/g, (_, id) => esc(sp(id).short));
     h = h.replace(/\{\{([^}]*)\}\}/g, '<span class="draft">$1</span>');
     h = h.replace(/\[\[pending:\s*([^\]]*)\]\]/g, '<span class="pending">$1</span>');
     return h;

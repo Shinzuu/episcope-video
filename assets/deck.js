@@ -17,6 +17,15 @@
     else el.textContent = cfg[k] ?? "";
   });
 
+  // ---------- presenter name on every slide (same short name the script page filters on) ----------
+  slides.forEach((s) => {
+    const tag = document.createElement("p");
+    tag.className = "presenter";
+    tag.setAttribute("aria-label", "Presenter");
+    tag.innerHTML = `<i></i>${esc(sp(s.dataset.speaker).short)}`;
+    s.appendChild(tag);
+  });
+
   // ---------- running order and chapter times, from the script timing ----------
   const tl = EPI.timeline(window.EPI_SCRIPT);
   const total = tl.reduce((a, s) => a + s.secs, 0);
@@ -212,8 +221,7 @@
     document.title = `EpiScope slides ${cur + 1}/${slides.length}`;
     history.replaceState(null, "", `#${cur + 1}`);
   }
-  const hint = document.querySelector(".nav-hint");
-  const next = () => { hint.classList.add("gone"); show(cur + 1); }, prev = () => show(cur - 1);
+  const next = () => show(cur + 1), prev = () => show(cur - 1);
 
   document.addEventListener("keydown", (e) => {
     if (e.altKey || e.ctrlKey || e.metaKey) return;
