@@ -5,7 +5,10 @@ Slides and a phone script for the EpiScope group video (CSE 4345 Big Data Analyt
 - `index.html`: the slide deck. Right arrow, space, click or swipe for the next slide; left arrow to go back;
   `F` for full screen; `#12` in the URL opens slide 12.
 - `script.html`: the script for reading on a phone. Tap your name to see only your parts.
-- `config.json`: speaker names. Edit only this file to change a name; both pages read it.
+- `config.json`: names, project roles (`role`, shown on slide 2) and video parts (`part`). Edit only this file to
+  change a name; both pages read it. Names appear on slide 2 only.
+- `assets/scenes.js`: the 3D views on slides 1 and 20 (three.js). They run only while their slide is shown and fall
+  back to a static SVG without WebGL or with reduced motion.
 
 ## Run locally
 
@@ -28,7 +31,9 @@ numbers in the script come from a repo file that table does not list; dashed box
 
 ## Credits
 
-Dashboard screenshots are of the EpiScope dashboard running locally on the SF=0.25 export of 21 Oct. Boundaries:
+Dashboard screenshots are of the EpiScope dashboard running locally on the SF=0.25 export of 21 Oct; the
+allocation screenshot is the report's final SF=1 figure. 3D: three.js 0.180.0 (MIT, `assets/vendor/three-0.180.0/LICENSE`),
+copied unchanged from cdnjs. Boundaries:
 BBS / OCHA ROAP via HDX (CC BY-IGO). Font: Atkinson Hyperlegible Next (SIL OFL 1.1, `assets/fonts/OFL.txt`).
 The data in the project is synthetic.
 

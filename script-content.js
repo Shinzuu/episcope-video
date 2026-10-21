@@ -9,12 +9,36 @@
 window.EPI_SCRIPT = [
   // ---------------- Speaker 1 (Tahsin Ahmed Rafi): problem, stakeholders, data, architecture (chapters 1 and 2) ----------------
   {
-    id: "1a", speaker: "s1", title: "Opening", slides: [1, 2], chapter: 1, pause: 4,
+    id: "1a", speaker: "s1", title: "Opening", slides: [1], chapter: 1, pause: 3,
     paras: [
-      "[SHOW slide 1, camera on, name on screen]",
+      "[SHOW slide 1, camera on; the 3D bars grow in]",
       "Assalamu alaikum. We're the EpiScope team. It's a big data platform that watches for outbreaks in Bangladesh and helps plan supplies.",
-      "[NEXT SLIDE]",
-      "I'm {s1}. I'll start with the problem and the data. Then {s3} shows the pipeline, {s4} shows the analytics, and {s2} shows the dashboard and closes. Each of us will explain why we built our part this way.",
+      "Each bar you see is one of our sixty-four districts. Its height is the district's population in the 2022 census. The tallest one is Dhaka.",
+    ],
+  },
+  {
+    id: "1t", speaker: "s1", title: "Meet our team", slides: [2], chapter: 1, pause: 2,
+    paras: [
+      "[NEXT SLIDE] [each person says one line, on camera]",
+      "I'm {n1}. In the project I built outbreak detection and forecasting. Today I start with the problem and the data.",
+    ],
+  },
+  {
+    id: "3t", speaker: "s3", title: "Meet our team", slides: [2], chapter: 1, pause: 1,
+    paras: [
+      "I'm {n3}, the data engineering lead. I built ingestion, the Delta lakehouse and the quality checks.",
+    ],
+  },
+  {
+    id: "4t", speaker: "s4", title: "Meet our team", slides: [2], chapter: 1, pause: 1,
+    paras: [
+      "I'm {n4}. I built the dashboard, and today I'll explain the analytics.",
+    ],
+  },
+  {
+    id: "2t", speaker: "s2", title: "Meet our team", slides: [2], chapter: 1, pause: 2,
+    paras: [
+      "I'm {n2}. I worked on the platform and the evaluation, and I'll show the dashboard.",
     ],
   },
   {
@@ -58,7 +82,7 @@ window.EPI_SCRIPT = [
     id: "3a", speaker: "s3", title: "My part and the generator", slides: [8], chapter: 3, pause: 3,
     paras: [
       "[NEXT SLIDE] [name on screen]",
-      "Thanks, {s1}. I'm {s3}, the data engineer. My part is everything before the analytics. If my layer is wrong, everything after it is wrong too.",
+      "Thanks, {s1}. My part is everything before the analytics.",
       "The generator makes the patients, and it also plants the problems we have to catch. About two percent of rows repeat an encounter ID. Some point to a facility that doesn't exist. Some have impossible ages. And one facility goes silent for three weeks, then sends everything at once.",
     ],
   },
@@ -75,7 +99,7 @@ window.EPI_SCRIPT = [
       "[NEXT SLIDE]",
       "Silver is where data gets trusted. Encounters go through fourteen rules. A failing row isn't deleted. It goes to a quarantine table with every reason code it broke. At full scale that was 1,367,440 rows, 4.0 percent.",
       "[NEXT SLIDE]",
-      "The patient ID never gets past this step. We replace it with an HMAC-SHA256 keyed hash, built from Spark's own sha2 function, so there's no slow Python code. The key lives in a .env file outside Git.",
+      "The patient ID never gets past this step. We replace it with an HMAC-SHA256 keyed hash, built from Spark's own sha2 function. The key lives in a .env file outside Git.",
       "Clean rows go in with a Delta MERGE on encounter ID. A row is replaced only if the new copy has a later report date. So a re-run changes nothing, and a late record moves into its correct week.",
     ],
   },
@@ -83,7 +107,7 @@ window.EPI_SCRIPT = [
     id: "3d", speaker: "s3", title: "Gold and lineage", slides: [12], chapter: 3, pause: 2,
     paras: [
       "[NEXT SLIDE]",
-      "Gold counts cases by the week of onset, not the week of report. When the silent facility back-fills, its cases land on the weeks they happened, so there's no fake spike. Every gold row keeps the bronze batch IDs it came from, so any number on the dashboard can be traced back to its files.",
+      "Gold counts cases by the week of onset, not the week of report. When the silent facility back-fills, its cases land on the weeks they happened, so there's no fake spike. Every gold row keeps the bronze batch IDs it came from, so any number can be traced back to its files.",
     ],
   },
   {
@@ -96,7 +120,7 @@ window.EPI_SCRIPT = [
       "[SHOW make bronze silver gold again, then the duplicate-count query]",
       "Now I run it again. Bronze finds nothing new, and the duplicate count is zero.",
       "[SHOW one silver.quarantine row with DQ_ORPHAN_FACILITY, then one gold row's batch_ids in the ingest log]",
-      "And here's a planted defect, an orphan facility, sitting in quarantine with its reason. This gold row's batch IDs match the ingest log.",
+      "Here's a planted defect, an orphan facility, in quarantine with its reason. This gold row's batch IDs match the ingest log.",
     ],
   },
   {
@@ -113,9 +137,9 @@ window.EPI_SCRIPT = [
     id: "4a", speaker: "s4", title: "Detection: why EARS C2 and CUSUM", slides: [15], chapter: 4, pause: 3,
     paras: [
       "[NEXT SLIDE] [name on screen]",
-      "Thanks, {s3}. I'm {s4}, and I did the analytics.",
-      "Our main detector is EARS C2. It compares this week with a baseline from three to nine weeks back. It works with short history. Farrington, the usual choice, needs about five years before its first test week.",
-      "But EARS on raw counts is fooled by the season. Dengue always rises in August, and that's not an outbreak. So we divide by a seasonal index first, and we build it without the current year, so an outbreak can't hide itself. The second method is CUSUM. It adds up small excesses week after week, so it catches slow outbreaks.",
+      "Thanks, {s3}. Now the analytics.",
+      "Our main detector is EARS C2. It compares this week with a baseline from three to nine weeks back. It works with short history. Farrington needs about five years of history first.",
+      "But EARS on raw counts is fooled by the season. Dengue always rises in August, and that's not an outbreak. So we divide by a seasonal index first, built without the current year, so an outbreak can't hide itself. The second method is CUSUM. It adds up small excesses week after week, so it catches slow outbreaks.",
     ],
   },
   {
@@ -129,7 +153,7 @@ window.EPI_SCRIPT = [
     id: "4c", speaker: "s4", title: "Detection against the baseline", slides: [17], chapter: 4, pause: 2,
     paras: [
       "[NEXT SLIDE]",
-      "To pick the threshold, we swept it against the planted outbreaks. For each value we measure how many outbreaks we catch against how many false alarms we raise. That's the first conflict, in numbers.",
+      "To pick the threshold, we swept it against the planted outbreaks. For each value we count outbreaks caught against false alarms raised.",
       "At a threshold of 4.0, EARS C2 catches 33 of the 35 outbreaks, with 1.89 false alerts per district each year. Half of them it catches within 8 days. CUSUM catches 32, with 1.82 false alerts.",
     ],
   },
@@ -138,16 +162,17 @@ window.EPI_SCRIPT = [
     paras: [
       "[NEXT SLIDE]",
       "For forecasts we fit a negative binomial model for each district, for dengue and diarrhoea. It uses rain and temperature from four to eight weeks earlier. Why not machine learning? A hospital manager can read this model: more rain now, more dengue in a month.",
-      "We tested it with a rolling backtest over the last fifty-two weeks. At each week the model sees only data up to that week. Against the seasonal naive baseline, our interval score ratio is 0.84, where below one means we win. It's 0.89 for dengue and 0.72 for diarrhoea. The average error drops from 133 to 113.",
+      "We tested it with a rolling backtest over the last fifty-two weeks. Each time, the model sees only the past. Against the seasonal naive baseline, our interval score ratio is 0.84, where below one means we win. It's 0.89 for dengue and 0.72 for diarrhoea. The average error drops from 133 to 113.",
     ],
   },
   {
     id: "4e", speaker: "s4", title: "From forecasts to supplies", slides: [19, 20], chapter: 4, pause: 4,
     paras: [
       "[NEXT SLIDE]",
-      "We turn expected cases into beds, saline, test kits, ORS and malaria drugs. Then a linear program splits the budget. It keeps unmet need as low as it can, within the budget and transport limits. Alpha says every district gets at least alpha times its population share, but never more than it needs.",
-      "[NEXT SLIDE]",
-      "At half the budget, the plan meets 67.8 percent of need. A plain population split meets only 34.4 percent. Our first version sent almost everything to two districts. We found three faults and fixed them. Now the plan reaches all sixty-four districts, and the top five get only 22 percent. This curve shows the price of fairness: any floor costs up to 2.5 points of need met, so at this budget we recommend alpha zero.",
+      "We turn expected cases into beds, saline, test kits, ORS and malaria drugs. Then a linear program splits the budget. It keeps unmet need as low as the budget allows. Alpha says every district gets at least alpha times its population share, but never more than it needs.",
+      "[NEXT SLIDE] [the 3D chart grows in and turns slowly]",
+      "This 3D chart shows every budget and every alpha. The green surface is our plan, the red one is the population split. At tight budgets green is about twice as high.",
+      "At half the budget, the plan meets 67.8 percent of need. A plain population split meets only 34.4 percent. Our first version sent almost everything to two districts, so we fixed three faults. Now the plan reaches all sixty-four districts, and the top five get only 22 percent. Along alpha you see the price of fairness. Any floor costs up to 2.5 points of need met, so at this budget we recommend alpha zero.",
     ],
   },
   {
@@ -163,7 +188,7 @@ window.EPI_SCRIPT = [
     id: "2a", speaker: "s2", title: "Why the dashboard looks like this", slides: [22], chapter: 5, pause: 3,
     paras: [
       "[NEXT SLIDE] [name on screen]",
-      "Thank you, {s4}. I'm {s2}. I'll show the dashboard, then talk about privacy and what we recommend.",
+      "Thank you, {s4}. I'll show the dashboard, then talk about privacy and what we recommend.",
       "The dashboard is built with D3 version seven. It reads only small summary files from gold, under ten megabytes in total. It never loads a patient row. That keeps it fast on a district office laptop, and there's nothing private in the browser to leak.",
     ],
   },
@@ -177,7 +202,7 @@ window.EPI_SCRIPT = [
       "[NEXT SLIDE] [then back to the browser: drag on the lower time strip]",
       "If I drag here, every view follows the new time range. The blue band is the forecast with its eighty percent range. A planner needs to know how sure we are.",
       "[SHOW the hatched cells, then move the budget and alpha sliders]",
-      "Striped cells are hidden counts under five. And in the what-if panel, when I change the budget or alpha, the plan updates at once. The plan was solved ahead of time on a grid, and the page just looks it up.",
+      "Striped cells are hidden counts under five. And in the what-if panel, when I change the budget or alpha, the plan updates at once. It looks up a grid solved in advance.",
     ],
   },
   {
@@ -200,7 +225,7 @@ window.EPI_SCRIPT = [
     paras: [
       "[NEXT SLIDE]",
       "So what would we tell the Ministry? Get dengue supplies in place by week {{29}}, before the season starts. Treat alerts as a short list to check, and look at reporting completeness before acting on a spike. And choose alpha openly, knowing what it costs in unmet need.",
-      "Our limits. The data is synthetic, so none of these numbers should drive a real decision yet. Streaming alerts take about 219.2 seconds at full scale, so they're fast, not instant. And the forecast bands ignore uncertainty in the model's own parameters, so they're a bit too narrow.",
+      "Our limits. The data is synthetic, so none of these numbers should drive a real decision yet. Streaming alerts take about 219.2 seconds at full scale. And the forecast bands ignore uncertainty in the model's own parameters, so they're a bit too narrow.",
     ],
   },
   {

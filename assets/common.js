@@ -6,10 +6,10 @@ window.EPI = (() => {
   const FALLBACK = {
     repo_tag: "v1.0",
     speakers: {
-      s1: { name: "Speaker 1", short: "Speaker 1", role: "Problem, stakeholders and data" },
-      s2: { name: "Speaker 2", short: "Speaker 2", role: "Dashboard, ethics and conclusion" },
-      s3: { name: "Speaker 3", short: "Speaker 3", role: "Data engineering" },
-      s4: { name: "Speaker 4", short: "Speaker 4", role: "Analytics" },
+      s1: { name: "Speaker 1", short: "Speaker 1", role: "", part: "Problem, stakeholders and data" },
+      s2: { name: "Speaker 2", short: "Speaker 2", role: "", part: "Dashboard, ethics and conclusion" },
+      s3: { name: "Speaker 3", short: "Speaker 3", role: "", part: "Data engineering" },
+      s4: { name: "Speaker 4", short: "Speaker 4", role: "", part: "Analytics" },
     },
     order: ["s1", "s3", "s4", "s2"],
   };
@@ -26,10 +26,14 @@ window.EPI = (() => {
 
   const isCue = (p) => /^\[[^\]]*\](\s*\[[^\]]*\])*$/.test(p.trim());
 
-  function spokenWords(paras) {
+  // {n1}..{n4} are full names: they count as the words of the name in config.json
+  const names = (p, cfg) => p.replace(/\{n([1-4])\}/g, (_, k) => (cfg ? cfg.speakers[`s${k}`].name : "Speaker"));
+
+  function spokenWords(paras, cfg) {
     let n = 0;
-    for (const p of paras) {
+    for (let p of paras) {
       if (isCue(p)) continue;
+      p = names(p, cfg);
       const pending = (p.match(/\[\[pending:[^\]]*\]\]/g) || []).length;
       const text = p.replace(/\[\[pending:[^\]]*\]\]/g, " ").replace(/\[[^\]]*\]/g, " ").replace(/[{}]/g, "");
       n += text.split(/\s+/).filter((w) => /[A-Za-z0-9]/.test(w)).length + pending * PENDING_WORDS;
@@ -37,10 +41,10 @@ window.EPI = (() => {
     return n;
   }
 
-  function timeline(script, wpm = WPM) {
+  function timeline(script, wpm = WPM, cfg = null) {
     let clock = 0;
     return script.map((s) => {
-      const words = spokenWords(s.paras);
+      const words = spokenWords(s.paras, cfg);
       const secs = (words / wpm) * 60 + s.pause;
       const row = { ...s, words, secs, start: clock };
       clock += secs;

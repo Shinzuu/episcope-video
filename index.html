@@ -15,7 +15,7 @@
 
   /* 1600 x 900 design canvas, scaled to fit the window */
   .stage {
-    position: absolute; left: 50%; top: 50%;
+    position: fixed; left: 50%; top: 50%; /* fixed: a 1600 px box must not widen the phone's layout viewport */
     width: 1600px; height: 900px;
     transform-origin: 0 0;
     background: var(--paper);
@@ -63,16 +63,19 @@
     border-top: 2px solid var(--rule); background: var(--paper);
     font-size: 22px; z-index: 5;
   }
-  .presenter {
-    position: absolute; top: 34px; right: 40px; z-index: 4;
-    display: flex; align-items: center; gap: 10px;
-    font-size: 26px; font-weight: 800; color: var(--ink);
-    background: var(--panel); border: 3px solid var(--sp); border-radius: 999px; padding: 6px 18px 6px 12px;
-  }
-  .presenter i { width: 20px; height: 20px; border-radius: 50%; background: var(--sp); }
-  .who { display: flex; align-items: center; gap: 12px; min-width: 360px; font-weight: 600; }
-  .who i { width: 18px; height: 18px; border-radius: 4px; background: var(--cur); display: inline-block; }
-  .who span { color: var(--muted); font-weight: 400; }
+  .team { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-top: 34px; }
+  .team .card { background: var(--panel); border: 2px solid var(--rule); border-top: 10px solid var(--c); border-radius: 12px; padding: 26px 26px 30px; }
+  .team .nm { font-size: 40px; font-weight: 800; line-height: 1.1; margin: 0 0 18px; }
+  .team .rl { font-size: 28px; font-weight: 700; margin: 0 0 8px; }
+  .team .dt { font-size: 23px; color: var(--muted); margin: 0; }
+  .scene3d { position: absolute; margin: 0; }
+  .scene3d canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 900ms ease-out; pointer-events: none; }
+  .scene3d.on canvas { opacity: 1; }
+  .scene3d .fallback { visibility: hidden; }
+  .scene3d.no3d .fallback { visibility: visible; }
+  .scene3d figcaption { position: absolute; right: 0; bottom: -10px; }
+  .only3d { visibility: hidden; }
+  .has3d .only3d { visibility: visible; }
   .strip { flex: 1; display: grid; gap: 3px; height: 22px; }
   .strip b { border-radius: 3px; opacity: .28; }
   .strip b.done { opacity: .75; }
@@ -109,13 +112,6 @@
   .title .meta { font-size: 26px; color: var(--muted); }
   .title svg.curve { position: absolute; left: 0; right: 0; bottom: 72px; width: 1600px; height: 330px; }
 
-  /* running order */
-  .order { display: grid; gap: 0; margin-top: 8px; }
-  .order .row { display: grid; grid-template-columns: 30px 340px 1fr 230px; gap: 24px; align-items: baseline; padding: 18px 0; border-top: 2px solid var(--rule); }
-  .order .row:last-child { border-bottom: 2px solid var(--rule); }
-  .order .sw { width: 24px; height: 24px; border-radius: 5px; align-self: center; }
-  .order .nm { font-weight: 800; }
-  .order .t { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
 
   .four { display: grid; grid-template-columns: repeat(4, 1fr); gap: 34px; margin-top: 30px; }
   .four div { border-top: 6px solid var(--sp); padding-top: 18px; }
@@ -161,15 +157,18 @@
   <p class="meta" data-in>CSE 4345 Big Data Analytics, Premier University, Chittagong</p>
   <h1 data-in>EpiScope</h1>
   <p class="lede" data-in>Catching outbreaks early in Bangladesh, and planning supplies before the season peaks.</p>
-  <p class="meta" data-in><span data-cfg="team"></span></p>
+  <figure class="scene3d" id="title-3d" style="right:70px;top:40px;width:700px;height:420px" aria-label="The 64 districts as bars, height = 2022 census population">
+    <svg class="fallback" id="title-map" viewBox="0 0 700 420" width="700" height="420"></svg>
+    <figcaption class="small">64 districts, sized by 2022 census population</figcaption>
+  </figure>
   <svg class="curve" id="title-curve" viewBox="0 0 1600 330" preserveAspectRatio="none" aria-label="Weekly dengue cases, all districts, from the pipeline's SF=0.25 build of 21 Oct"></svg>
 </section>
 
 <!-- 2 -->
-<section class="slide" data-speaker="s1" aria-label="Running order">
-  <h2 data-in>Four of us, six chapters</h2>
-  <p class="lede" data-in>Each person explains their own part, and why we built it that way.</p>
-  <div class="order" id="order" data-in></div>
+<section class="slide" data-speaker="s1" aria-label="Meet our team">
+  <h2 data-in>Meet our team</h2>
+  <p class="lede" data-in>Four people, one pipeline. Each of us presents one part of it.</p>
+  <div class="team" id="team"></div>
 </section>
 
 <!-- 3 -->
@@ -193,19 +192,19 @@
     <div class="mid" data-in>vs</div>
     <div class="side" data-in><h3>Epidemiologist</h3><p>"If the alarm rings every week, nobody answers it."</p></div>
   </div>
-  <p class="verdict" data-in>We sweep the alert threshold against planted outbreaks and pick the point in the open. Shown by <b data-cfg="s4"></b>.</p>
+  <p class="verdict" data-in>We sweep the alert threshold against planted outbreaks and pick the point in the open.</p>
 </section>
 
 <!-- 5 -->
 <section class="slide" data-speaker="s1" aria-label="Conflicts 2 to 5">
   <h2 data-in>Four more trade-offs</h2>
   <table class="t" data-in>
-    <thead><tr><th>Conflict</th><th>What we chose</th><th>Shown by</th></tr></thead>
+    <thead><tr><th>Conflict</th><th>What we chose</th></tr></thead>
     <tbody>
-      <tr><td>Detail or privacy</td><td>District and week only; counts of 1 to 4 hidden, with a second cell hidden where a total would reveal them</td><td data-cfg="s2"></td></tr>
-      <tr><td>Efficiency or equity</td><td>One number, the equity floor α, decides how much goes by population</td><td data-cfg="s4"></td></tr>
-      <tr><td>Speed or cost</td><td>A daily batch that can be re-run safely; allocation is a weekly decision</td><td data-cfg="s3"></td></tr>
-      <tr><td>Accuracy or clarity</td><td>A readable count model, tested against a simple baseline</td><td data-cfg="s4"></td></tr>
+      <tr><td>Detail or privacy</td><td>District and week only; counts of 1 to 4 hidden, with a second cell hidden where a total would reveal them</td></tr>
+      <tr><td>Efficiency or equity</td><td>One number, the equity floor α, decides how much goes by population</td></tr>
+      <tr><td>Speed or cost</td><td>A daily batch that can be re-run safely; allocation is a weekly decision</td></tr>
+      <tr><td>Accuracy or clarity</td><td>A readable count model, tested against a simple baseline</td></tr>
     </tbody>
   </table>
 </section>
@@ -581,7 +580,10 @@
       <p>A floor of α 0.1 to 0.9 costs 2.5 points (65.3%); α 1 costs 1.5. No district gets more than it needs.</p>
     </div>
     <div data-in>
-      <svg id="curve-chart" viewBox="0 0 760 430" width="760" height="430"></svg>
+      <figure class="scene3d" id="alloc-3d" style="position:relative;width:760px;height:430px" aria-label="Share of need met at every budget and equity floor">
+        <svg class="fallback" id="curve-chart" viewBox="0 0 760 430" width="760" height="430"></svg>
+      </figure>
+      <p class="small only3d"><b style="color:var(--s4)">Green</b>: our plan at every budget (front to back: 0.25 to 1.5 × full need) and every α (left to right: 0 to 1). <b style="color:var(--alert)">Red</b>: population split.</p>
     </div>
   </div>
   <p class="src">Source: <code>docs/FINAL-NUMBERS.md</code> (<code>allocation_summary.json</code>, <code>allocation_diagnosis.md</code>); curve from <code>allocation_curve.csv</code>.</p>
@@ -698,11 +700,10 @@
 <section class="slide" data-speaker="s2" aria-label="Close">
   <h2 data-in>Thank you</h2>
   <p class="lede" data-in>Everything shown matches tag <b data-cfg="repo_tag"></b> in our repository.</p>
-  <div class="order" id="chapters" data-in></div>
+  <p class="meta" data-in>EpiScope: early warning, forecasts and supply planning for Bangladesh's 64 districts.</p>
 </section>
 
 <div class="bar" aria-hidden="false">
-  <div class="who" id="who"><i></i><b></b><span></span></div>
   <div class="strip" id="strip" aria-hidden="true"></div>
   <div class="count" id="count"></div>
   <div class="copy">© 2026 EpiScope team. All rights reserved.</div>
@@ -711,7 +712,7 @@
 
 <script src="assets/data.js"></script>
 <script src="assets/common.js"></script>
-<script src="script-content.js"></script>
 <script src="assets/deck.js"></script>
+<script type="module" src="assets/scenes.js"></script>
 </body>
 </html>

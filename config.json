@@ -1,29 +1,33 @@
 {
-  "_note": "Names are the only thing to edit here. Both pages read this file. Confirmed on 2026-10-21.",
+  "_note": "Names are the only thing to edit here. Both pages read this file. 'role' is the project role shown on slide 2 (Meet our team); 'part' is what the person presents in the video. Full names confirmed on 2026-10-21.",
   "repo_tag": "v1.0",
   "speakers": {
     "s1": {
       "name": "Tahsin Ahmed Rafi",
       "short": "Rafi",
-      "role": "Problem, stakeholders and data",
+      "role": "Analytics (outbreak detection and forecasting)",
+      "part": "Problem, stakeholders and data",
       "confirmed": true
     },
     "s2": {
-      "name": "Samira",
+      "name": "Samira Sultana",
       "short": "Samira",
-      "role": "Dashboard, ethics and conclusion",
+      "role": "Platform and evaluation",
+      "part": "Dashboard, ethics and conclusion",
       "confirmed": true
     },
     "s3": {
-      "name": "Shezan",
+      "name": "Nishadul Islam Shezan",
       "short": "Shezan",
-      "role": "Data engineering",
+      "role": "Data engineering lead (ingestion, Delta lakehouse, data quality)",
+      "part": "Data engineering",
       "confirmed": true
     },
     "s4": {
       "name": "Rimjhim Dey",
       "short": "Rimjhim",
-      "role": "Analytics",
+      "role": "Visualisation (dashboard)",
+      "part": "Analytics",
       "confirmed": true
     }
   },

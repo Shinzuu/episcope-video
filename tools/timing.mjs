@@ -15,8 +15,9 @@ const cfg = JSON.parse(readFileSync(join(ROOT, "config.json"), "utf8"));
 
 export function spokenWords(paras) {
   let n = 0;
-  for (const p of paras) {
+  for (let p of paras) {
     if (/^\[[^\]]*\](\s*\[[^\]]*\])*$/.test(p.trim())) continue;
+    p = p.replace(/\{n([1-4])\}/g, (_, k) => cfg.speakers[`s${k}`].name); // full names count as their words
     const pending = (p.match(/\[\[pending:[^\]]*\]\]/g) || []).length;
     const text = p.replace(/\[\[pending:[^\]]*\]\]/g, " ").replace(/\[[^\]]*\]/g, " ").replace(/[{}]/g, "");
     n += text.split(/\s+/).filter((w) => /[A-Za-z0-9]/.test(w)).length + pending * PENDING_WORDS;

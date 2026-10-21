@@ -108,6 +108,606 @@ window.EPI_DATA = {
   ],
   "baseline_pct": 34.44032752505725
  },
+ "curve_grid": {
+  "budgets": [
+   0.25,
+   0.5,
+   0.75,
+   1.0,
+   1.5
+  ],
+  "alphas": [
+   0.0,
+   0.1,
+   0.2,
+   0.3,
+   0.4,
+   0.5,
+   0.6,
+   0.7,
+   0.8,
+   0.9,
+   1.0
+  ],
+  "lp": {
+   "0.25|0.0": 50.4545684232307,
+   "0.25|0.1": 50.454568427477874,
+   "0.25|0.2": 50.45456842407246,
+   "0.25|0.3": 50.454568424730596,
+   "0.25|0.4": 50.45456842760031,
+   "0.25|0.5": 50.45456842972007,
+   "0.25|0.6": 50.45456842598561,
+   "0.25|0.7": 50.45696002038588,
+   "0.25|0.8": 50.4775161462895,
+   "0.25|0.9": 50.25984840538826,
+   "0.25|1.0": 49.79171264547591,
+   "0.5|0.0": 67.78184415533651,
+   "0.5|0.1": 65.34544845451623,
+   "0.5|0.2": 65.3454484790045,
+   "0.5|0.3": 65.34544844686366,
+   "0.5|0.4": 65.34544845757728,
+   "0.5|0.5": 65.34544844762891,
+   "0.5|0.6": 65.34544844303737,
+   "0.5|0.7": 65.34784006598176,
+   "0.5|0.8": 65.36839617183561,
+   "0.5|0.9": 65.5105503537469,
+   "0.5|1.0": 66.30248595302649,
+   "0.75|0.0": 82.67272421187558,
+   "0.75|0.1": 82.67272422947651,
+   "0.75|0.2": 82.67272429605399,
+   "0.75|0.3": 82.67272428304459,
+   "0.75|0.4": 82.67272423483332,
+   "0.75|0.5": 82.67272425013849,
+   "0.75|0.6": 82.67272427309624,
+   "0.75|0.7": 82.67631160578671,
+   "0.75|0.8": 82.70714583031534,
+   "0.75|0.9": 82.86757139547764,
+   "0.75|1.0": 83.44308225999106,
+   "1.0|0.0": 99.99999984678301,
+   "1.0|0.1": 99.99999984678301,
+   "1.0|0.2": 99.99999984678301,
+   "1.0|0.3": 99.99999984678301,
+   "1.0|0.4": 99.99999984678301,
+   "1.0|0.5": 99.99999984678301,
+   "1.0|0.6": 99.99999984678301,
+   "1.0|0.7": 99.99999984678301,
+   "1.0|0.8": 99.99999984678301,
+   "1.0|0.9": 99.99999984678301,
+   "1.0|1.0": 99.99999984678301,
+   "1.5|0.0": 99.99999984678301,
+   "1.5|0.1": 99.99999984678301,
+   "1.5|0.2": 99.99999984678301,
+   "1.5|0.3": 99.99999984678301,
+   "1.5|0.4": 99.99999984678301,
+   "1.5|0.5": 99.99999984678301,
+   "1.5|0.6": 99.99999984678301,
+   "1.5|0.7": 99.99999984678301,
+   "1.5|0.8": 99.99999984678301,
+   "1.5|0.9": 99.99999984678301,
+   "1.5|1.0": 99.99999984678301
+  },
+  "baseline": {
+   "0.25": 17.561217477140755,
+   "0.5": 34.44032752505725,
+   "0.75": 50.12529466277456,
+   "1.0": 63.132339715700034,
+   "1.5": 70.88461721108999
+  }
+ },
+ "districts": [
+  {
+   "code": "BD1004",
+   "name": "Barguna",
+   "division": "Barishal",
+   "lat": 22.128262,
+   "lon": 90.110133,
+   "pop": 898288
+  },
+  {
+   "code": "BD1006",
+   "name": "Barishal",
+   "division": "Barishal",
+   "lat": 22.819387,
+   "lon": 90.368787,
+   "pop": 2192962
+  },
+  {
+   "code": "BD1009",
+   "name": "Bhola",
+   "division": "Barishal",
+   "lat": 22.310321,
+   "lon": 90.763983,
+   "pop": 1772115
+  },
+  {
+   "code": "BD1042",
+   "name": "Jhalokati",
+   "division": "Barishal",
+   "lat": 22.572341,
+   "lon": 90.181898,
+   "pop": 639323
+  },
+  {
+   "code": "BD1078",
+   "name": "Patuakhali",
+   "division": "Barishal",
+   "lat": 22.165187,
+   "lon": 90.407257,
+   "pop": 1548309
+  },
+  {
+   "code": "BD1079",
+   "name": "Pirojpur",
+   "division": "Barishal",
+   "lat": 22.532037,
+   "lon": 89.99209,
+   "pop": 1059726
+  },
+  {
+   "code": "BD2003",
+   "name": "Bandarban",
+   "division": "Chattogram",
+   "lat": 21.804506,
+   "lon": 92.365136,
+   "pop": 497397
+  },
+  {
+   "code": "BD2012",
+   "name": "Brahmanbaria",
+   "division": "Chattogram",
+   "lat": 23.953343,
+   "lon": 91.083172,
+   "pop": 3261331
+  },
+  {
+   "code": "BD2013",
+   "name": "Chandpur",
+   "division": "Chattogram",
+   "lat": 23.26111,
+   "lon": 90.748889,
+   "pop": 2468479
+  },
+  {
+   "code": "BD2015",
+   "name": "Chattogram",
+   "division": "Chattogram",
+   "lat": 22.446733,
+   "lon": 91.819228,
+   "pop": 8606592
+  },
+  {
+   "code": "BD2019",
+   "name": "Cumilla",
+   "division": "Chattogram",
+   "lat": 23.437048,
+   "lon": 91.032979,
+   "pop": 6262743
+  },
+  {
+   "code": "BD2022",
+   "name": "Cox's Bazar",
+   "division": "Chattogram",
+   "lat": 21.476011,
+   "lon": 92.062517,
+   "pop": 2890272
+  },
+  {
+   "code": "BD2030",
+   "name": "Feni",
+   "division": "Chattogram",
+   "lat": 22.994955,
+   "lon": 91.411998,
+   "pop": 1614966
+  },
+  {
+   "code": "BD2046",
+   "name": "Khagrachhari",
+   "division": "Chattogram",
+   "lat": 23.171941,
+   "lon": 91.956457,
+   "pop": 697657
+  },
+  {
+   "code": "BD2051",
+   "name": "Lakshmipur",
+   "division": "Chattogram",
+   "lat": 22.850934,
+   "lon": 90.853689,
+   "pop": 1946592
+  },
+  {
+   "code": "BD2075",
+   "name": "Noakhali",
+   "division": "Chattogram",
+   "lat": 22.658062,
+   "lon": 91.129499,
+   "pop": 3665008
+  },
+  {
+   "code": "BD2084",
+   "name": "Rangamati",
+   "division": "Chattogram",
+   "lat": 22.825071,
+   "lon": 92.28109,
+   "pop": 682248
+  },
+  {
+   "code": "BD3026",
+   "name": "Dhaka",
+   "division": "Dhaka",
+   "lat": 23.788451,
+   "lon": 90.250585,
+   "pop": 18113283
+  },
+  {
+   "code": "BD3029",
+   "name": "Faridpur",
+   "division": "Dhaka",
+   "lat": 23.477601,
+   "lon": 89.835901,
+   "pop": 2018158
+  },
+  {
+   "code": "BD3033",
+   "name": "Gazipur",
+   "division": "Dhaka",
+   "lat": 24.098656,
+   "lon": 90.446184,
+   "pop": 6154811
+  },
+  {
+   "code": "BD3035",
+   "name": "Gopalganj",
+   "division": "Dhaka",
+   "lat": 23.104803,
+   "lon": 89.899241,
+   "pop": 1123453
+  },
+  {
+   "code": "BD3048",
+   "name": "Kishoreganj",
+   "division": "Dhaka",
+   "lat": 24.378015,
+   "lon": 90.943306,
+   "pop": 3150871
+  },
+  {
+   "code": "BD3054",
+   "name": "Madaripur",
+   "division": "Dhaka",
+   "lat": 23.222073,
+   "lon": 90.166234,
+   "pop": 1127908
+  },
+  {
+   "code": "BD3056",
+   "name": "Manikganj",
+   "division": "Dhaka",
+   "lat": 23.840804,
+   "lon": 89.951192,
+   "pop": 1463813
+  },
+  {
+   "code": "BD3059",
+   "name": "Munshiganj",
+   "division": "Dhaka",
+   "lat": 23.525842,
+   "lon": 90.41611,
+   "pop": 1560983
+  },
+  {
+   "code": "BD3067",
+   "name": "Narayanganj",
+   "division": "Dhaka",
+   "lat": 23.723811,
+   "lon": 90.578146,
+   "pop": 3968554
+  },
+  {
+   "code": "BD3068",
+   "name": "Narsingdi",
+   "division": "Dhaka",
+   "lat": 24.003213,
+   "lon": 90.774054,
+   "pop": 2525087
+  },
+  {
+   "code": "BD3082",
+   "name": "Rajbari",
+   "division": "Dhaka",
+   "lat": 23.728541,
+   "lon": 89.560517,
+   "pop": 1113458
+  },
+  {
+   "code": "BD3086",
+   "name": "Shariatpur",
+   "division": "Dhaka",
+   "lat": 23.244585,
+   "lon": 90.414641,
+   "pop": 1188172
+  },
+  {
+   "code": "BD3093",
+   "name": "Tangail",
+   "division": "Dhaka",
+   "lat": 24.358449,
+   "lon": 90.000405,
+   "pop": 3804363
+  },
+  {
+   "code": "BD4001",
+   "name": "Bagerhat",
+   "division": "Khulna",
+   "lat": 22.328846,
+   "lon": 89.743975,
+   "pop": 1338096
+  },
+  {
+   "code": "BD4018",
+   "name": "Chuadanga",
+   "division": "Khulna",
+   "lat": 23.609069,
+   "lon": 88.84862,
+   "pop": 1216379
+  },
+  {
+   "code": "BD4041",
+   "name": "Jashore",
+   "division": "Khulna",
+   "lat": 23.089475,
+   "lon": 89.174812,
+   "pop": 2972217
+  },
+  {
+   "code": "BD4044",
+   "name": "Jhenaidah",
+   "division": "Khulna",
+   "lat": 23.488476,
+   "lon": 89.087047,
+   "pop": 1910352
+  },
+  {
+   "code": "BD4047",
+   "name": "Khulna",
+   "division": "Khulna",
+   "lat": 22.365739,
+   "lon": 89.452816,
+   "pop": 2181770
+  },
+  {
+   "code": "BD4050",
+   "name": "Kushtia",
+   "division": "Khulna",
+   "lat": 23.926195,
+   "lon": 89.01845,
+   "pop": 2099291
+  },
+  {
+   "code": "BD4055",
+   "name": "Magura",
+   "division": "Khulna",
+   "lat": 23.443659,
+   "lon": 89.432849,
+   "pop": 983429
+  },
+  {
+   "code": "BD4057",
+   "name": "Meherpur",
+   "division": "Khulna",
+   "lat": 23.793551,
+   "lon": 88.706757,
+   "pop": 696968
+  },
+  {
+   "code": "BD4065",
+   "name": "Narail",
+   "division": "Khulna",
+   "lat": 23.131201,
+   "lon": 89.578213,
+   "pop": 710145
+  },
+  {
+   "code": "BD4087",
+   "name": "Satkhira",
+   "division": "Khulna",
+   "lat": 22.307897,
+   "lon": 89.14335,
+   "pop": 2023845
+  },
+  {
+   "code": "BD4539",
+   "name": "Jamalpur",
+   "division": "Mymensingh",
+   "lat": 24.977242,
+   "lon": 89.847214,
+   "pop": 2395906
+  },
+  {
+   "code": "BD4561",
+   "name": "Mymensingh",
+   "division": "Mymensingh",
+   "lat": 24.69929,
+   "lon": 90.429618,
+   "pop": 5628978
+  },
+  {
+   "code": "BD4572",
+   "name": "Netrakona",
+   "division": "Mymensingh",
+   "lat": 24.870764,
+   "lon": 90.845299,
+   "pop": 2405452
+  },
+  {
+   "code": "BD4589",
+   "name": "Sherpur",
+   "division": "Mymensingh",
+   "lat": 25.08294,
+   "lon": 90.075457,
+   "pop": 1379426
+  },
+  {
+   "code": "BD5010",
+   "name": "Bogura",
+   "division": "Rajshahi",
+   "lat": 24.824331,
+   "lon": 89.380401,
+   "pop": 3702387
+  },
+  {
+   "code": "BD5038",
+   "name": "Joypurhat",
+   "division": "Rajshahi",
+   "lat": 25.092984,
+   "lon": 89.083817,
+   "pop": 947031
+  },
+  {
+   "code": "BD5064",
+   "name": "Naogaon",
+   "division": "Rajshahi",
+   "lat": 24.900211,
+   "lon": 88.751679,
+   "pop": 2711029
+  },
+  {
+   "code": "BD5069",
+   "name": "Natore",
+   "division": "Rajshahi",
+   "lat": 24.380562,
+   "lon": 89.087415,
+   "pop": 1840322
+  },
+  {
+   "code": "BD5070",
+   "name": "Chapainababganj",
+   "division": "Rajshahi",
+   "lat": 24.715596,
+   "lon": 88.263992,
+   "pop": 1836973
+  },
+  {
+   "code": "BD5076",
+   "name": "Pabna",
+   "division": "Rajshahi",
+   "lat": 24.053047,
+   "lon": 89.386181,
+   "pop": 2832687
+  },
+  {
+   "code": "BD5081",
+   "name": "Rajshahi",
+   "division": "Rajshahi",
+   "lat": 24.468377,
+   "lon": 88.650654,
+   "pop": 2837737
+  },
+  {
+   "code": "BD5088",
+   "name": "Sirajganj",
+   "division": "Rajshahi",
+   "lat": 24.391524,
+   "lon": 89.601465,
+   "pop": 3442663
+  },
+  {
+   "code": "BD5527",
+   "name": "Dinajpur",
+   "division": "Rangpur",
+   "lat": 25.630427,
+   "lon": 88.786282,
+   "pop": 3255541
+  },
+  {
+   "code": "BD5532",
+   "name": "Gaibandha",
+   "division": "Rangpur",
+   "lat": 25.298285,
+   "lon": 89.505435,
+   "pop": 2545669
+  },
+  {
+   "code": "BD5549",
+   "name": "Kurigram",
+   "division": "Rangpur",
+   "lat": 25.790477,
+   "lon": 89.69509,
+   "pop": 2309661
+  },
+  {
+   "code": "BD5552",
+   "name": "Lalmonirhat",
+   "division": "Rangpur",
+   "lat": 26.062899,
+   "lon": 89.236513,
+   "pop": 1368552
+  },
+  {
+   "code": "BD5573",
+   "name": "Nilphamari",
+   "division": "Rangpur",
+   "lat": 26.025557,
+   "lon": 88.93006,
+   "pop": 2076058
+  },
+  {
+   "code": "BD5577",
+   "name": "Panchagarh",
+   "division": "Rangpur",
+   "lat": 26.28531,
+   "lon": 88.578542,
+   "pop": 1127967
+  },
+  {
+   "code": "BD5585",
+   "name": "Rangpur",
+   "division": "Rangpur",
+   "lat": 25.651348,
+   "lon": 89.236832,
+   "pop": 3147367
+  },
+  {
+   "code": "BD5594",
+   "name": "Thakurgaon",
+   "division": "Rangpur",
+   "lat": 25.990096,
+   "lon": 88.344545,
+   "pop": 1532697
+  },
+  {
+   "code": "BD6036",
+   "name": "Habiganj",
+   "division": "Sylhet",
+   "lat": 24.369432,
+   "lon": 91.431707,
+   "pop": 2404043
+  },
+  {
+   "code": "BD6058",
+   "name": "Moulvibazar",
+   "division": "Sylhet",
+   "lat": 24.481077,
+   "lon": 91.916467,
+   "pop": 2217984
+  },
+  {
+   "code": "BD6090",
+   "name": "Sunamganj",
+   "division": "Sylhet",
+   "lat": 24.939849,
+   "lon": 91.345596,
+   "pop": 2945083
+  },
+  {
+   "code": "BD6091",
+   "name": "Sylhet",
+   "division": "Sylhet",
+   "lat": 24.919686,
+   "lon": 91.987683,
+   "pop": 4609848
+  }
+ ],
  "calendar": [
   {
    "division": "Barishal",

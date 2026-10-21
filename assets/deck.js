@@ -12,42 +12,17 @@
   const sp = (id) => cfg.speakers[id];
   document.querySelectorAll("[data-cfg]").forEach((el) => {
     const k = el.dataset.cfg;
-    if (k === "team") el.textContent = cfg.order.map((id) => sp(id).name).join(", ");
-    else if (cfg.speakers[k]) el.textContent = sp(k).short;
-    else el.textContent = cfg[k] ?? "";
+    if (!cfg.speakers[k]) el.textContent = cfg[k] ?? "";
   });
 
-  // ---------- presenter name on every slide (same short name the script page filters on) ----------
-  slides.forEach((s) => {
-    const tag = document.createElement("p");
-    tag.className = "presenter";
-    tag.setAttribute("aria-label", "Presenter");
-    tag.innerHTML = `<i></i>${esc(sp(s.dataset.speaker).short)}`;
-    s.appendChild(tag);
+  // ---------- slide 2: meet our team (the only slide that names people) ----------
+  const team = document.getElementById("team");
+  cfg.order.forEach((id, k) => {
+    const m = /^(.*?)\s*\((.*)\)$/.exec(sp(id).role || "") || [null, sp(id).role || "", ""];
+    team.insertAdjacentHTML("beforeend",
+      `<div class="card" data-in style="--c:var(--${id})"><p class="nm">${esc(sp(id).name)}</p>` +
+      `<p class="rl">${esc(m[1])}</p>${m[2] ? `<p class="dt">${esc(m[2])}</p>` : ""}</div>`);
   });
-
-  // ---------- running order and chapter times, from the script timing ----------
-  const tl = EPI.timeline(window.EPI_SCRIPT);
-  const total = tl.reduce((a, s) => a + s.secs, 0);
-  const order = document.getElementById("order");
-  for (const id of cfg.order) {
-    const secs = tl.filter((s) => s.speaker === id);
-    const start = Math.min(...secs.map((s) => s.start));
-    const dur = secs.reduce((a, s) => a + s.secs, 0);
-    order.insertAdjacentHTML("beforeend",
-      `<div class="row"><i class="sw" style="background:var(--${id})"></i><span class="nm">${esc(sp(id).name)}</span>` +
-      `<span>${esc(sp(id).role)}</span><span class="t">${EPI.fmt(start)} for ${EPI.fmt(dur)}</span></div>`);
-  }
-  const CH = { 1: "Problem, stakeholders and conflicts", 2: "Architecture", 3: "Pipeline run: clean, incremental, re-run, quarantine",
-    4: "Analytics against baselines", 5: "Dashboard and what-if panel", 6: "Recommendations, ethics and limits" };
-  const chapters = document.getElementById("chapters");
-  for (const c of [1, 2, 3, 4, 5, 6]) {
-    const first = tl.find((s) => s.chapter === c);
-    chapters.insertAdjacentHTML("beforeend",
-      `<div class="row" style="grid-template-columns:110px 1fr 300px"><span class="t" style="text-align:left">${EPI.fmt(first.start)}</span>` +
-      `<span class="nm">${c}. ${CH[c]}</span><span class="t">${esc(sp(first.speaker).short)}</span></div>`);
-  }
-  chapters.insertAdjacentHTML("beforeend", `<p class="small" style="margin-top:14px">Planned length ${EPI.fmt(total)} at ${EPI.WPM} words a minute.</p>`);
 
   // ---------- svg helpers ----------
   function el(parent, tag, attrs = {}, text) {
@@ -181,11 +156,22 @@
     });
   })();
 
-  // ---------- progress strip, speaker label, navigation ----------
+  // title fallback (no WebGL or reduced motion): the 64 district centroids, area = 2022 census population
+  (() => {
+    const svg = document.getElementById("title-map");
+    const ds = D.districts, W = 700, H = 420;
+    const lon0 = Math.min(...ds.map((d) => d.lon)), lon1 = Math.max(...ds.map((d) => d.lon));
+    const lat0 = Math.min(...ds.map((d) => d.lat)), lat1 = Math.max(...ds.map((d) => d.lat));
+    const k = Math.min((W - 120) / (lon1 - lon0), (H - 60) / (lat1 - lat0));
+    const pmax = Math.max(...ds.map((d) => d.pop));
+    ds.forEach((d) => el(svg, "circle", { cx: W / 2 + (d.lon - (lon0 + lon1) / 2) * k, cy: H / 2 - (d.lat - (lat0 + lat1) / 2) * k,
+      r: 4 + 26 * Math.sqrt(d.pop / pmax), fill: "var(--teal)", opacity: 0.55 }));
+  })();
+
+  // ---------- progress strip, navigation ----------
   const strip = document.getElementById("strip");
   strip.style.gridTemplateColumns = `repeat(${slides.length}, 1fr)`;
   slides.forEach((s) => { const b = document.createElement("b"); b.style.background = `var(--${s.dataset.speaker})`; strip.appendChild(b); });
-  const who = document.getElementById("who");
   let cur = 0;
 
   function show(i) {
@@ -193,14 +179,12 @@
     slides.forEach((s, k) => s.classList.toggle("active", k === cur));
     const s = slides[cur];
     [...s.querySelectorAll("[data-in]")].forEach((n, k) => n.style.setProperty("--i", k));
-    const id = s.dataset.speaker;
-    who.style.setProperty("--cur", `var(--${id})`);
-    who.querySelector("b").textContent = sp(id).name;
-    who.querySelector("span").textContent = sp(id).role;
     [...strip.children].forEach((b, k) => { b.className = k < cur ? "done" : k === cur ? "now" : ""; });
     document.getElementById("count").textContent = `${cur + 1} / ${slides.length}`;
     document.title = `EpiScope slides ${cur + 1}/${slides.length}`;
     history.replaceState(null, "", `#${cur + 1}`);
+    window.EPI_SLIDE = cur;
+    document.dispatchEvent(new CustomEvent("epi:slide", { detail: { index: cur, slide: s } }));
   }
   const next = () => show(cur + 1), prev = () => show(cur - 1);
 
@@ -237,4 +221,9 @@
   addEventListener("resize", fit);
   fit();
   show((parseInt(location.hash.slice(1), 10) || 1) - 1);
+
+  // 3D scenes (assets/scenes.js) mark themselves "on" or "no3d". If that module never loads, show the fallbacks.
+  setTimeout(() => document.querySelectorAll(".scene3d:not(.on):not(.no3d)").forEach((f) => {
+    if (!document.documentElement.classList.contains("has3d")) f.classList.add("no3d");
+  }), 2500);
 })();

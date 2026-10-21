@@ -11,37 +11,41 @@ Tool: `node tools/timing.mjs 110` (and `105` for the slow case). Spoken words ex
 
 | Section | Speaker | Words | Pause s | Time | Starts |
 |---|---|---:|---:|---:|---:|
-| 1a Opening | s1 | 59 | 4 | 0:36 | 0:00 |
-| 1b The problem | s1 | 91 | 2 | 0:51 | 0:36 |
-| 1c Stakeholders and conflicts | s1 | 136 | 4 | 1:18 | 1:27 |
-| 1d The data story | s1 | 78 | 2 | 0:44 | 2:46 |
-| 1e Architecture | s1 | 91 | 3 | 0:52 | 3:30 |
-| 3a My part and the generator | s3 | 74 | 3 | 0:43 | 4:23 |
-| 3b Bronze | s3 | 64 | 2 | 0:36 | 5:06 |
-| 3c Silver: rules, quarantine, privacy | s3 | 113 | 4 | 1:05 | 5:43 |
-| 3d Gold and lineage | s3 | 55 | 2 | 0:32 | 6:49 |
-| 3e Live run: new drop, re-run, quarantine | s3 | 72 | 35 | 1:14 | 7:21 |
-| 3f Spark choices and scaling | s3 | 81 | 2 | 0:46 | 8:35 |
-| 4a Detection: why EARS C2 and CUSUM | s4 | 106 | 3 | 1:00 | 9:21 |
-| 4b The reporting artefact | s4 | 51 | 2 | 0:29 | 10:22 |
-| 4c Detection against the baseline | s4 | 70 | 2 | 0:40 | 10:52 |
-| 4d Forecasts and the backtest | s4 | 102 | 2 | 0:57 | 11:32 |
-| 4e From forecasts to supplies | s4 | 128 | 4 | 1:13 | 12:30 |
-| 4f Preparedness calendar | s4 | 46 | 2 | 0:27 | 13:43 |
-| 2a Why the dashboard looks like this | s2 | 62 | 3 | 0:36 | 14:10 |
-| 2b Live walkthrough | s2 | 128 | 27 | 1:36 | 14:47 |
-| 2c Usability check | s2 | 58 | 2 | 0:33 | 16:24 |
-| 2d Privacy and ethics | s2 | 105 | 2 | 0:59 | 16:58 |
-| 2e Recommendations and limits | s2 | 96 | 2 | 0:54 | 17:57 |
-| 2f Close | s2 | 17 | 3 | 0:12 | 18:51 |
+| 1a Opening | s1 | 46 | 3 | 0:28 | 0:00 |
+| 1t Meet our team | s1 | 22 | 2 | 0:14 | 0:28 |
+| 3t Meet our team | s3 | 18 | 1 | 0:10 | 0:42 |
+| 4t Meet our team | s4 | 13 | 1 | 0:08 | 0:52 |
+| 2t Meet our team | s2 | 16 | 2 | 0:10 | 1:01 |
+| 1b The problem | s1 | 91 | 2 | 0:51 | 1:11 |
+| 1c Stakeholders and conflicts | s1 | 136 | 4 | 1:18 | 2:03 |
+| 1d The data story | s1 | 78 | 2 | 0:44 | 3:21 |
+| 1e Architecture | s1 | 91 | 3 | 0:52 | 4:06 |
+| 3a My part and the generator | s3 | 58 | 3 | 0:34 | 4:58 |
+| 3b Bronze | s3 | 64 | 2 | 0:36 | 5:33 |
+| 3c Silver: rules, quarantine, privacy | s3 | 107 | 4 | 1:02 | 6:10 |
+| 3d Gold and lineage | s3 | 52 | 2 | 0:30 | 7:12 |
+| 3e Live run: new drop, re-run, quarantine | s3 | 70 | 35 | 1:13 | 7:43 |
+| 3f Spark choices and scaling | s3 | 81 | 2 | 0:46 | 8:56 |
+| 4a Detection: why EARS C2 and CUSUM | s4 | 94 | 3 | 0:54 | 9:42 |
+| 4b The reporting artefact | s4 | 51 | 2 | 0:29 | 10:36 |
+| 4c Detection against the baseline | s4 | 58 | 2 | 0:33 | 11:06 |
+| 4d Forecasts and the backtest | s4 | 98 | 2 | 0:55 | 11:40 |
+| 4e From forecasts to supplies | s4 | 153 | 4 | 1:27 | 12:35 |
+| 4f Preparedness calendar | s4 | 46 | 2 | 0:27 | 14:03 |
+| 2a Why the dashboard looks like this | s2 | 60 | 3 | 0:35 | 14:30 |
+| 2b Live walkthrough | s2 | 119 | 27 | 1:31 | 15:05 |
+| 2c Usability check | s2 | 58 | 2 | 0:33 | 16:37 |
+| 2d Privacy and ethics | s2 | 105 | 2 | 0:59 | 17:11 |
+| 2e Recommendations and limits | s2 | 91 | 2 | 0:51 | 18:10 |
+| 2f Close | s2 | 17 | 3 | 0:12 | 19:02 |
 
 | Speaker | Slides | Words | At 110 wpm | At 105 wpm | 4 to 5 min at 110 |
 |---|---|---:|---:|---:|---|
-| s1 Rafi | 6 (+ title) | 455 | 4:23 | 4:35 | yes |
-| s3 Shezan | 7 | 459 | 4:58 | 5:10 | yes |
-| s4 Rimjhim | 7 | 503 | 4:49 | 5:02 | yes |
-| s2 Samira | 6 (+ closing) | 466 | 4:53 | 5:05 | yes |
-| **Total** | 28 | 1,883 | **19:04** | **19:53** | limit 15:00 to 20:00 |
+| s1 Rafi | 7 (title, team, 3 to 7) | 464 | 4:29 | 4:41 | yes |
+| s3 Shezan | 7 | 450 | 4:54 | 5:06 | yes |
+| s4 Rimjhim | 7 | 513 | 4:55 | 5:09 | yes |
+| s2 Samira | 6 (+ closing) | 466 | 4:55 | 5:07 | yes |
+| **Total** | 28 | 1,893 | **19:14** | **20:03** | limit 15:00 to 20:00 |
 
 Changes made in this pass: the first draft ran 19:16 at 110 wpm and 20:05 at 105 wpm, which is over the limit
 for slow readers. Cut about 160 words, mostly repeated explanations (Shezan's transcript was written for 145
@@ -164,4 +168,23 @@ district whose reports are missing; the pipeline marks silent weeks as missing, 
 (`analytics/detection/prepare.py`), and the dashboard shows them as "no report" (`timeseries.js`, `heatmap.js`).
 The detector does not raise an alert on a silent week, so the script does not say it does. Samira's what-if and
 band lines were shortened to keep her at 4:53.
+
+## 2026-10-21 (evening): V2, names off the slides, team slide, 3D
+
+- Names appear only on slide 2 ("Meet our team"): full name and project role from `config.json` (`role`; the
+  video part is now `part`). The presenter chip, the footer name, the "Shown by" column (slide 5), "Shown by" on
+  slide 4, and the names and times on the closing slide are gone. The script page still shows who speaks.
+- 3D (three.js 0.180.0, MIT, vendored): title slide (64 districts, bar height = 2022 census population from
+  `data/reference/districts.csv`) and slide 20 (share of need met at every budget and α from
+  `allocation_curve.csv`, against the population split). Each renders only while its slide is active, at 30 fps,
+  and falls back to an SVG with no WebGL or with reduced motion. The numbers on slide 20 are unchanged: 67.8% and
+  34.4% at half the budget, 65.3% for α 0.1 to 0.9.
+- Script: slide-2 intros (one sentence each, full names via `{n1}` to `{n4}`), a 3D line on slides 1 and 20, and the
+  self-introductions removed from 3a, 4a and 2a. Rimjhim no longer says she "did the analytics" (her project role is
+  the dashboard); she now says she will explain them. Trims to stay inside 5 minutes: listed in HANDOFF.md.
+- Timing at 110 wpm: 19:14, every speaker 4:29 to 4:55. At 105 wpm the total is 20:03, three speakers 5:06 to
+  5:09, slightly over: rehearse at 110.
+- Style pass on the new lines: no banned words, no dashes, no new sentence over 18 words.
+- Form check (brief item 6): **not done yet**. BRIEF.md has no "FORM REQUIREMENTS" section, and the Google Form is
+  not opened from here.
 

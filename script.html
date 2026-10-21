@@ -85,7 +85,7 @@
 <script>
 (async () => {
   const cfg = await EPI.loadConfig();
-  const tl = EPI.timeline(window.EPI_SCRIPT);
+  const tl = EPI.timeline(window.EPI_SCRIPT, EPI.WPM, cfg);
   const total = tl.reduce((a, s) => a + s.secs, 0);
   const sp = (id) => cfg.speakers[id];
   const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
@@ -95,6 +95,7 @@
   function render(p) {
     let h = esc(p);
     h = h.replace(/\{(s[1-4])\}/g, (_, id) => esc(sp(id).short));
+    h = h.replace(/\{n([1-4])\}/g, (_, k) => esc(sp(`s${k}`).name));
     h = h.replace(/\{\{([^}]*)\}\}/g, '<span class="draft">$1</span>');
     h = h.replace(/\[\[pending:\s*([^\]]*)\]\]/g, '<span class="pending">$1</span>');
     return h;

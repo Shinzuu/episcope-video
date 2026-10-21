@@ -53,6 +53,22 @@ def main():
         "baseline_pct": [float(r["pct_need_met"]) for r in curve if r["kind"] != "lp"][0],
     }
 
+    # Share of need met over every budget and alpha (3D surface on the allocation slide), and the population split
+    grid = rows(REPO / SOURCES["curve"])
+    data["curve_grid"] = {
+        "budgets": sorted({float(r["budget_level"]) for r in grid}),
+        "alphas": sorted({float(r["alpha"]) for r in grid if r["kind"] == "lp"}),
+        "lp": {f'{float(r["budget_level"])}|{float(r["alpha"])}': float(r["pct_need_met"]) for r in grid if r["kind"] == "lp"},
+        "baseline": {str(float(r["budget_level"])): float(r["pct_need_met"]) for r in grid if r["kind"] != "lp"},
+    }
+
+    # The 64 districts: centroid and 2022 census population (3D bars on the title slide)
+    data["districts"] = [
+        {"code": r["district_code"], "name": r["district_name"], "division": r["division_name"],
+         "lat": float(r["lat"]), "lon": float(r["lon"]), "pop": int(r["population_2022"])}
+        for r in rows(REPO / SOURCES["districts"])
+    ]
+
     names = {r["division_code"]: r["division_name"] for r in rows(REPO / SOURCES["districts"])}
     data["calendar"] = [
         {"division": names[r["division_code"]], "disease": r["disease"], "onset": int(r["onset_week"]),
