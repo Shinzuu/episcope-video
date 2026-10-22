@@ -211,8 +211,8 @@ window.EPI_SCRIPT = [
     paras: [
       "[SHOW the dashboard in the browser at 125% zoom]",
       "There are five views, sharing one selection. The map shows cases per hundred thousand people, so a big district doesn't look worse just for being big. The table ranks districts by alerts, so an officer knows where to look first.",
-      "[SHOW the line at the top, then point to one solid and one outlined triangle]",
-      "The line at the top names districts on alert in the last full week. On the map, a solid triangle means the same; an outlined one, alerts earlier in the range only.",
+      "[SHOW the line at the top (it says none), then point to the outlined triangles]",
+      "The line at the top names districts on alert in the last full week. In our last week there are none. On the map, a solid triangle would mean the same; an outlined one marks alerts earlier in the range.",
       "[SHOW click Chattogram on the map]",
       "When I click Chattogram, the weekly chart, seasonal pattern and allocation all switch to it.",
       "[NEXT SLIDE] [then back to the browser: drag on the lower time strip, then hover the newest week]",
