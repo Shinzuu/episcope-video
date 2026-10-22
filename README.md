@@ -36,8 +36,8 @@ numbers in the script come from a repo file that table does not list; dashed box
 
 ## Credits
 
-Dashboard screenshots are of the EpiScope dashboard running locally on the SF=0.25 export of 21 Oct; the
-allocation screenshot is the report's final SF=1 figure. 3D: three.js 0.180.0 (MIT, `assets/vendor/three-0.180.0/LICENSE`),
+Dashboard screenshots are of the EpiScope dashboard on the final SF=1 build (EARS C2 4.0, CUSUM h 6.5); the
+title curve and the rule chart use the SF=0.25 export of 21 Oct. 3D: three.js 0.180.0 (MIT, `assets/vendor/three-0.180.0/LICENSE`),
 copied unchanged from cdnjs. Boundaries:
 BBS / OCHA ROAP via HDX (CC BY-IGO). Font: Atkinson Hyperlegible Next (SIL OFL 1.1, `assets/fonts/OFL.txt`).
 The data in the project is synthetic.

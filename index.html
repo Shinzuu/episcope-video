@@ -369,9 +369,9 @@
   <h2 data-in>No patient ID past bronze; one rule for late data</h2>
   <div class="cols">
     <div data-in>
-      <p class="formula">patient_key = HMAC-SHA256(salt, patient_id)</p>
+      <p class="formula">patient_key = HMAC-SHA256(key, patient_id)</p>
       <p>Built from Spark's own <code>sha2</code>, so no Python UDF slows it down.</p>
-      <p>The salt lives in <code>.env</code>, outside Git. Clean rows keep only an age band.</p>
+      <p>The secret key lives in <code>.env</code> (<code>EPISCOPE_HASH_SALT</code>), outside Git. Clean rows keep only an age band.</p>
     </div>
     <div data-in>
       <svg viewBox="0 0 640 380" width="640" height="380" aria-label="MERGE rule">

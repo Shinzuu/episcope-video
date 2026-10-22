@@ -249,7 +249,7 @@ window.EPI_SCRIPT = [
     paras: [
       "[NEXT SLIDE]",
       "Our advice to the Ministry. Have dengue supplies in place by week {{29}}, before the season. Treat alerts as a short list to check, and check reporting completeness before acting on a spike. And choose alpha openly, knowing its cost in unmet need.",
-      "Our limits. The data is synthetic, so no real decision should rest on it yet. Streaming alerts take about three and a half minutes at full scale. And the forecast bands ignore uncertainty in the model's own parameters, so they're a bit narrow.",
+      "Our limits. The data is synthetic, so no real decision should rest on it yet. Streaming alerts take just under four minutes at full scale. And the forecast bands ignore uncertainty in the model's own parameters, so they're a bit narrow.",
     ],
   },
   {
