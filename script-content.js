@@ -156,7 +156,7 @@ window.EPI_SCRIPT = [
     id: "4d", speaker: "s1", title: "The forecast model", slides: [17], chapter: 4, pause: 2,
     paras: [
       "[NEXT SLIDE]",
-      "For forecasts we fit a negative binomial model per district, for dengue and diarrhoea, using rain and temperature from four to eight weeks earlier. Why not machine learning? A hospital manager can read this model: more rain now, more dengue in a month. {s2} will show how well the forecasts and the detectors work.",
+      "For forecasts we fit a negative binomial model per district, for dengue and diarrhoea, and for malaria to size antimalarials, using rain and temperature from four to eight weeks earlier. Why not machine learning? A hospital manager can read this model: more rain now, more dengue in a month. {s2} will show how well the forecasts and the detectors work.",
     ],
   },
 
@@ -164,7 +164,7 @@ window.EPI_SCRIPT = [
   {
     id: "4g", speaker: "s2", title: "Forecast backtest", slides: [17], chapter: 4, pause: 1,
     paras: [
-      "Thanks, {s1}. Evaluation is my part. A rolling backtest over the last fifty-two weeks lets the model see only the past each time. Against the seasonal naive baseline, our interval score ratio is 0.84; below one means we win. It's 0.89 for dengue and 0.72 for diarrhoea. The average error drops from 133 to 113.",
+      "Thanks, {s1}. A rolling backtest over the last fifty-two weeks lets the model see only earlier weeks, as finally reported. Against the seasonal naive baseline, our interval score ratio is 0.84; below one means we win. It's 0.89 for dengue and 0.72 for diarrhoea. The average error drops from 133 to 113.",
     ],
   },
   {
@@ -191,7 +191,7 @@ window.EPI_SCRIPT = [
     id: "4f", speaker: "s1", title: "Preparedness calendar", slides: [21], chapter: 4, pause: 2,
     paras: [
       "[NEXT SLIDE]",
-      "Last, the calendar, from each division's trend and season. Dengue starts rising around week {{32}} and peaks around week {{39}}. So supplies should be in place by week {{29}}, and the campaign start by week {{26}}, in late June. Over to {s4} for the dashboard.",
+      "Last, the calendar, from each division's trend and season. Dengue starts rising around week {{31}} or {{32}} and peaks around week {{39}}. So supplies should be in place by week {{28}} or {{29}}, and the campaign start by week {{25}} or {{26}}, in the second half of June. Over to {s4} for the dashboard.",
     ],
   },
 
@@ -248,7 +248,7 @@ window.EPI_SCRIPT = [
     id: "2e", speaker: "s2", title: "Recommendations and limits", slides: [27], chapter: 6, pause: 2,
     paras: [
       "[NEXT SLIDE]",
-      "Our advice to the Ministry. Have dengue supplies in place by week {{29}}, before the season. Treat alerts as a short list to check, and check reporting completeness before acting on a spike. And choose alpha openly, knowing its cost in unmet need.",
+      "Our advice to the Ministry. Have dengue supplies in place by early to mid-July, before the season. Treat alerts as a short list to check, and check reporting completeness before acting on a spike. And choose alpha openly, knowing its cost in unmet need.",
       "Our limits. The data is synthetic, so no real decision should rest on it yet. Streaming alerts take just under four minutes at full scale. And the forecast bands ignore uncertainty in the model's own parameters, so they're a bit narrow.",
     ],
   },
