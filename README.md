@@ -2,6 +2,8 @@
 
 Slides and a phone script for the EpiScope group video (CSE 4345 Big Data Analytics, CEP).
 
+Portfolio: https://shinzuu.asktechguy.com/
+
 - `index.html`: the slide deck. Right arrow, space, click or swipe for the next slide; left arrow to go back;
   `F` for full screen; `#12` in the URL opens slide 12.
 - `script.html`: the script for reading on a phone. Tap your name to see only your parts.
