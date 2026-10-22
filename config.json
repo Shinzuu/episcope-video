@@ -5,36 +5,36 @@
     "s1": {
       "name": "Tahsin Ahmed Rafi",
       "short": "Rafi",
-      "role": "Analytics (outbreak detection and forecasting)",
-      "part": "Problem, stakeholders and data",
+      "role": "Analytics (outbreak detection, forecasting, supply allocation and calendar)",
+      "part": "Opening, analytics: detection, forecasting, supplies and calendar",
       "confirmed": true
     },
     "s2": {
       "name": "Samira Sultana",
       "short": "Samira",
-      "role": "Platform and evaluation",
-      "part": "Dashboard, ethics and conclusion",
+      "role": "Platform and evaluation (problem analysis, detection evaluation, privacy and ethics)",
+      "part": "Problem and conflicts, detection evaluation, privacy, ethics and conclusion",
       "confirmed": true
     },
     "s3": {
       "name": "Nishadul Islam Shezan",
       "short": "Shezan",
       "role": "Data engineering lead (ingestion, Delta lakehouse, data quality)",
-      "part": "Data engineering",
+      "part": "Data, architecture and data engineering",
       "confirmed": true
     },
     "s4": {
       "name": "Rimjhim Dey",
       "short": "Rimjhim",
-      "role": "Visualisation (dashboard)",
-      "part": "Analytics",
+      "role": "Visualisation (dashboard and usability check)",
+      "part": "Dashboard and usability check",
       "confirmed": true
     }
   },
   "order": [
     "s1",
+    "s2",
     "s3",
-    "s4",
-    "s2"
+    "s4"
   ]
 }

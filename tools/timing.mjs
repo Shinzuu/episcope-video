@@ -1,4 +1,4 @@
-// Read-aloud timing check for script-content.js (REVIEW.md pass a).
+// Read-aloud timing check for script-content.js.
 //   node tools/timing.mjs [wpm]      default 110
 // Spoken words exclude cue paragraphs. A [[pending: ...]] placeholder counts as PENDING_WORDS words, the
 // length of the sentence that will replace it. Time = words / wpm + the section's pause seconds.

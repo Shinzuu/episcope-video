@@ -5,6 +5,8 @@ Slides and a phone script for the EpiScope group video (CSE 4345 Big Data Analyt
 - `index.html`: the slide deck. Right arrow, space, click or swipe for the next slide; left arrow to go back;
   `F` for full screen; `#12` in the URL opens slide 12.
 - `script.html`: the script for reading on a phone. Tap your name to see only your parts.
+  Each person presents their own lead area: Rafi analytics (detection, forecasting, supplies, calendar),
+  Samira problem, detection evaluation, privacy and conclusion, Shezan data engineering, Rimjhim the dashboard.
 - `config.json`: names, project roles (`role`, shown on slide 2) and video parts (`part`). Edit only this file to
   change a name; both pages read it. Names appear on slide 2 only.
 - `assets/scenes.js`: the 3D views on slides 1 and 20 (three.js). They run only while their slide is shown and fall
@@ -27,7 +29,7 @@ node tools/timing.mjs                                       # timing per section
 ```
 
 Headline numbers in the slides and script are typed in from `docs/FINAL-NUMBERS.md` in the project repo. Shaded
-numbers in the script come from a repo file that table does not list; dashed boxes are results not final yet. `REVIEW.md` has the timing, style and fact passes.
+numbers in the script come from a repo file that table does not list; dashed boxes are results not final yet.
 
 ## Credits
 

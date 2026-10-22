@@ -172,7 +172,7 @@
 </section>
 
 <!-- 3 -->
-<section class="slide" data-speaker="s1" aria-label="The problem">
+<section class="slide" data-speaker="s2" aria-label="The problem">
   <h2 data-in>Late, messy reports from 64 districts</h2>
   <p class="lede" data-in>Dengue, diarrhoea, flu-like illness and malaria. Reports arrive late, facilities go quiet, and the same patient appears twice.</p>
   <div class="four">
@@ -185,7 +185,7 @@
 </section>
 
 <!-- 4 -->
-<section class="slide" data-speaker="s1" aria-label="Conflict 1">
+<section class="slide" data-speaker="s2" aria-label="Conflict 1">
   <h2 data-in>Conflict 1: early alerts or few false alarms</h2>
   <div class="vs">
     <div class="side" data-in><h3>District health officer</h3><p>"Tell me the moment cases go up. A missed outbreak costs lives."</p></div>
@@ -196,7 +196,7 @@
 </section>
 
 <!-- 5 -->
-<section class="slide" data-speaker="s1" aria-label="Conflicts 2 to 5">
+<section class="slide" data-speaker="s2" aria-label="Conflicts 2 to 5">
   <h2 data-in>Four more trade-offs</h2>
   <table class="t" data-in>
     <thead><tr><th>Conflict</th><th>What we chose</th></tr></thead>
@@ -210,7 +210,7 @@
 </section>
 
 <!-- 6 -->
-<section class="slide" data-speaker="s1" aria-label="The data story">
+<section class="slide" data-speaker="s3" aria-label="The data story">
   <h2 data-in>Real places and weather, synthetic patients</h2>
   <div class="cols">
     <div data-in>
@@ -228,7 +228,7 @@
 </section>
 
 <!-- 7 -->
-<section class="slide" data-speaker="s1" aria-label="Architecture">
+<section class="slide" data-speaker="s3" aria-label="Architecture">
   <h2 data-in>One pipeline, each layer rebuilt from the last</h2>
   <svg viewBox="0 0 1430 520" width="1430" height="520" data-in aria-label="Architecture diagram">
     <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
@@ -302,7 +302,7 @@
     <div data-in>
       <p>Patients are fake, but seasons, climate and population are real.</p>
       <p>Defects are injected on purpose, so the pipeline can prove it catches each one.</p>
-      <p>One facility goes silent for three weeks, then back-fills everything at once.</p>
+      <p>Two facilities each go silent for three weeks, then back-fill everything at once.</p>
     </div>
     <div data-in>
       <p class="stamp d">Injected defect rates, from <code>generator/config.py</code></p>
@@ -425,7 +425,7 @@
       <li>A gold row's batch IDs in the ingest log</li>
     </ol>
     <div data-in>
-      <p class="stamp">Hidden-drop drill on the final code</p>
+      <p class="stamp">Hidden-drop drill on the final ingestion code</p>
       <table class="t">
         <tbody>
           <tr><td>Drop seed</td><td class="r">4675</td></tr>
@@ -467,7 +467,7 @@
 </section>
 
 <!-- 15 -->
-<section class="slide" data-speaker="s4" aria-label="Detection">
+<section class="slide" data-speaker="s1" aria-label="Detection">
   <h2 data-in>Two detectors on seasonally adjusted counts</h2>
   <div class="cols">
     <div data-in>
@@ -484,7 +484,7 @@
 </section>
 
 <!-- 16 -->
-<section class="slide" data-speaker="s4" aria-label="Artefact handling">
+<section class="slide" data-speaker="s1" aria-label="Artefact handling">
   <h2 data-in>A silent facility is missing data, not zero cases</h2>
   <div class="cols">
     <div data-in>
@@ -497,11 +497,11 @@
       <p>Together with onset-week counting in gold, the back-fill spike never reaches the detector.</p>
     </div>
   </div>
-  <p class="src">Code: <code>analytics/detection/prepare.py</code>; artefact listed in <code>ground_truth/artefacts.csv</code></p>
+  <p class="src">Code: <code>analytics/detection/prepare.py</code>; both planted silent facilities listed in <code>ground_truth/artefacts.csv</code></p>
 </section>
 
 <!-- 17 -->
-<section class="slide" data-speaker="s4" aria-label="Detection evaluation">
+<section class="slide" data-speaker="s2" aria-label="Detection evaluation">
   <h2 data-in>Picking the threshold against planted outbreaks</h2>
   <div class="cols">
     <div data-in>
@@ -522,7 +522,7 @@
 </section>
 
 <!-- 18 -->
-<section class="slide" data-speaker="s4" aria-label="Forecasting">
+<section class="slide" data-speaker="s1" aria-label="Forecasting">
   <h2 data-in>A count model a manager can read</h2>
   <div class="cols">
     <div data-in>
@@ -546,7 +546,7 @@
 </section>
 
 <!-- 19 -->
-<section class="slide" data-speaker="s4" aria-label="Allocation model">
+<section class="slide" data-speaker="s1" aria-label="Allocation model">
   <h2 data-in>From cases to supplies to a plan</h2>
   <div class="cols wide-left">
     <div data-in>
@@ -563,7 +563,8 @@
       </svg>
     </div>
     <div data-in>
-      <p class="formula" style="font-size:25px">minimise weighted unmet need<br>budget, transport per division<br>x<sub>d</sub> ≥ min(α · population share, need)<br>x<sub>d</sub> ≤ need</p>
+      <p class="formula" style="font-size:25px">minimise weighted unmet need<br>budget, transport per division<br>x<sub>d</sub> ≥ min(α · p<sub>d</sub> · Σx, need<sub>d</sub>)<br>x<sub>d</sub> ≤ need<sub>d</sub></p>
+      <p class="small">p<sub>d</sub>: population share; Σx: total sent.</p>
       <p>Solved with PuLP and CBC. Every rate lives in one file with its source.</p>
     </div>
   </div>
@@ -571,13 +572,13 @@
 </section>
 
 <!-- 20 -->
-<section class="slide" data-speaker="s4" aria-label="Efficiency and equity">
+<section class="slide" data-speaker="s1" aria-label="Efficiency and equity">
   <h2 data-in>The price of fairness</h2>
   <div class="cols wide-right">
     <div data-in>
       <p>At half the budget: <b>67.8%</b> of need met, against <b>34.4%</b> for a population split. Recommended α = 0.</p>
-      <p>Spread across all 64 districts: top-5 share 0.22, Gini 0.27 (before the fix: 1.00 and 0.98).</p>
-      <p>A floor of α 0.1 to 0.9 costs 2.5 points (65.3%); α 1 costs 1.5. No district gets more than it needs.</p>
+      <p>Spread across all 64 districts: top-5 share 0.22, Gini 0.27 (SF=0.25; before the fix: 1.00 and 0.98).</p>
+      <p>A floor of α 0.1 to 0.9 costs 2.3 to 2.4 points (65.3 to 65.5%); α 1 costs 1.5. No district gets more than it needs.</p>
     </div>
     <div data-in>
       <figure class="scene3d" id="alloc-3d" style="position:relative;width:760px;height:430px" aria-label="Share of need met at every budget and equity floor">
@@ -590,32 +591,35 @@
 </section>
 
 <!-- 21 -->
-<section class="slide" data-speaker="s4" aria-label="Preparedness calendar">
+<section class="slide" data-speaker="s1" aria-label="Preparedness calendar">
   <h2 data-in>Dengue calendar by division</h2>
   <svg id="cal-chart" viewBox="0 0 1420 520" width="1420" height="520" data-in></svg>
   <p class="src">Source: <code>docs/experiments/calendar_summary.csv</code> (STL per division, 5 years). Rule: stock 3 weeks and campaign 6 weeks before onset.</p>
 </section>
 
 <!-- 22 -->
-<section class="slide" data-speaker="s2" aria-label="Dashboard design">
+<section class="slide" data-speaker="s4" aria-label="Dashboard design">
   <h2 data-in>Built for a district office laptop</h2>
   <div class="cols wide-right">
     <ul data-in>
       <li>D3 v7 only, no other chart library.</li>
       <li>Reads small gold summaries, under 10 MB. Never a patient row.</li>
       <li>Every panel says how fresh its data is.</li>
+      <li>Viridis for cases, vermillion for alerts: colour-blind safe.</li>
+      <li>Phone: views stack in one column.</li>
     </ul>
     <div class="shot" data-in><img src="assets/dash-top.webp" alt="EpiScope dashboard: map, weekly chart, seasonal heatmap"></div>
   </div>
 </section>
 
 <!-- 23 -->
-<section class="slide" data-speaker="s2" aria-label="Linked views">
+<section class="slide" data-speaker="s4" aria-label="Linked views">
   <span class="cue" data-in>Switch to the live dashboard</span>
   <h2 data-in>One selection, five views</h2>
   <div class="cols wide-right">
     <ol class="steps" data-in>
       <li>The map shows cases per 100,000; triangles are alerts</li>
+      <li>Solid triangle: on alert in the last full week; outline: earlier in the range</li>
       <li>The table ranks districts by alerts</li>
       <li>Click a district: weekly chart, heatmap and allocation follow</li>
     </ol>
@@ -624,14 +628,16 @@
 </section>
 
 <!-- 24 -->
-<section class="slide" data-speaker="s2" aria-label="Uncertainty, suppression and what-if">
+<section class="slide" data-speaker="s4" aria-label="Uncertainty, suppression and what-if">
   <h2 data-in>Ranges, hidden counts and the what-if panel</h2>
   <div class="cols wide-right">
     <ol class="steps" data-in>
       <li>Drag the time strip: every view follows</li>
-      <li>Blue band: the forecast's 80% range</li>
+      <li>Open dot: newest week, not yet complete</li>
+      <li>Blue band: 80% forecast range; table below</li>
       <li>Striped cells: counts under 5, hidden</li>
-      <li>What-if: move budget and α; the plan is looked up from a grid solved in advance</li>
+      <li>What-if: move budget and α; the plan comes from a grid solved in advance</li>
+      <li><code>?district=</code>: own district in full, rest as division totals</li>
     </ol>
     <div data-in><div class="shot" style="width:fit-content;margin-left:auto"><img src="assets/p-alloc.webp" style="max-height:540px;width:auto" alt="Allocation panel with budget, equity floor and threshold sliders"></div>
     <p class="small" style="text-align:right">Final SF=1 build, allocation capped at need.</p></div>
@@ -639,11 +645,13 @@
 </section>
 
 <!-- 25 -->
-<section class="slide" data-speaker="s2" aria-label="Persona walkthroughs">
+<section class="slide" data-speaker="s4" aria-label="Persona walkthroughs">
   <h2 data-in>Simulated persona walkthroughs run with AI agents</h2>
   <div class="cols">
     <div data-in>
       <p>Three AI agents, each briefed as a non-technical persona, tried five tasks each on the real dashboard. Not a test with real people.</p>
+      <p>Personas: a district officer in Cox's Bazar, a hospital store-keeper in Chattogram, a senior ministry official.</p>
+      <p class="small">Run on an SF=1 build of 21 October, before the allocation cap.</p>
     </div>
     <div data-in>
       <table class="t">
@@ -666,7 +674,7 @@
     <ul data-in>
       <li>Keyed hash for patient IDs; age in bands.</li>
       <li>Counts 1 to 4 hidden, with complementary suppression so totals cannot reveal them.</li>
-      <li>k-anonymity check on published tables.</li>
+      <li>k-anonymity checker for record-level extracts; published tables are aggregates.</li>
       <li>Equity floor: a population share, never more than need. No need shown, nothing sent, so it cannot protect a district whose reports are missing. Silent weeks are marked missing, not zero.</li>
     </ul>
     <div data-in>
@@ -674,6 +682,7 @@
       <p class="small" style="text-align:right">Hatched cells: suppressed counts under 5.</p>
     </div>
   </div>
+  <p class="src">k-anonymity checker: <code>pipeline/privacy/kanon.py</code>, unit-tested; not a pipeline step.</p>
 </section>
 
 <!-- 27 -->
