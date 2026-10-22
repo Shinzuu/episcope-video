@@ -122,7 +122,7 @@ window.EPI_SCRIPT = [
     id: "3f", speaker: "s3", title: "Spark choices", slides: [14], chapter: 3, pause: 2,
     paras: [
       "[NEXT SLIDE]",
-      "Small tables are broadcast, so the encounter table never shuffles for a join. We partition by year only; finer keys make thousands of tiny files. Forecasts and allocations run as a daily batch; they're weekly decisions. {s2} has the timings.",
+      "Small tables are broadcast, so joining them never shuffles the encounter table; only the MERGE and the patient de-duplication shuffle it. We partition by year only; finer keys make thousands of tiny files. Forecasts and allocations run as a daily batch; they're weekly decisions. {s2} has the timings.",
     ],
   },
 
@@ -183,8 +183,8 @@ window.EPI_SCRIPT = [
       "[NEXT SLIDE]",
       "Thanks, {s2}. We turn expected cases into beds, saline, test kits, ORS and malaria drugs. A linear program then splits the budget to keep unmet need as low as possible. Alpha gives every district at least alpha times its population share of what is sent, never more than it needs.",
       "[NEXT SLIDE] [the 3D chart grows in and turns slowly]",
-      "This 3D chart shows every budget and every alpha: green is our plan, red the population split. At tight budgets green is about twice as high.",
-      "At half the budget, the plan meets 67.8 percent of need. A plain population split meets only 34.4 percent. Our first version sent almost everything to two districts, so we fixed three faults. On the quarter-size test data, the plan now reaches all sixty-four districts, with only 22 percent to the top five. Along alpha you see the price of fairness: a floor costs 1.5 to 2.4 points of need met. Our rule keeps floors that cost at most two points, that's alpha zero and alpha one, and then picks the one that gives the worst-off district the most. That's alpha zero.",
+      "This 3D chart shows every budget and every alpha: green is our plan, red the population split. At tight budgets green is up to three times as high.",
+      "At half the budget, the plan meets 67.8 percent of need. A plain population split meets only 34.4 percent. Our first version sent almost everything to two districts, so we fixed three faults. On the quarter-size test data, the plan now reaches all sixty-four districts, with only 22 percent to the top five. Along alpha you see the price of fairness: at half the budget a floor costs 1.5 to 2.4 points of need met. Our rule keeps floors that cost at most two points, that's alpha zero and alpha one, and then picks the one that gives the worst-off district the most. That's alpha zero.",
     ],
   },
   {

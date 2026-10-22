@@ -445,7 +445,7 @@
   <h2 data-in>Spark choices, and the 45-minute target</h2>
   <div class="cols">
     <ul data-in>
-      <li><b>Broadcast joins</b> for small tables: the encounter table never shuffles for a join.</li>
+      <li><b>Broadcast joins</b> for small tables (facilities, districts): joining them never shuffles the encounter table.</li>
       <li><b>Adaptive query execution</b> on.</li>
       <li><b>Partition by year only</b>: finer keys would mean thousands of tiny files.</li>
       <li><b>Daily batch</b> for forecasts and allocation: they are weekly decisions.</li>
