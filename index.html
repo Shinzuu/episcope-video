@@ -365,13 +365,13 @@
 </section>
 
 <!-- 11 -->
-<section class="slide" data-speaker="s3" aria-label="Privacy and MERGE">
-  <h2 data-in>No patient ID past silver; one rule for late data</h2>
+<section class="slide" data-speaker="s2" aria-label="Privacy and MERGE">
+  <h2 data-in>No patient ID past bronze; one rule for late data</h2>
   <div class="cols">
     <div data-in>
       <p class="formula">patient_key = HMAC-SHA256(salt, patient_id)</p>
       <p>Built from Spark's own <code>sha2</code>, so no Python UDF slows it down.</p>
-      <p>The salt lives in <code>.env</code>, outside Git. Exact age becomes an age band.</p>
+      <p>The salt lives in <code>.env</code>, outside Git. Clean rows keep only an age band.</p>
     </div>
     <div data-in>
       <svg viewBox="0 0 640 380" width="640" height="380" aria-label="MERGE rule">
@@ -501,27 +501,6 @@
 </section>
 
 <!-- 17 -->
-<section class="slide" data-speaker="s2" aria-label="Detection evaluation">
-  <h2 data-in>Picking the threshold against planted outbreaks</h2>
-  <div class="cols">
-    <div data-in>
-      <p>Sweep the threshold. For each value: outbreaks caught, false alerts per district-year, days to detection.</p>
-      <p>Chosen points: EARS C2 threshold 4.0; CUSUM k 0.5, h 6.5.</p>
-    </div>
-    <div data-in>
-      <table class="t">
-        <thead><tr><th>Method</th><th class="r">Caught</th><th class="r">False / district-yr</th><th class="r">Median days</th><th class="r">PPV</th></tr></thead>
-        <tbody>
-          <tr><td>EARS C2</td><td class="r">33 of 35 (0.94)</td><td class="r">1.89</td><td class="r">8</td><td class="r">0.15</td></tr>
-          <tr><td>CUSUM</td><td class="r">32 of 35 (0.91)</td><td class="r">1.82</td><td class="r">9.5</td><td class="r">0.25</td></tr>
-        </tbody>
-      </table>
-      <p class="small" style="margin-top:14px">EARS C2 catches 91% within 14 days. Source: <code>docs/FINAL-NUMBERS.md</code> (<code>detection_tradeoff.json</code>).</p>
-    </div>
-  </div>
-</section>
-
-<!-- 18 -->
 <section class="slide" data-speaker="s1" aria-label="Forecasting">
   <h2 data-in>A count model a manager can read</h2>
   <div class="cols">
@@ -541,6 +520,27 @@
         </tbody>
       </table>
       <p class="small" style="margin-top:14px">Source: <code>docs/FINAL-NUMBERS.md</code> (<code>backtest_metrics.csv</code>).</p>
+    </div>
+  </div>
+</section>
+
+<!-- 18 -->
+<section class="slide" data-speaker="s2" aria-label="Detection evaluation">
+  <h2 data-in>Picking the threshold against planted outbreaks</h2>
+  <div class="cols">
+    <div data-in>
+      <p>Sweep the threshold. For each value: outbreaks caught, false alerts per district-year, days to detection.</p>
+      <p>Chosen points: EARS C2 threshold 4.0; CUSUM k 0.5, h 6.5.</p>
+    </div>
+    <div data-in>
+      <table class="t">
+        <thead><tr><th>Method</th><th class="r">Caught</th><th class="r">False / district-yr</th><th class="r">Median days</th><th class="r">PPV</th></tr></thead>
+        <tbody>
+          <tr><td>EARS C2</td><td class="r">33 of 35 (0.94)</td><td class="r">1.89</td><td class="r">8</td><td class="r">0.15</td></tr>
+          <tr><td>CUSUM</td><td class="r">32 of 35 (0.91)</td><td class="r">1.82</td><td class="r">9.5</td><td class="r">0.25</td></tr>
+        </tbody>
+      </table>
+      <p class="small" style="margin-top:14px">EARS C2 catches 91% within 14 days. Source: <code>docs/FINAL-NUMBERS.md</code> (<code>detection_tradeoff.json</code>).</p>
     </div>
   </div>
 </section>
@@ -576,9 +576,10 @@
   <h2 data-in>The price of fairness</h2>
   <div class="cols wide-right">
     <div data-in>
-      <p>At half the budget: <b>67.8%</b> of need met, against <b>34.4%</b> for a population split. Recommended α = 0.</p>
+      <p>At half the budget: <b>67.8%</b> of need met, against <b>34.4%</b> for a population split.</p>
       <p>Spread across all 64 districts: top-5 share 0.22, Gini 0.27 (SF=0.25; before the fix: 1.00 and 0.98).</p>
       <p>A floor of α 0.1 to 0.9 costs 2.3 to 2.4 points (65.3 to 65.5%); α 1 costs 1.5. No district gets more than it needs.</p>
+      <p><b>Recommended α = 0</b>: of the floors costing ≤ 2 points (α 0 and 1), it gives the worst-off district most (0.46 vs 0.38).</p>
     </div>
     <div data-in>
       <figure class="scene3d" id="alloc-3d" style="position:relative;width:760px;height:430px" aria-label="Share of need met at every budget and equity floor">
@@ -635,7 +636,7 @@
       <li>Drag the time strip: every view follows</li>
       <li>Open dot: newest week, not yet complete</li>
       <li>Blue band: 80% forecast range; table below</li>
-      <li>Striped cells: counts under 5, hidden</li>
+      <li>Striped cells: counts 1–4, hidden</li>
       <li>What-if: move budget and α; the plan comes from a grid solved in advance</li>
       <li><code>?district=</code>: own district in full, rest as division totals</li>
     </ol>
@@ -679,7 +680,7 @@
     </ul>
     <div data-in>
       <div class="shot" style="width:fit-content;margin-left:auto"><img src="assets/p-table.webp" style="max-height:560px;width:auto;max-width:100%" alt="Early warning table with hatched suppressed cells"></div>
-      <p class="small" style="text-align:right">Hatched cells: suppressed counts under 5.</p>
+      <p class="small" style="text-align:right">Hatched cells: suppressed counts 1–4.</p>
     </div>
   </div>
   <p class="src">k-anonymity checker: <code>pipeline/privacy/kanon.py</code>, unit-tested; not a pipeline step.</p>

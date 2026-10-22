@@ -7,8 +7,9 @@
 // A paragraph that starts with "[" and ends with "]" is a cue (NEXT SLIDE, SHOW, PAUSE), not spoken.
 // `pause` is the seconds of silence the section needs for slide changes and demo moments.
 //
-// Speaking order: Rafi (1a, 1t) -> Samira (1b, 1c) -> Shezan (1d to 3f) -> Rafi (4a, 4b) -> Samira (4c)
-// -> Rafi (4d to 4f) -> Rimjhim (2a to 2c) -> Samira (2d to 2f). Each person presents their own lead area.
+// Speaking order: Rafi (1a, 1t) -> Samira (1b, 1c) -> Shezan (1d to 3c) -> Samira (3g) -> Shezan (3d to 3f)
+// -> Samira (3h) -> Rafi (4a, 4b, 4d) -> Samira (4g, 4c) -> Rafi (4e, 4f) -> Rimjhim (2a to 2c) -> Samira (2d to 2f).
+// Each person presents their own lead area from the report's contribution matrix.
 window.EPI_SCRIPT = [
   // ---------------- Speaker 1 (Tahsin Ahmed Rafi, analytics): opening and team (chapter 1) ----------------
   {
@@ -23,7 +24,7 @@ window.EPI_SCRIPT = [
     id: "1t", speaker: "s1", title: "Meet our team", slides: [2], chapter: 1, pause: 2,
     paras: [
       "[NEXT SLIDE]",
-      "I'm {n1}. My part is analytics: outbreak detection and forecasting. {n3} covers data engineering. {n4} covers the dashboard. {n2} covers platform and evaluation, and she starts with the problem.",
+      "I'm {n1}. My part is analytics: outbreak detection, forecasting and supplies. {n3} covers data engineering. {n4} covers the dashboard. {n2} covers platform and evaluation: privacy, scaling and how well our methods work. She starts with the problem.",
     ],
   },
 
@@ -32,24 +33,25 @@ window.EPI_SCRIPT = [
     id: "1b", speaker: "s2", title: "The problem", slides: [3], chapter: 1, pause: 2,
     paras: [
       "[NEXT SLIDE] [name on screen]",
-      "Thanks, {s1}. My part is the problem and its conflicts, and later detection results, privacy and our conclusion.",
-      "Every year we face dengue, diarrhoea, flu-like illness and malaria. Reports come from all sixty-four districts, but late. Some facilities go quiet for weeks. The same patient can show up twice.",
-      "So the Ministry wants four things. An early warning when cases rise more than normal. A forecast one to four weeks ahead. A plan to split a fixed stock of supplies. And a calendar for when to get ready. The users aren't data scientists, so it must explain itself.",
+      "Thanks, {s1}. My part is platform and evaluation. First, the problem.",
+      "Dengue, diarrhoea, flu-like illness and malaria come every year. Reports from all sixty-four districts arrive late, some facilities go quiet for weeks, and one patient can appear twice.",
+      "The Ministry wants early warnings, forecasts one to four weeks ahead, a plan to split a fixed stock, and a calendar for when to get ready. Its users aren't data scientists.",
     ],
   },
   {
     id: "1c", speaker: "s2", title: "Stakeholders and conflicts", slides: [4, 5], chapter: 1, pause: 4,
     paras: [
       "[NEXT SLIDE]",
-      "People who use this system want different things. A district health officer wants an alert as early as possible. An epidemiologist wants fewer false alarms, because if the alarm rings every week, people stop listening. That's our first conflict.",
+      "Conflict one: a district officer wants early alerts. An epidemiologist wants fewer false alarms, or people stop listening.",
       "[NEXT SLIDE]",
-      "The second is privacy. Vector-control teams want small-area maps. The privacy regulator wants no small counts anywhere, because a count of two in a small place can point to a real person. So we publish by district and week, and hide every count from one to four.",
-      "The third is efficiency against equity. If supplies only go where they help most, some districts get nothing. One number, alpha, lets the Ministry control that. {s1} will show what it costs.",
-      "Speed against cost and accuracy against simplicity come up later. Now, {s3} and the data.",
+      "Two, privacy: vector-control teams want small-area maps, but a count of two in a small place can point to a real person. So we publish by district and week, and hide counts from one to four.",
+      "Three, efficiency against equity: supplies sent only where they help most leave some districts with nothing. One number, alpha, controls that.",
+      "Speed against cost and accuracy against simplicity come later. Now, {s3} and the data.",
     ],
   },
 
-  // ---------------- Speaker 3 (Nishadul Islam Shezan, data engineering): data, architecture, pipeline (chapters 1 to 3, live run) ----------------
+  // ---------------- Speaker 3 (Nishadul Islam Shezan, data engineering): data, architecture, pipeline (chapters 1 to 3, live run),
+  // with Samira's de-identification (3g, slide 11) and scaling (3h, slide 14) inserts ----------------
   {
     id: "1d", speaker: "s3", title: "The data story", slides: [6], chapter: 1, pause: 2,
     paras: [
@@ -82,18 +84,23 @@ window.EPI_SCRIPT = [
     ],
   },
   {
-    id: "3c", speaker: "s3", title: "Silver: rules, quarantine, privacy", slides: [10, 11], chapter: 3, pause: 4,
+    id: "3c", speaker: "s3", title: "Silver: rules and quarantine", slides: [10], chapter: 3, pause: 2,
     paras: [
       "[NEXT SLIDE]",
-      "Silver checks encounters against fourteen rules. A failing row goes to quarantine, not the bin, with every reason code it broke: 1,367,440 rows at full scale, 4.0 percent.",
-      "[NEXT SLIDE]",
-      "The patient ID stops here, replaced by an HMAC-SHA256 keyed hash from Spark's own sha2. The key stays in .env, outside Git.",
-      "A Delta MERGE on encounter ID replaces a row only with a later report. So a re-run changes nothing, and a late record moves to its correct week.",
+      "Silver checks encounters against fourteen rules. A failing row goes to quarantine, not the bin, with every reason code it broke: 1,367,440 rows at full scale, 4.0 percent. {s2} covers the privacy step.",
     ],
   },
   {
-    id: "3d", speaker: "s3", title: "Gold and lineage", slides: [12], chapter: 3, pause: 2,
+    id: "3g", speaker: "s2", title: "De-identification", slides: [11], chapter: 3, pause: 2,
     paras: [
+      "[NEXT SLIDE]",
+      "Thanks, {s3}. De-identification is my part. Before a clean row is stored in silver, the patient ID becomes an HMAC-SHA256 keyed hash, built from Spark's own sha2. The key stays in .env, outside Git. Back to you, {s3}.",
+    ],
+  },
+  {
+    id: "3d", speaker: "s3", title: "Late data and gold", slides: [11, 12], chapter: 3, pause: 2,
+    paras: [
+      "Thanks, {s2}. A Delta MERGE on encounter ID replaces a row only with a later report. So a re-run changes nothing, and a late record moves to its correct week.",
       "[NEXT SLIDE]",
       "Gold counts by onset week, not report week, so a back-fill lands where the cases happened: no fake spike. Each gold row keeps its bronze batch IDs, so any number traces back to its files.",
     ],
@@ -103,7 +110,7 @@ window.EPI_SCRIPT = [
     paras: [
       "[NEXT SLIDE] [SHOW terminal with the clock visible; git describe --tags shows v1.0]",
       "Now live: a new fourteen-day drop, with an unseen seed.",
-      "[SHOW make drop DROP_SEED=<new seed>, then make bronze silver gold analytics serve; speed up, keep timestamps]",
+      "[SHOW make drop SF=<base SF> DROP_SEED=<new seed>, then make bronze silver gold analytics serve; speed up, keep timestamps]",
       "It finds the new files as one batch. In our drill, seed 4675 added 8,888 rows.",
       "[SHOW make bronze silver gold again, then the duplicate-count query]",
       "I run it again: nothing new, zero duplicates.",
@@ -112,20 +119,27 @@ window.EPI_SCRIPT = [
     ],
   },
   {
-    id: "3f", speaker: "s3", title: "Spark choices and scaling", slides: [14], chapter: 3, pause: 2,
+    id: "3f", speaker: "s3", title: "Spark choices", slides: [14], chapter: 3, pause: 2,
     paras: [
       "[NEXT SLIDE]",
-      "Small tables are broadcast, so the encounter table never shuffles for a join. We partition by year only; finer keys make thousands of tiny files. Forecasts and allocations run as a daily batch; they're weekly decisions.",
-      "The full-scale limit is forty-five minutes. Our timed run took 28.3 minutes, and 25.0 on the final code. Checking rules once, not per output, cut silver from 325 to 214 seconds at quarter scale. {s1}, over to you.",
+      "Small tables are broadcast, so the encounter table never shuffles for a join. We partition by year only; finer keys make thousands of tiny files. Forecasts and allocations run as a daily batch; they're weekly decisions. {s2} has the timings.",
     ],
   },
 
-  // ---------------- Speaker 1 (Tahsin Ahmed Rafi, analytics): detection (chapter 4) ----------------
+  // ---------------- Speaker 2 (Samira Sultana, platform and evaluation): scaling (chapter 3) ----------------
+  {
+    id: "3h", speaker: "s2", title: "Scaling", slides: [14], chapter: 3, pause: 1,
+    paras: [
+      "Thanks, {s3}. Scaling is my part. The full-scale limit is forty-five minutes. Our timed run took 28.3 minutes, and 25.0 on the final code. Checking rules once, not per output, cut silver from 325 to 214 seconds on the quarter-size data. {s1}, over to you.",
+    ],
+  },
+
+  // ---------------- Speaker 1 (Tahsin Ahmed Rafi, analytics): detection and the forecast model (chapter 4) ----------------
   {
     id: "4a", speaker: "s1", title: "Detection: why EARS C2 and CUSUM", slides: [15], chapter: 4, pause: 3,
     paras: [
       "[NEXT SLIDE]",
-      "Thanks, {s3}. Now my part, the analytics.",
+      "Thanks, {s2}. Now my part, the analytics.",
       "Our main detector is EARS C2. It compares this week with weeks three to nine back, so it works with short history. Farrington needs about five years first.",
       "But raw counts fool it with the season. Dengue always rises in August, and that's not an outbreak. So we first divide by a seasonal index, built without the current year, so an outbreak can't hide itself. Our second method, CUSUM, adds up small excesses week after week, so it catches slow outbreaks.",
     ],
@@ -134,37 +148,43 @@ window.EPI_SCRIPT = [
     id: "4b", speaker: "s1", title: "The reporting artefact", slides: [16], chapter: 4, pause: 2,
     paras: [
       "[NEXT SLIDE]",
-      "Remember the two silent facilities? A simple detector sees zero, then a big jump, and raises an alarm. Ours treats a week with low reporting as missing, not zero, and scales the count up when most facilities reported. With {s3}'s onset-week counting, the fake spike is gone. {s2} will show how well it works.",
+      "Remember the two silent facilities? A simple detector sees zero, then a big jump, and raises an alarm. Ours treats a week with low reporting as missing, not zero, and scales the count up when most facilities reported. With {s3}'s onset-week counting, the fake spike is gone.",
     ],
   },
 
-  // ---------------- Speaker 2 (Samira Sultana, platform and evaluation): detection evaluation (chapter 4) ----------------
   {
-    id: "4c", speaker: "s2", title: "Detection against the baseline", slides: [17], chapter: 4, pause: 2,
+    id: "4d", speaker: "s1", title: "The forecast model", slides: [17], chapter: 4, pause: 2,
     paras: [
       "[NEXT SLIDE]",
-      "Thanks, {s1}. We picked the threshold by sweeping it against the planted outbreaks, counting outbreaks caught against false alarms raised.",
+      "For forecasts we fit a negative binomial model per district, for dengue and diarrhoea, using rain and temperature from four to eight weeks earlier. Why not machine learning? A hospital manager can read this model: more rain now, more dengue in a month. {s2} will show how well the forecasts and the detectors work.",
+    ],
+  },
+
+  // ---------------- Speaker 2 (Samira Sultana, platform and evaluation): evaluation and backtest (chapter 4) ----------------
+  {
+    id: "4g", speaker: "s2", title: "Forecast backtest", slides: [17], chapter: 4, pause: 1,
+    paras: [
+      "Thanks, {s1}. Evaluation is my part. A rolling backtest over the last fifty-two weeks lets the model see only the past each time. Against the seasonal naive baseline, our interval score ratio is 0.84; below one means we win. It's 0.89 for dengue and 0.72 for diarrhoea. The average error drops from 133 to 113.",
+    ],
+  },
+  {
+    id: "4c", speaker: "s2", title: "Detection against the baseline", slides: [18], chapter: 4, pause: 2,
+    paras: [
+      "[NEXT SLIDE]",
+      "For detection, we swept the threshold against the planted outbreaks: outbreaks caught against false alarms.",
       "At a threshold of 4.0, EARS C2 catches 33 of the 35 outbreaks, with 1.89 false alerts per district each year. Half of them it catches within 8 days. CUSUM catches 32, with 1.82 false alerts. Back to you, {s1}.",
     ],
   },
 
-  // ---------------- Speaker 1 (Tahsin Ahmed Rafi, analytics): forecasts, supplies, calendar (chapter 4) ----------------
-  {
-    id: "4d", speaker: "s1", title: "Forecasts and the backtest", slides: [18], chapter: 4, pause: 2,
-    paras: [
-      "[NEXT SLIDE]",
-      "Thanks. For forecasts we fit a negative binomial model per district, for dengue and diarrhoea, using rain and temperature from four to eight weeks earlier. Why not machine learning? A hospital manager can read this model: more rain now, more dengue in a month.",
-      "A rolling backtest over the last fifty-two weeks lets the model see only the past each time. Against the seasonal naive baseline, our interval score ratio is 0.84; below one means we win. It's 0.89 for dengue and 0.72 for diarrhoea. The average error drops from 133 to 113.",
-    ],
-  },
+  // ---------------- Speaker 1 (Tahsin Ahmed Rafi, analytics): supplies and calendar (chapter 4) ----------------
   {
     id: "4e", speaker: "s1", title: "From forecasts to supplies", slides: [19, 20], chapter: 4, pause: 4,
     paras: [
       "[NEXT SLIDE]",
-      "We turn expected cases into beds, saline, test kits, ORS and malaria drugs. A linear program then splits the budget to keep unmet need as low as possible. Alpha gives every district at least alpha times its population share of what is sent, never more than it needs.",
+      "Thanks, {s2}. We turn expected cases into beds, saline, test kits, ORS and malaria drugs. A linear program then splits the budget to keep unmet need as low as possible. Alpha gives every district at least alpha times its population share of what is sent, never more than it needs.",
       "[NEXT SLIDE] [the 3D chart grows in and turns slowly]",
       "This 3D chart shows every budget and every alpha: green is our plan, red the population split. At tight budgets green is about twice as high.",
-      "At half the budget, the plan meets 67.8 percent of need. A plain population split meets only 34.4 percent. Our first version sent almost everything to two districts, so we fixed three faults. At quarter scale the plan now reaches all sixty-four districts, with only 22 percent to the top five. Along alpha you see the price of fairness: any floor costs 1.5 to 2.4 points of need met. So at this budget we recommend alpha zero.",
+      "At half the budget, the plan meets 67.8 percent of need. A plain population split meets only 34.4 percent. Our first version sent almost everything to two districts, so we fixed three faults. On the quarter-size test data, the plan now reaches all sixty-four districts, with only 22 percent to the top five. Along alpha you see the price of fairness: a floor costs 1.5 to 2.4 points of need met. Our rule keeps floors that cost at most two points, that's alpha zero and alpha one, and then picks the one that gives the worst-off district the most. That's alpha zero.",
     ],
   },
   {
@@ -200,7 +220,7 @@ window.EPI_SCRIPT = [
       "[SHOW the forecast band and the forecast table under the chart]",
       "The blue band is the forecast's eighty percent range. The table under it gives expected cases and a likely range per week, plus a cautious four-week total to order with.",
       "[SHOW the hatched cells, then move the budget and alpha sliders]",
-      "Striped cells are hidden counts under five, so hidden never looks like zero. In the what-if panel, the plan updates at once when I change budget or alpha, from a grid solved in advance. A sentence explains what the selected district gets.",
+      "Striped cells are hidden counts from one to four, and where needed a second cell too, so nobody can get one back by subtracting from a total. Hidden never looks like zero. In the what-if panel, the plan updates at once when I change budget or alpha, from a grid solved in advance. A sentence explains what the selected district gets.",
       "[SHOW open the page with ?district=BD1004]",
       "Last, the district view: with a district code in the address, an officer sees their own district in full, and the rest only as lighter division totals.",
     ],
@@ -220,16 +240,16 @@ window.EPI_SCRIPT = [
     id: "2d", speaker: "s2", title: "Privacy and ethics", slides: [26], chapter: 6, pause: 2,
     paras: [
       "[NEXT SLIDE]",
-      "Thanks, {s4}. On privacy: patient IDs are hashed with a secret key before gold, and exact age becomes an age band. Every count under five is hidden, and where needed a second cell too, so nobody can get it back by subtracting from a total.",
-      "The equity floor gives every district a population share of what is sent, never more than it needs. A district showing no need gets nothing, so the floor can't protect one whose reports are missing. That's why silent weeks are marked missing, not zero, and the dashboard shows no report.",
+      "Thanks, {s4}. On privacy: patient IDs get a keyed hash before silver, and clean rows keep only an age band.",
+      "The equity floor gives each district a population share, never more than it needs. A district showing no need gets nothing, so the floor can't protect one whose reports are missing. That's why silent weeks are marked missing, not zero.",
     ],
   },
   {
     id: "2e", speaker: "s2", title: "Recommendations and limits", slides: [27], chapter: 6, pause: 2,
     paras: [
       "[NEXT SLIDE]",
-      "So what would we tell the Ministry? Have dengue supplies in place by week {{29}}, before the season. Treat alerts as a short list to check, and check reporting completeness before acting on a spike. And choose alpha openly, knowing its cost in unmet need.",
-      "Our limits. The data is synthetic, so no real decision should rest on these numbers yet. Streaming alerts take about 219.2 seconds at full scale. And the forecast bands ignore uncertainty in the model's own parameters, so they're a bit narrow.",
+      "Our advice to the Ministry. Have dengue supplies in place by week {{29}}, before the season. Treat alerts as a short list to check, and check reporting completeness before acting on a spike. And choose alpha openly, knowing its cost in unmet need.",
+      "Our limits. The data is synthetic, so no real decision should rest on it yet. Streaming alerts take about three and a half minutes at full scale. And the forecast bands ignore uncertainty in the model's own parameters, so they're a bit narrow.",
     ],
   },
   {
