@@ -147,6 +147,9 @@
   .kpis div { border-top: 4px solid var(--sp); padding-top: 12px; }
   .kpis .big { font-size: 70px; }
 
+  .term { font-family: ui-monospace, "DejaVu Sans Mono", monospace; font-size: 23px; line-height: 1.45; background: #0f1b1e; color: #e6efe9; border-radius: 12px; padding: 22px 26px; margin: 0; white-space: pre; overflow: hidden; }
+  .term .c { color: #8fd3c7; font-weight: 700; }
+  .term .m { color: #8a9a9d; }
 </style>
 </head>
 <body>
@@ -172,6 +175,102 @@
 </section>
 
 <!-- 3 -->
+<section class="slide" data-speaker="s1" aria-label="Detection">
+  <h2 data-in>Two detectors on seasonally adjusted counts</h2>
+  <div class="cols">
+    <div data-in>
+      <p><b>EARS C2</b>: this week against weeks 3 to 9 back. Alarm when z &gt; 4.0.</p>
+      <p class="formula">z = (y − s·m) / σ</p>
+      <p><b>CUSUM</b>: S = max(0, S + z − 0.5), alarm when S &gt; 6.5. It adds up small, steady excess.</p>
+      <p class="small">Farrington needs about five years before its first test week. That is all the history we have.</p>
+    </div>
+    <div data-in>
+      <div class="shot"><img src="assets/p-ts.webp" alt="Dashboard weekly dengue chart for Dhaka with EARS C2 alert markers"></div>
+      <p class="small">Real output: weekly dengue in Dhaka, triangles are EARS C2 alerts at threshold 4.0 (final SF=1 build).</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="slide" data-speaker="s1" aria-label="Artefact handling">
+  <h2 data-in>A silent facility is missing data, not zero cases</h2>
+  <div class="cols">
+    <div data-in>
+      <p class="stamp">Illustration</p>
+      <svg id="artefact-ill" viewBox="0 0 640 360" width="640" height="360"></svg>
+    </div>
+    <div data-in>
+      <p>Completeness = reporting facilities ÷ expected.</p>
+      <p>Below 80%: the week is <b>missing</b>. Above it: the count is scaled up by 1 ÷ completeness.</p>
+      <p>Together with onset-week counting in gold, the back-fill spike never reaches the detector.</p>
+    </div>
+  </div>
+  <p class="src">Code: <code>analytics/detection/prepare.py</code>; both planted silent facilities listed in <code>ground_truth/artefacts.csv</code></p>
+</section>
+
+<!-- 5 -->
+<section class="slide" data-speaker="s1" aria-label="Forecasting">
+  <h2 data-in>A count model a manager can read</h2>
+  <div data-in style="max-width:1300px">
+      <p class="formula" style="font-size:27px">log μ = season + rain(4–8 wk ago) + temp(4–8 wk ago) + recent level</p>
+      <p>Negative binomial, one per district, for dengue and diarrhoea (malaria too, for antimalarial demand), horizons 1 to 4 weeks.</p>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="slide" data-speaker="s1" aria-label="Allocation model">
+  <h2 data-in>From cases to supplies to a plan</h2>
+  <div class="cols wide-left">
+    <div data-in>
+      <svg viewBox="0 0 760 330" width="760" height="330" aria-label="Demand chain">
+        <g style="color: var(--ink)">
+          <rect class="box" x="0" y="120" width="180" height="90" rx="10"/><text x="20" y="174" font-size="25" font-weight="800">Forecast</text>
+          <rect class="box" x="250" y="120" width="190" height="90" rx="10"/><text x="270" y="160" font-size="25" font-weight="800">Demand</text><text x="270" y="192" font-size="20" class="m">q90, minus stock</text>
+          <rect class="box" x="510" y="0" width="250" height="330" rx="10" style="stroke: var(--sp)"/>
+          <text x="530" y="46" font-size="25" font-weight="800">Need per district</text>
+          <text x="530" y="98" font-size="22">beds</text><text x="530" y="140" font-size="22">IV saline</text><text x="530" y="182" font-size="22">NS1 test kits</text><text x="530" y="224" font-size="22">ORS sachets</text><text x="530" y="266" font-size="22">malaria courses</text>
+          <path class="ln draw" pathLength="1" style="--d:0" d="M180 165H242" marker-end="url(#ah)"/>
+          <path class="ln draw" pathLength="1" style="--d:1" d="M440 165H502" marker-end="url(#ah)"/>
+        </g>
+      </svg>
+    </div>
+    <div data-in>
+      <p class="formula" style="font-size:25px">minimise weighted unmet need<br>budget, transport per division<br>x<sub>d</sub> ≥ min(α · p<sub>d</sub> · Σx, need<sub>d</sub>)<br>x<sub>d</sub> ≤ need<sub>d</sub></p>
+      <p class="small">p<sub>d</sub>: population share; Σx: total sent.</p>
+      <p>Solved with PuLP and CBC. Every rate lives in one file with its source.</p>
+    </div>
+  </div>
+  <p class="src">Code: <code>analytics/forecast/demand_assumptions.py</code>, <code>analytics/optimise/lp.py</code></p>
+</section>
+
+<!-- 7 -->
+<section class="slide" data-speaker="s1" aria-label="Efficiency and equity">
+  <h2 data-in>The price of fairness</h2>
+  <div class="cols wide-right">
+    <div data-in>
+      <p>At half the budget: <b>67.8%</b> of need met, against <b>34.4%</b> for a population split.</p>
+      <p>Spread across all 64 districts: top-5 share 0.22, Gini 0.27 (SF=0.25; before the fix: 1.00 and 0.98).</p>
+      <p>A floor of α 0.1 to 0.9 costs 2.3 to 2.4 points (65.3 to 65.5%); α 1 costs 1.5. No district gets more than it needs.</p>
+      <p><b>Recommended α = 0</b>: of the floors costing ≤ 2 points (α 0 and 1), it gives the worst-off district most (0.46 vs 0.38).</p>
+    </div>
+    <div data-in>
+      <figure class="scene3d" id="alloc-3d" style="position:relative;width:760px;height:430px" aria-label="Share of need met at every budget and equity floor">
+        <svg class="fallback" id="curve-chart" viewBox="0 0 760 430" width="760" height="430"></svg>
+      </figure>
+      <p class="small only3d"><b style="color:var(--s4)">Green</b>: our plan at every budget (front to back: 0.25 to 1.5 × full need) and every α (left to right: 0 to 1). <b style="color:var(--alert)">Red</b>: population split.</p>
+    </div>
+  </div>
+  <p class="src">Source: <code>docs/FINAL-NUMBERS.md</code> (<code>allocation_summary.json</code>, <code>allocation_diagnosis.md</code>); curve from <code>allocation_curve.csv</code>.</p>
+</section>
+
+<!-- 8 -->
+<section class="slide" data-speaker="s1" aria-label="Preparedness calendar">
+  <h2 data-in>Dengue calendar by division</h2>
+  <svg id="cal-chart" viewBox="0 0 1420 520" width="1420" height="520" data-in></svg>
+  <p class="src">Source: <code>docs/experiments/calendar_summary.csv</code> (STL per division, 5 years). Rule: stock 3 weeks and campaign 6 weeks before onset.</p>
+</section>
+
+<!-- 9 -->
 <section class="slide" data-speaker="s2" aria-label="The problem">
   <h2 data-in>Late, messy reports from 64 districts</h2>
   <p class="lede" data-in>Dengue, diarrhoea, flu-like illness and malaria. Reports arrive late, facilities go quiet, and the same patient appears twice.</p>
@@ -184,7 +283,7 @@
   <p class="verdict" data-in>The people using it are not data scientists. Every output has to explain itself.</p>
 </section>
 
-<!-- 4 -->
+<!-- 10 -->
 <section class="slide" data-speaker="s2" aria-label="Conflict 1">
   <h2 data-in>Conflict 1: early alerts or few false alarms</h2>
   <div class="vs">
@@ -195,7 +294,7 @@
   <p class="verdict" data-in>We sweep the alert threshold against planted outbreaks and pick the point in the open.</p>
 </section>
 
-<!-- 5 -->
+<!-- 11 -->
 <section class="slide" data-speaker="s2" aria-label="Conflicts 2 to 5">
   <h2 data-in>Four more trade-offs</h2>
   <table class="t" data-in>
@@ -209,7 +308,118 @@
   </table>
 </section>
 
-<!-- 6 -->
+<!-- 12 -->
+<section class="slide" data-speaker="s2" aria-label="Detection evaluation">
+  <h2 data-in>Picking the threshold against planted outbreaks</h2>
+  <div class="cols">
+    <div data-in>
+      <p>Sweep the threshold. For each value: outbreaks caught, false alerts per district-year, days to detection.</p>
+      <p>Chosen points: EARS C2 threshold 4.0; CUSUM k 0.5, h 6.5.</p>
+    </div>
+    <div data-in>
+      <table class="t">
+        <thead><tr><th>Method</th><th class="r">Caught</th><th class="r">False / district-yr</th><th class="r">Median days</th><th class="r">PPV</th></tr></thead>
+        <tbody>
+          <tr><td>EARS C2</td><td class="r">33 of 35 (0.94)</td><td class="r">1.89</td><td class="r">8</td><td class="r">0.15</td></tr>
+          <tr><td>CUSUM</td><td class="r">32 of 35 (0.91)</td><td class="r">1.82</td><td class="r">9.5</td><td class="r">0.25</td></tr>
+        </tbody>
+      </table>
+      <p class="small" style="margin-top:14px">EARS C2 catches 91% within 14 days. Source: <code>docs/FINAL-NUMBERS.md</code> (<code>detection_tradeoff.json</code>).</p>
+    </div>
+  </div>
+</section>
+
+<!-- 13 -->
+<section class="slide" data-speaker="s2" aria-label="Forecast backtest">
+  <h2 data-in>Forecasts tested against a simple baseline</h2>
+  <div class="cols">
+    <div data-in>
+      <p>Backtest: 52 rolling origins. At each one the model sees only earlier weeks, as finally reported.</p>
+      <p>Seasonal naive baseline: each week's forecast is the same week last year.</p>
+    </div>
+    <div data-in>
+      <table class="t">
+        <thead><tr><th>Against seasonal naive</th><th class="r">Result</th></tr></thead>
+        <tbody>
+          <tr><td>MAE (model vs naive)</td><td class="r">113 vs 133</td></tr>
+          <tr><td>80% interval coverage</td><td class="r">0.79 vs 0.77</td></tr>
+          <tr><td>Relative WIS (&lt; 1 wins)</td><td class="r"><b>0.84</b></td></tr>
+          <tr><td>dengue / diarrhoea</td><td class="r">0.89 / 0.72</td></tr>
+        </tbody>
+      </table>
+      <p class="small" style="margin-top:14px">Source: <code>docs/FINAL-NUMBERS.md</code> (<code>backtest_metrics.csv</code>).</p>
+    </div>
+  </div>
+</section>
+
+<!-- 14 -->
+<section class="slide" data-speaker="s2" aria-label="De-identification">
+  <h2 data-in>No real patient ID is stored after bronze</h2>
+  <div data-in>
+      <p class="formula">patient_key = HMAC-SHA256(key, patient_id)</p>
+      <p>Built from Spark's own <code>sha2</code>, so no Python UDF slows it down.</p>
+      <p>The secret key lives in <code>.env</code> (<code>EPISCOPE_HASH_SALT</code>), outside Git. Clean rows keep only an age band.</p>
+  </div>
+  <p class="src">Code: <code>pipeline/privacy/deid.py</code></p>
+</section>
+
+<!-- 15 -->
+<section class="slide" data-speaker="s2" aria-label="Privacy and ethics">
+  <h2 data-in>Privacy by design, and a limit of the equity floor</h2>
+  <div class="cols">
+    <ul data-in>
+      <li>Keyed hash for patient IDs; age in bands.</li>
+      <li>Counts 1 to 4 hidden, with complementary suppression so totals cannot reveal them.</li>
+      <li>k-anonymity checker for record-level extracts; published tables are aggregates.</li>
+      <li>Equity floor: a population share, never more than need. No need shown, nothing sent, so it cannot protect a district whose reports are missing. Silent weeks are marked missing, not zero.</li>
+    </ul>
+    <div data-in>
+      <div class="shot" style="width:fit-content;margin-left:auto"><img src="assets/p-table.webp" style="max-height:560px;width:auto;max-width:100%" alt="Early warning table with hatched suppressed cells"></div>
+      <p class="small" style="text-align:right">Hatched cells: suppressed counts 1–4.</p>
+    </div>
+  </div>
+  <p class="src">k-anonymity checker: <code>pipeline/privacy/kanon.py</code>, unit-tested; not a pipeline step.</p>
+</section>
+
+<!-- 16 -->
+<section class="slide" data-speaker="s2" aria-label="Scaling">
+  <h2 data-in>Scaling: the 45-minute target</h2>
+  <div data-in style="max-width:900px">
+      <table class="t">
+        <thead><tr><th>Scale factor</th><th class="r">Runtime</th></tr></thead>
+        <tbody>
+          <tr><td>0.25</td><td class="r">15.4 min</td></tr>
+          <tr><td>0.5</td><td class="r">20.4 min</td></tr>
+          <tr><td>1 (limit 45 min)</td><td class="r"><b>28.3 min, pass</b></td></tr>
+          <tr><td>1, final code</td><td class="r"><b>25.0 min</b></td></tr>
+        </tbody>
+      </table>
+      <p class="small" style="margin-top:14px">Silver: rules checked once, 325 s to 214 s Spark time at SF=0.25, outputs identical.
+      Backtest: 1 task to 64, 325 s to 165 s. Source: <code>docs/FINAL-NUMBERS.md</code>.</p>
+  </div>
+</section>
+
+<!-- 17 -->
+<section class="slide" data-speaker="s2" aria-label="Recommendations and limits">
+  <h2 data-in>What we would tell the Ministry</h2>
+  <div class="cols">
+    <ol class="steps" data-in>
+      <li>Dengue supplies in place by week 28-29 (6-13 July), before the season.</li>
+      <li>Treat alerts as a short list; check reporting completeness before acting.</li>
+      <li>Choose α openly, knowing what it costs.</li>
+    </ol>
+    <div data-in>
+      <p class="stamp">Limits</p>
+      <ul>
+        <li>Synthetic data: no real decision yet.</li>
+        <li>Streaming alerts take 219.2 s at full scale: fast, not instant.</li>
+        <li>Forecast bands ignore parameter uncertainty, so they are a little narrow.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 18 -->
 <section class="slide" data-speaker="s3" aria-label="The data story">
   <h2 data-in>Real places and weather, synthetic patients</h2>
   <div class="cols">
@@ -227,7 +437,7 @@
   </div>
 </section>
 
-<!-- 7 -->
+<!-- 19 -->
 <section class="slide" data-speaker="s3" aria-label="Architecture">
   <h2 data-in>One pipeline, each layer rebuilt from the last</h2>
   <svg viewBox="0 0 1430 520" width="1430" height="520" data-in aria-label="Architecture diagram">
@@ -295,7 +505,7 @@
   </svg>
 </section>
 
-<!-- 8 -->
+<!-- 20 -->
 <section class="slide" data-speaker="s3" aria-label="Generator">
   <h2 data-in>The generator plants the problems we must catch</h2>
   <div class="cols wide-right">
@@ -311,7 +521,7 @@
   </div>
 </section>
 
-<!-- 9 -->
+<!-- 21 -->
 <section class="slide" data-speaker="s3" aria-label="Bronze">
   <h2 data-in>Bronze: keep what arrived, load it once</h2>
   <svg viewBox="0 0 1420 330" width="1420" height="330" data-in aria-label="Bronze checksum flow">
@@ -344,7 +554,7 @@
   <p class="src">Code: <code>pipeline/bronze/ingest.py</code></p>
 </section>
 
-<!-- 10 -->
+<!-- 22 -->
 <section class="slide" data-speaker="s3" aria-label="Silver quality">
   <h2 data-in>Silver: rules decide what we trust</h2>
   <div class="cols wide-right">
@@ -364,16 +574,10 @@
   <p class="src">Counts: <code>docs/FINAL-NUMBERS.md</code> (<code>sf1_final_run.json</code>). Rule chart: <code>dashboard/data/dq.json</code>, SF=0.25 build of 21 Oct.</p>
 </section>
 
-<!-- 11 -->
-<section class="slide" data-speaker="s2" aria-label="Privacy and MERGE">
-  <h2 data-in>No patient ID past bronze; one rule for late data</h2>
-  <div class="cols">
-    <div data-in>
-      <p class="formula">patient_key = HMAC-SHA256(key, patient_id)</p>
-      <p>Built from Spark's own <code>sha2</code>, so no Python UDF slows it down.</p>
-      <p>The secret key lives in <code>.env</code> (<code>EPISCOPE_HASH_SALT</code>), outside Git. Clean rows keep only an age band.</p>
-    </div>
-    <div data-in>
+<!-- 23 -->
+<section class="slide" data-speaker="s3" aria-label="MERGE">
+  <h2 data-in>One rule for late data</h2>
+  <div data-in>
       <svg viewBox="0 0 640 380" width="640" height="380" aria-label="MERGE rule">
         <g style="color: var(--ink)">
           <rect class="box soft" x="0" y="0" width="290" height="120" rx="10"/>
@@ -390,12 +594,11 @@
           <text x="64" y="348" font-size="21" class="m">re-run: no change. late record: right week.</text>
         </g>
       </svg>
-    </div>
   </div>
-  <p class="src">Code: <code>pipeline/privacy/deid.py</code>, <code>pipeline/silver/build.py</code></p>
+  <p class="src">Code: <code>pipeline/silver/build.py</code></p>
 </section>
 
-<!-- 12 -->
+<!-- 24 -->
 <section class="slide" data-speaker="s3" aria-label="Gold">
   <h2 data-in>Gold counts by onset week, so a back-fill is not a spike</h2>
   <div class="cols">
@@ -411,19 +614,20 @@
   <p class="src">Code: <code>pipeline/gold/build.py</code> (replaceWhere on changed weeks)</p>
 </section>
 
-<!-- 13 -->
-<section class="slide" data-speaker="s3" aria-label="Live pipeline run">
-  <span class="cue" data-in>Live run in the terminal, clock visible</span>
-  <h2 data-in>New drop, re-run, quarantine</h2>
+<!-- 25 -->
+<section class="slide" data-speaker="s3" aria-label="Hidden-drop drill">
+  <h2 data-in>Hidden-drop drill: new drop, re-run, quarantine</h2>
   <div class="cols">
-    <ol class="steps" data-in>
-      <li><code>git describe --tags</code> shows v1.0</li>
-      <li><code>make drop</code> with a new seed: 14 new days</li>
-      <li><code>make bronze silver gold analytics serve</code></li>
-      <li>Run again: nothing new, duplicates = 0</li>
-      <li>One quarantined row: <code>DQ_ORPHAN_FACILITY</code></li>
-      <li>A gold row's batch IDs in the ingest log</li>
-    </ol>
+    <pre class="term" data-in><span class="c">$ make drop SF=0.05 DROP_SEED=4675</span>
+14 new days, unseen seed
+<span class="c">$ make bronze silver gold analytics serve</span>
+bronze batches      1 &rarr; 2
+silver rows         1,636,674 &rarr; 1,645,562
+quarantined rows       68,195 &rarr; 68,532
+data through       2025-12-31 &rarr; 2026-01-14
+<span class="c">$ make bronze silver gold</span>   <span class="m"># again</span>
+silver rows         1,645,562  (no change)
+duplicate IDs       0</pre>
     <div data-in>
       <p class="stamp">Hidden-drop drill on the final ingestion code</p>
       <table class="t">
@@ -435,170 +639,23 @@
           <tr><td>Whole drill</td><td class="r">28.6 min, pass</td></tr>
         </tbody>
       </table>
-      <p class="small" style="margin-top:14px">Clean clone, SF=0.05. Source: <code>docs/FINAL-NUMBERS.md</code> (<code>hidden_drop_drill.json</code>).</p>
+      <p class="small" style="margin-top:14px">Quarantined rows keep their reason code, e.g. <code>DQ_ORPHAN_FACILITY</code>. Clean clone, SF=0.05. Source: <code>docs/FINAL-NUMBERS.md</code> (<code>hidden_drop_drill.json</code>).</p>
     </div>
   </div>
 </section>
 
-<!-- 14 -->
-<section class="slide" data-speaker="s3" aria-label="Spark performance">
-  <h2 data-in>Spark choices, and the 45-minute target</h2>
-  <div class="cols">
-    <ul data-in>
+<!-- 26 -->
+<section class="slide" data-speaker="s3" aria-label="Spark choices">
+  <h2 data-in>Spark choices</h2>
+  <ul data-in>
       <li><b>Broadcast joins</b> for small tables (facilities, districts): joining them never shuffles the encounter table.</li>
       <li><b>Adaptive query execution</b> on.</li>
       <li><b>Partition by year only</b>: finer keys would mean thousands of tiny files.</li>
       <li><b>Daily batch</b> for forecasts and allocation: they are weekly decisions.</li>
     </ul>
-    <div data-in>
-      <table class="t">
-        <thead><tr><th>Scale factor</th><th class="r">Runtime</th></tr></thead>
-        <tbody>
-          <tr><td>0.25</td><td class="r">15.4 min</td></tr>
-          <tr><td>0.5</td><td class="r">20.4 min</td></tr>
-          <tr><td>1 (limit 45 min)</td><td class="r"><b>28.3 min, pass</b></td></tr>
-          <tr><td>1, final code</td><td class="r"><b>25.0 min</b></td></tr>
-        </tbody>
-      </table>
-      <p class="small" style="margin-top:14px">Silver: rules checked once, 325 s to 214 s Spark time at SF=0.25, outputs identical.
-      Backtest: 1 task to 64, 325 s to 165 s. Source: <code>docs/FINAL-NUMBERS.md</code>.</p>
-    </div>
-  </div>
 </section>
 
-<!-- 15 -->
-<section class="slide" data-speaker="s1" aria-label="Detection">
-  <h2 data-in>Two detectors on seasonally adjusted counts</h2>
-  <div class="cols">
-    <div data-in>
-      <p><b>EARS C2</b>: this week against weeks 3 to 9 back. Alarm when z &gt; 4.0.</p>
-      <p class="formula">z = (y − s·m) / σ</p>
-      <p><b>CUSUM</b>: S = max(0, S + z − 0.5), alarm when S &gt; 6.5. It adds up small, steady excess.</p>
-      <p class="small">Farrington needs about five years before its first test week. That is all the history we have.</p>
-    </div>
-    <div data-in>
-      <div class="shot"><img src="assets/p-ts.webp" alt="Dashboard weekly dengue chart for Dhaka with EARS C2 alert markers"></div>
-      <p class="small">Real output: weekly dengue in Dhaka, triangles are EARS C2 alerts at threshold 4.0 (final SF=1 build).</p>
-    </div>
-  </div>
-</section>
-
-<!-- 16 -->
-<section class="slide" data-speaker="s1" aria-label="Artefact handling">
-  <h2 data-in>A silent facility is missing data, not zero cases</h2>
-  <div class="cols">
-    <div data-in>
-      <p class="stamp">Illustration</p>
-      <svg id="artefact-ill" viewBox="0 0 640 360" width="640" height="360"></svg>
-    </div>
-    <div data-in>
-      <p>Completeness = reporting facilities ÷ expected.</p>
-      <p>Below 80%: the week is <b>missing</b>. Above it: the count is scaled up by 1 ÷ completeness.</p>
-      <p>Together with onset-week counting in gold, the back-fill spike never reaches the detector.</p>
-    </div>
-  </div>
-  <p class="src">Code: <code>analytics/detection/prepare.py</code>; both planted silent facilities listed in <code>ground_truth/artefacts.csv</code></p>
-</section>
-
-<!-- 17 -->
-<section class="slide" data-speaker="s1" aria-label="Forecasting">
-  <h2 data-in>A count model a manager can read</h2>
-  <div class="cols">
-    <div data-in>
-      <p class="formula" style="font-size:27px">log μ = season + rain(4–8 wk ago) + temp(4–8 wk ago) + recent level</p>
-      <p>Negative binomial, one per district, for dengue and diarrhoea (malaria too, for antimalarial demand), horizons 1 to 4 weeks.</p>
-      <p>Backtest: 52 rolling origins. At each one the model sees only earlier weeks, as finally reported.</p>
-    </div>
-    <div data-in>
-      <table class="t">
-        <thead><tr><th>Against seasonal naive</th><th class="r">Result</th></tr></thead>
-        <tbody>
-          <tr><td>MAE (model vs naive)</td><td class="r">113 vs 133</td></tr>
-          <tr><td>80% interval coverage</td><td class="r">0.79 vs 0.77</td></tr>
-          <tr><td>Relative WIS (&lt; 1 wins)</td><td class="r"><b>0.84</b></td></tr>
-          <tr><td>dengue / diarrhoea</td><td class="r">0.89 / 0.72</td></tr>
-        </tbody>
-      </table>
-      <p class="small" style="margin-top:14px">Source: <code>docs/FINAL-NUMBERS.md</code> (<code>backtest_metrics.csv</code>).</p>
-    </div>
-  </div>
-</section>
-
-<!-- 18 -->
-<section class="slide" data-speaker="s2" aria-label="Detection evaluation">
-  <h2 data-in>Picking the threshold against planted outbreaks</h2>
-  <div class="cols">
-    <div data-in>
-      <p>Sweep the threshold. For each value: outbreaks caught, false alerts per district-year, days to detection.</p>
-      <p>Chosen points: EARS C2 threshold 4.0; CUSUM k 0.5, h 6.5.</p>
-    </div>
-    <div data-in>
-      <table class="t">
-        <thead><tr><th>Method</th><th class="r">Caught</th><th class="r">False / district-yr</th><th class="r">Median days</th><th class="r">PPV</th></tr></thead>
-        <tbody>
-          <tr><td>EARS C2</td><td class="r">33 of 35 (0.94)</td><td class="r">1.89</td><td class="r">8</td><td class="r">0.15</td></tr>
-          <tr><td>CUSUM</td><td class="r">32 of 35 (0.91)</td><td class="r">1.82</td><td class="r">9.5</td><td class="r">0.25</td></tr>
-        </tbody>
-      </table>
-      <p class="small" style="margin-top:14px">EARS C2 catches 91% within 14 days. Source: <code>docs/FINAL-NUMBERS.md</code> (<code>detection_tradeoff.json</code>).</p>
-    </div>
-  </div>
-</section>
-
-<!-- 19 -->
-<section class="slide" data-speaker="s1" aria-label="Allocation model">
-  <h2 data-in>From cases to supplies to a plan</h2>
-  <div class="cols wide-left">
-    <div data-in>
-      <svg viewBox="0 0 760 330" width="760" height="330" aria-label="Demand chain">
-        <g style="color: var(--ink)">
-          <rect class="box" x="0" y="120" width="180" height="90" rx="10"/><text x="20" y="174" font-size="25" font-weight="800">Forecast</text>
-          <rect class="box" x="250" y="120" width="190" height="90" rx="10"/><text x="270" y="160" font-size="25" font-weight="800">Demand</text><text x="270" y="192" font-size="20" class="m">q90, minus stock</text>
-          <rect class="box" x="510" y="0" width="250" height="330" rx="10" style="stroke: var(--sp)"/>
-          <text x="530" y="46" font-size="25" font-weight="800">Need per district</text>
-          <text x="530" y="98" font-size="22">beds</text><text x="530" y="140" font-size="22">IV saline</text><text x="530" y="182" font-size="22">NS1 test kits</text><text x="530" y="224" font-size="22">ORS sachets</text><text x="530" y="266" font-size="22">malaria courses</text>
-          <path class="ln draw" pathLength="1" style="--d:0" d="M180 165H242" marker-end="url(#ah)"/>
-          <path class="ln draw" pathLength="1" style="--d:1" d="M440 165H502" marker-end="url(#ah)"/>
-        </g>
-      </svg>
-    </div>
-    <div data-in>
-      <p class="formula" style="font-size:25px">minimise weighted unmet need<br>budget, transport per division<br>x<sub>d</sub> ≥ min(α · p<sub>d</sub> · Σx, need<sub>d</sub>)<br>x<sub>d</sub> ≤ need<sub>d</sub></p>
-      <p class="small">p<sub>d</sub>: population share; Σx: total sent.</p>
-      <p>Solved with PuLP and CBC. Every rate lives in one file with its source.</p>
-    </div>
-  </div>
-  <p class="src">Code: <code>analytics/forecast/demand_assumptions.py</code>, <code>analytics/optimise/lp.py</code></p>
-</section>
-
-<!-- 20 -->
-<section class="slide" data-speaker="s1" aria-label="Efficiency and equity">
-  <h2 data-in>The price of fairness</h2>
-  <div class="cols wide-right">
-    <div data-in>
-      <p>At half the budget: <b>67.8%</b> of need met, against <b>34.4%</b> for a population split.</p>
-      <p>Spread across all 64 districts: top-5 share 0.22, Gini 0.27 (SF=0.25; before the fix: 1.00 and 0.98).</p>
-      <p>A floor of α 0.1 to 0.9 costs 2.3 to 2.4 points (65.3 to 65.5%); α 1 costs 1.5. No district gets more than it needs.</p>
-      <p><b>Recommended α = 0</b>: of the floors costing ≤ 2 points (α 0 and 1), it gives the worst-off district most (0.46 vs 0.38).</p>
-    </div>
-    <div data-in>
-      <figure class="scene3d" id="alloc-3d" style="position:relative;width:760px;height:430px" aria-label="Share of need met at every budget and equity floor">
-        <svg class="fallback" id="curve-chart" viewBox="0 0 760 430" width="760" height="430"></svg>
-      </figure>
-      <p class="small only3d"><b style="color:var(--s4)">Green</b>: our plan at every budget (front to back: 0.25 to 1.5 × full need) and every α (left to right: 0 to 1). <b style="color:var(--alert)">Red</b>: population split.</p>
-    </div>
-  </div>
-  <p class="src">Source: <code>docs/FINAL-NUMBERS.md</code> (<code>allocation_summary.json</code>, <code>allocation_diagnosis.md</code>); curve from <code>allocation_curve.csv</code>.</p>
-</section>
-
-<!-- 21 -->
-<section class="slide" data-speaker="s1" aria-label="Preparedness calendar">
-  <h2 data-in>Dengue calendar by division</h2>
-  <svg id="cal-chart" viewBox="0 0 1420 520" width="1420" height="520" data-in></svg>
-  <p class="src">Source: <code>docs/experiments/calendar_summary.csv</code> (STL per division, 5 years). Rule: stock 3 weeks and campaign 6 weeks before onset.</p>
-</section>
-
-<!-- 22 -->
+<!-- 27 -->
 <section class="slide" data-speaker="s4" aria-label="Dashboard design">
   <h2 data-in>Built for a district office laptop</h2>
   <div class="cols wide-right">
@@ -613,29 +670,41 @@
   </div>
 </section>
 
-<!-- 23 -->
+<!-- 28 -->
 <section class="slide" data-speaker="s4" aria-label="Linked views">
-  <span class="cue" data-in>Switch to the live dashboard</span>
   <h2 data-in>One selection, five views</h2>
   <div class="cols wide-right">
     <ol class="steps" data-in>
+      <li>Top line: districts on alert in the last full week (none)</li>
       <li>The map shows cases per 100,000; triangles are alerts</li>
       <li>Solid triangle: on alert in the last full week; outline: earlier in the range</li>
       <li>The table ranks districts by alerts</li>
-      <li>Click a district: weekly chart, heatmap and allocation follow</li>
+      <li>Chattogram selected: weekly chart, heatmap and allocation follow</li>
     </ol>
     <div class="shot" data-in><img src="assets/dash-ctg.webp" alt="Dashboard after selecting Chattogram: every view shows Chattogram"></div>
   </div>
 </section>
 
-<!-- 24 -->
-<section class="slide" data-speaker="s4" aria-label="Uncertainty, suppression and what-if">
-  <h2 data-in>Ranges, hidden counts and the what-if panel</h2>
+<!-- 29 -->
+<section class="slide" data-speaker="s4" aria-label="Weekly chart and forecast table">
+  <h2 data-in>The weekly chart and the forecast table</h2>
   <div class="cols wide-right">
     <ol class="steps" data-in>
-      <li>Drag the time strip: every view follows</li>
+      <li>Drag the lower time strip: every view follows</li>
       <li>Open dot: newest week, not yet complete</li>
-      <li>Blue band: 80% forecast range; table below</li>
+      <li>Blue band: 80% forecast range</li>
+      <li>Table: expected cases and likely range per week, plus a 4-week total</li>
+      <li>No data: the week says no report, not zero</li>
+    </ol>
+    <div class="shot" data-in><img src="assets/dash-ctg-chart.webp" alt="Weekly dengue chart for Chattogram with the open dot, forecast band and forecast table"></div>
+  </div>
+</section>
+
+<!-- 30 -->
+<section class="slide" data-speaker="s4" aria-label="Suppression, what-if, district view">
+  <h2 data-in>Hidden counts, the what-if panel, the district view</h2>
+  <div class="cols wide-right">
+    <ol class="steps" data-in>
       <li>Striped cells: counts 1–4, hidden</li>
       <li>What-if: move budget and α; the plan comes from a grid solved in advance</li>
       <li><code>?district=</code>: own district in full, rest as division totals</li>
@@ -645,7 +714,7 @@
   </div>
 </section>
 
-<!-- 25 -->
+<!-- 31 -->
 <section class="slide" data-speaker="s4" aria-label="Persona walkthroughs">
   <h2 data-in>Simulated persona walkthroughs run with AI agents</h2>
   <div class="cols">
@@ -668,46 +737,8 @@
   </div>
 </section>
 
-<!-- 26 -->
-<section class="slide" data-speaker="s2" aria-label="Privacy and ethics">
-  <h2 data-in>Privacy by design, and a limit of the equity floor</h2>
-  <div class="cols">
-    <ul data-in>
-      <li>Keyed hash for patient IDs; age in bands.</li>
-      <li>Counts 1 to 4 hidden, with complementary suppression so totals cannot reveal them.</li>
-      <li>k-anonymity checker for record-level extracts; published tables are aggregates.</li>
-      <li>Equity floor: a population share, never more than need. No need shown, nothing sent, so it cannot protect a district whose reports are missing. Silent weeks are marked missing, not zero.</li>
-    </ul>
-    <div data-in>
-      <div class="shot" style="width:fit-content;margin-left:auto"><img src="assets/p-table.webp" style="max-height:560px;width:auto;max-width:100%" alt="Early warning table with hatched suppressed cells"></div>
-      <p class="small" style="text-align:right">Hatched cells: suppressed counts 1–4.</p>
-    </div>
-  </div>
-  <p class="src">k-anonymity checker: <code>pipeline/privacy/kanon.py</code>, unit-tested; not a pipeline step.</p>
-</section>
-
-<!-- 27 -->
-<section class="slide" data-speaker="s2" aria-label="Recommendations and limits">
-  <h2 data-in>What we would tell the Ministry</h2>
-  <div class="cols">
-    <ol class="steps" data-in>
-      <li>Dengue supplies in place by week 28-29 (6-13 July), before the season.</li>
-      <li>Treat alerts as a short list; check reporting completeness before acting.</li>
-      <li>Choose α openly, knowing what it costs.</li>
-    </ol>
-    <div data-in>
-      <p class="stamp">Limits</p>
-      <ul>
-        <li>Synthetic data: no real decision yet.</li>
-        <li>Streaming alerts take 219.2 s at full scale: fast, not instant.</li>
-        <li>Forecast bands ignore parameter uncertainty, so they are a little narrow.</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- 28 -->
-<section class="slide" data-speaker="s2" aria-label="Close">
+<!-- 32 -->
+<section class="slide" data-speaker="s4" aria-label="Close">
   <h2 data-in>Thank you</h2>
   <p class="lede" data-in>Everything shown matches tag <b data-cfg="repo_tag"></b> in our repository.</p>
   <p class="meta" data-in>EpiScope: early warning, forecasts and supply planning for Bangladesh's 64 districts.</p>
