@@ -16,7 +16,7 @@ window.EPI_SCRIPT = [
     id: "1a", speaker: "s1", title: "Opening", slides: [1], chapter: 1, pause: 3,
     paras: [
       "[SHOW slide 1, camera on; the 3D bars grow in]",
-      "Assalamu alaikum. We're the EpiScope team. We built a big data platform for outbreaks and supplies in Bangladesh.",
+      "Assalamu alaikum. We're group Sentinel BD, and our project is EpiScope. We built a big data platform for outbreaks and supplies in Bangladesh.",
       "Each bar is one of our sixty-four districts. Its height is its population in the 2022 census. The tallest is Dhaka.",
     ],
   },
