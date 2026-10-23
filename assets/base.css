@@ -1,5 +1,5 @@
-/* Shared tokens for the deck and the script. Atkinson Hyperlegible Next (SIL OFL 1.1, Braille Institute):
-   chosen for legibility after Zoom compression and for reading aloud from a phone. */
+/* Shared tokens for the deck. Atkinson Hyperlegible Next (SIL OFL 1.1, Braille Institute):
+   chosen for legibility after Zoom compression. */
 @font-face {
   font-family: "Atkinson Next";
   src: url("fonts/atkinson-next-latin.woff2") format("woff2");
@@ -68,17 +68,3 @@
 html, body { margin: 0; }
 body { background: var(--paper); color: var(--ink); font-family: var(--font); }
 :focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
-
-.pending {
-  background: var(--pending-bg);
-  color: var(--pending);
-  border: 2px dashed currentColor;
-  border-radius: 6px;
-  padding: 0 .3em;
-  font-weight: 600;
-}
-.draft {
-  background: var(--draft-bg);
-  border-bottom: 2px solid var(--teal);
-  padding: 0 .15em;
-}

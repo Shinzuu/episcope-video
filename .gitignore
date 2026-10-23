@@ -4,3 +4,12 @@ node_modules/
 BRIEF.md
 HANDOFF.md
 REVIEW.md
+.claude/
+.DS_Store
+# Recordings never go in this repo
+video/
+recording*/
+*.mp4
+*.mkv
+*.webm
+*.mov

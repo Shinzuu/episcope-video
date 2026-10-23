@@ -1,8 +1,5 @@
-// Shared by index.html and script.html: config loading, word counts and timing.
-// Word counting matches tools/timing.mjs, so the pages and the timing tool agree.
+// Config loading for index.html (names and roles from config.json, with a fallback for file://).
 window.EPI = (() => {
-  const WPM = 110;
-  const PENDING_WORDS = 5;
   const FALLBACK = {
     repo_tag: "v1.0",
     speakers: {
@@ -24,35 +21,5 @@ window.EPI = (() => {
     }
   }
 
-  const isCue = (p) => /^\[[^\]]*\](\s*\[[^\]]*\])*$/.test(p.trim());
-
-  // {n1}..{n4} are full names: they count as the words of the name in config.json
-  const names = (p, cfg) => p.replace(/\{n([1-4])\}/g, (_, k) => (cfg ? cfg.speakers[`s${k}`].name : "Speaker"));
-
-  function spokenWords(paras, cfg) {
-    let n = 0;
-    for (let p of paras) {
-      if (isCue(p)) continue;
-      p = names(p, cfg);
-      const pending = (p.match(/\[\[pending:[^\]]*\]\]/g) || []).length;
-      const text = p.replace(/\[\[pending:[^\]]*\]\]/g, " ").replace(/\[[^\]]*\]/g, " ").replace(/[{}]/g, "");
-      n += text.split(/\s+/).filter((w) => /[A-Za-z0-9]/.test(w)).length + pending * PENDING_WORDS;
-    }
-    return n;
-  }
-
-  function timeline(script, wpm = WPM, cfg = null) {
-    let clock = 0;
-    return script.map((s) => {
-      const words = spokenWords(s.paras, cfg);
-      const secs = (words / wpm) * 60 + s.pause;
-      const row = { ...s, words, secs, start: clock };
-      clock += secs;
-      return row;
-    });
-  }
-
-  const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
-
-  return { WPM, loadConfig, isCue, spokenWords, timeline, fmt };
+  return { loadConfig };
 })();
