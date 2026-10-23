@@ -10,8 +10,8 @@
 <link rel="stylesheet" href="assets/base.css">
 <style>
   html, body { height: 100%; overflow: hidden; }
-  body { background: #d9e2e4; display: grid; place-items: center; }
-  :root[data-theme="dark"] body { background: #081215; }
+  /* page background = slide paper, so any margin left on a non-16:9 window blends in (no visible gap) */
+  body { background: var(--paper); display: grid; place-items: center; }
 
   /* 1600 x 900 design canvas, scaled to fit the window */
   .stage {
@@ -20,7 +20,6 @@
     transform-origin: 0 0;
     background: var(--paper);
     overflow: hidden;
-    box-shadow: 0 0 0 1px var(--rule);
   }
   .slide {
     position: absolute; inset: 0;
@@ -157,7 +156,7 @@
 
 <!-- 1 -->
 <section class="slide title" data-speaker="s1" aria-label="Title">
-  <p class="meta" data-in>Group Sentinel BD · CSE 4345 Big Data Analytics, Premier University, Chittagong</p>
+  <p class="meta" data-in style="max-width:none">Group Sentinel BD · CSE 4345 Big Data Analytics, Premier University, Chittagong</p>
   <h1 data-in>EpiScope</h1>
   <p class="lede" data-in>Catching outbreaks early in Bangladesh, and planning supplies before the season peaks.</p>
   <figure class="scene3d" id="title-3d" style="right:70px;top:40px;width:700px;height:420px" aria-label="The 64 districts as bars, height = 2022 census population">
